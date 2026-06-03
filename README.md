@@ -1,28 +1,45 @@
 # ResizerAgent
 
-A multi-agent CLI-driven OpenROAD timing-closure framework. Four agents
-(**Reporter → Planner → Executor → Selector**) iterate over a post-CTS design
-to minimize Worst Negative Slack (WNS) and Total Negative Slack (TNS). Every
-iteration runs `repair_timing` plus global route inside the loop, and the
-reported metrics are after-GR slack.
+A CLI-driven OpenROAD timing-closure framework. Each iteration moves through
+four phases — **Report → Plan → Execute → Select** — to minimize Worst
+Negative Slack (WNS) and Total Negative Slack (TNS) on a post-CTS design.
+Every iteration runs `repair_timing` plus global route inside the loop, and
+the reported metrics are after-GR slack. Three of the four phases delegate
+their reasoning step to a Claude-CLI agent; the Report phase is fully
+deterministic Python.
 
-## The Four-Agent Loop
+## The Four-Phase Loop
 
 ```
 run.py (orchestrator)
   └─ Per iteration:
-       Reporter  — pure Python; builds reporter_baseline_prompt.txt from
-                   base_cts / default / prev-best artifacts (metrics, paths,
-                   neighbors, cell catalog, GR metrics).
-       Planner   — Claude CLI (Opus); reads reporter prompt, writes
-                   planner_decision.json (1–7 plans: sequence / staged / eco).
-       Executor  — pure Python; validates the planner JSON, emits one
-                   run_plan.tcl per plan, then launch_workers.py runs them
-                   in parallel inside Docker.
-       Selector  — Claude CLI (Opus); rates plans, promotes the best to
-                   Iteration<N>/best/, decides continue / stop / backtrack.
-  └─ The promoted plan's after-GR ODB becomes the seed for the next
-     iteration.
+       Report   — pure Python. Parses base_cts / default / prev-best
+                  artifacts (metrics, paths, neighbors, cell catalog, GR
+                  metrics) and assembles reporter_baseline_prompt.txt for
+                  the Plan phase. No agent.
+
+       Plan     — Planner agent (Claude CLI, Opus,
+                  agents/planner/AGENTS.md). Reads the reporter prompt and
+                  writes planner_decision.json with 1–7 execution plans
+                  (sequence / staged / eco) plus rationale and expected
+                  outcomes.
+
+       Execute  — hybrid. First pass is pure Python
+                  (Scripts/python/executor.py): validates the planner JSON
+                  and emits one run_plan.tcl per plan; launch_workers.py
+                  then runs the plans in parallel inside Docker. If a
+                  worker hits a TCL error, the Executor agent (Claude CLI,
+                  Sonnet, agents/executor/AGENTS.md) repairs the TCL and
+                  the worker re-runs.
+
+       Select   — hybrid. Pure-Python selector_prep.py pre-computes the
+                  mechanical fields (plan rankings, regression flags,
+                  plateau / convergence diagnostics). The Selector agent
+                  (Claude CLI, Opus, agents/selector/AGENTS.md) then rates
+                  plans, names the worst stuck path with cell-level
+                  guidance for the next Plan phase, and decides
+                  continue / stop / backtrack. The promoted plan's after-GR
+                  ODB becomes the seed for the next iteration.
 ```
 
 ## Repository layout
