@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Planner Decision",
+  "description": "Output contract for the Planner agent. Commits to one execution plan per iteration of type 'sequence', 'staged', or 'eco'. Analysis is done internally — only the decision, rationale, and the plan are written.",
+  "type": "object",
+  "required": ["decision", "rationale", "plan_count", "plans"],
+
+  "properties": {
+
+    "decision": {
+      "type": "string",
+      "enum": ["execute"],
+      "description": "Always 'execute' — the Planner always commits to a plan."
+    },
+
+    "rationale": {
+      "type": "array",
+      "description": "2–4 bullet points connecting key analysis conclusions to the plan choice. For N≥2, include convergence assessment.",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+
+    "plan_count": {
+      "type": "integer",
+      "const": 1,
+      "description": "Always 1 — exactly one plan per iteration."
+    },
+
+    "plans": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "title": "Sequence Plan",
+            "type": "object",
+            "required": ["plan_type", "sequence", "reasoning", "expected_outcome"],
+            "properties": {
+              "plan_type": { "type": "string", "const": "sequence" },
+              "sequence": {
+                "type": "array",
+                "items": { "type": "string", "enum": ["sizeup", "sizedown", "vt_swap", "buffer", "split", "unbuffer", "clone", "sizeup_match", "swap"] },
+                "minItems": 1, "maxItems": 9, "uniqueItems": true
+              },
+              "run_knobs": {
+                "type": "object",
+                "properties": {
+                  "repair_tns":           { "type": "number",  "minimum": 0, "maximum": 100 },
+                  "max_passes":           { "type": "integer", "minimum": 1 },
+                  "max_iterations":       { "type": "integer", "minimum": 1 },
+                  "setup_margin":         { "type": "number" },
+                  "skip_last_gasp":       { "type": "boolean" },
+                  "skip_crit_vt_swap":    { "type": "boolean" }
+                },
+                "additionalProperties": false
+              },
+              "reasoning":        { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "expected_outcome": { "type": "string" }
+            },
+            "additionalProperties": false
+          },
+          {
+            "title": "Staged Plan",
+            "type": "object",
+            "required": ["plan_type", "stages", "reasoning", "expected_outcome"],
+            "properties": {
+              "plan_type": { "type": "string", "const": "staged" },
+              "stages": {
+                "type": "array",
+                "minItems": 2, "maxItems": 9,
+                "items": {
+                  "type": "object",
+                  "required": ["move"],
+                  "properties": {
+                    "label": { "type": "string" },
+                    "move":  { "type": "string", "enum": ["sizeup", "sizedown", "vt_swap", "buffer", "split", "unbuffer", "clone", "sizeup_match", "swap"] },
+                    "run_knobs": {
+                      "type": "object",
+                      "properties": {
+                        "repair_tns":           { "type": "number",  "minimum": 0, "maximum": 100 },
+                        "max_passes":           { "type": "integer", "minimum": 1 },
+                        "max_iterations":       { "type": "integer", "minimum": 1 },
+                        "setup_margin":         { "type": "number" },
+                        "skip_last_gasp":       { "type": "boolean" },
+                        "skip_crit_vt_swap":    { "type": "boolean" }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "reasoning":        { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "expected_outcome": { "type": "string" }
+            },
+            "additionalProperties": false
+          },
+          {
+            "title": "ECO Plan",
+            "type": "object",
+            "required": ["plan_type", "changes", "reasoning", "expected_outcome"],
+            "properties": {
+              "plan_type": { "type": "string", "const": "eco" },
+              "changes": {
+                "type": "array",
+                "minItems": 1, "maxItems": 20,
+                "items": {
+                  "type": "object",
+                  "required": ["action", "reason"],
+                  "oneOf": [
+                    {
+                      "required": ["action", "inst", "new_master", "reason"],
+                      "properties": {
+                        "action":     { "type": "string", "const": "resize" },
+                        "inst":       { "type": "string" },
+                        "new_master": { "type": "string" },
+                        "reason":     { "type": "string" }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "required": ["action", "inst", "reason"],
+                      "properties": {
+                        "action": { "type": "string", "const": "delete_buffer" },
+                        "inst":   { "type": "string" },
+                        "reason": { "type": "string" }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "required": ["action", "net", "driver_pin", "buf_cell", "buf_name", "reason"],
+                      "properties": {
+                        "action":     { "type": "string", "const": "insert_buffer" },
+                        "net":        { "type": "string", "description": "Net name to split" },
+                        "driver_pin": { "type": "string", "description": "Driver output pin: 'inst/pin'" },
+                        "buf_cell":   { "type": "string", "description": "Buffer cell master from PDK cell catalog" },
+                        "buf_name":   { "type": "string", "description": "Unique instance name for new buffer" },
+                        "sinks":      {
+                          "description": "'all' or list of 'inst/pin' to move to buffer output",
+                          "oneOf": [
+                            { "type": "string", "const": "all" },
+                            { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+                          ]
+                        },
+                        "at":         { "type": "string", "description": "Placement: 'centroid' (default), 'driver', or 'x y'" },
+                        "in_pin":     { "type": "string", "description": "Buffer input pin name (default: A)" },
+                        "out_pin":    { "type": "string", "description": "Buffer output pin name (default: Y)" },
+                        "reason":     { "type": "string" }
+                      },
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "reasoning":        { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "expected_outcome": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+
+    "more_info": {
+      "type": "string",
+      "description": "1-2 sentences: what additional data or context would have helped you make a better plan? Not parsed by infrastructure — for human review only."
+    }
+  },
+
+  "additionalProperties": false
+}
