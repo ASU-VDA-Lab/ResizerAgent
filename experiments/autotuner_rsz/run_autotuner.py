@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-autotuner_rsz/run_autotuner.py — Standalone entry point for AutoTuner.
+experiments/autotuner_rsz/run_autotuner.py — Standalone entry point for AutoTuner.
 
 Completely standalone — never touches run.py, work_dir/, or any agentic
-flow infrastructure. Copy autotuner_rsz/ to another server and it runs.
+flow infrastructure. Copy experiments/autotuner_rsz/ to another server and it runs.
 
 Stages:
-  base  — Run make cts inside Docker (autotuner_rsz/ORFS_fix/), copy
-           4_1_cts.odb + SDC to autotuner_rsz/results/.../base/, generate
+  base  — Run make cts inside Docker (experiments/autotuner_rsz/ORFS_fix/), copy
+           4_1_cts.odb + SDC to experiments/autotuner_rsz/results/.../base/, generate
            placement-parasitic artifacts via generate_base_artifacts.tcl.
 
   tune  — Run Optuna TPE hyperparameter search starting from the base_cts.odb
@@ -18,19 +18,19 @@ Prerequisites:
 
 Usage:
   # Step 1 — generate base_cts.odb (must run first)
-  python3 autotuner_rsz/run_autotuner.py \\
+  python3 experiments/autotuner_rsz/run_autotuner.py \\
       --design aes --pdk asap7 --run-stage base
 
   # Step 2 — run autotuner search
-  python3 autotuner_rsz/run_autotuner.py \\
+  python3 experiments/autotuner_rsz/run_autotuner.py \\
       --design aes --pdk asap7 --run-stage tune \\
       --n-startup-trials 20 --n-iterations 15 --n-jobs 4
 
   # Resume a previous study
-  python3 autotuner_rsz/run_autotuner.py \\
+  python3 experiments/autotuner_rsz/run_autotuner.py \\
       --design aes --pdk asap7 --run-stage tune --resume
 
-Output (autotuner_rsz/results/orfs_<orfs>/<pdk>/<design>/):
+Output (experiments/autotuner_rsz/results/orfs_<orfs>/<pdk>/<design>/):
   base/
     base_cts.odb            — raw post-CTS database (seed for all trials)
     constraint.sdc          — post-CTS SDC
@@ -58,7 +58,7 @@ import sys
 os.environ.setdefault("DOCKER_API_VERSION", "1.43")
 
 # ---------------------------------------------------------------------------
-# Standalone layout — everything relative to autotuner_rsz/
+# Standalone layout — everything relative to experiments/autotuner_rsz/
 # ---------------------------------------------------------------------------
 
 AUTOTUNER_ROOT = pathlib.Path(__file__).resolve().parent        # experiments/autotuner_rsz/
@@ -116,7 +116,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--pdk",       required=True, choices=["asap7", "nangate45"],
                     help="Target PDK")
     ap.add_argument("--orfs",      choices=["old", "new", "fix"], default="fix",
-                    help="ORFS variant (default: fix → rsz_fix image + autotuner_rsz/ORFS_fix/)")
+                    help="ORFS variant (default: fix → rsz_fix image + experiments/autotuner_rsz/ORFS_fix/)")
     group = ap.add_mutually_exclusive_group(required=True)
     group.add_argument("--run-stage", choices=["base", "tune", "backend"],
                        dest="run_stage",

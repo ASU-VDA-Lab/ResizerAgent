@@ -1,5 +1,5 @@
 """
-autotuner_rsz/backend_stage.py — Backend route+finish for AutoTuner.
+experiments/autotuner_rsz/backend_stage.py — Backend route+finish for AutoTuner.
 
 Reads autotuner_best.json, copies best_output.odb → ORFS_fix/flow/results/
 as 4_1_cts.*, then runs `make clean_route && make route finish` inside Docker.
