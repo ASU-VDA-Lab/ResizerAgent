@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Selector Decision (LLM portion)",
+  "description": "Simplified schema for what the LLM Selector agent writes. Python pre-computes and merges all mechanical fields (chosen_plan, chosen_metrics, regressed, convergence, iteration_table, plan_results, strategy_note.prediction_analysis) AFTER the LLM writes this file. The final selector_decision.json on disk will contain all original fields — this schema only covers what the LLM must supply.",
+  "type": "object",
+  "required": [
+    "decision",
+    "stop_reason",
+    "backtrack_to_iteration",
+    "per_plan_ratings",
+    "strategy_note"
+  ],
+
+  "properties": {
+
+    "decision": {
+      "type": "string",
+      "enum": ["continue", "stop", "backtrack", "accept_regression", "retry"],
+      "description": "'continue' = promote best plan and proceed. 'stop' = halt the loop (only valid reasons: closure_achieved or all_plans_failed). 'backtrack' = re-seed from an earlier iteration. 'accept_regression' = promote a regressed plan with a different path structure. 'retry' = none of this iteration's plans beat the seed; re-seed from the same ODB next iteration."
+    },
+
+    "stop_reason": {
+      "type": ["string", "null"],
+      "enum": ["closure_achieved", "all_plans_failed", null],
+      "description": "Required non-null only when decision='stop'. 'closure_achieved' if WNS >= 0. 'all_plans_failed' if no plan ran successfully. Hard plateau is NOT a valid stop reason — use 'backtrack' instead."
+    },
+
+    "backtrack_to_iteration": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "description": "Required non-null only when decision='backtrack'. The iteration whose best ODB to re-seed from. Target the last iteration that produced meaningful ΔWNS (>=3 ps), NOT always iteration 1."
+    },
+
+    "per_plan_ratings": {
+      "type": "array",
+      "description": "One entry per plan that ran successfully. Rating: A=excellent, B=good, C=marginal, F=failed/regressed. Note: one sentence on why.",
+      "items": {
+        "type": "object",
+        "required": ["plan", "rating", "note"],
+        "properties": {
+          "plan":   { "type": "string" },
+          "rating": { "type": "string", "enum": ["A", "B", "C", "F"] },
+          "note":   { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "strategy_note": {
+      "type": "object",
+      "description": "Semantic analysis passed to the Planner for the next iteration.",
+      "required": ["stuck_paths", "plateau_diagnosis", "guidance", "avoid_strategies"],
+      "properties": {
+        "stuck_paths": {
+          "type": "array",
+          "description": "Endpoint names that are the worst across 2+ consecutive iterations. Read best/best_worst_paths.txt to identify these. Empty list if no plateau or iteration 1.",
+          "items": { "type": "string" }
+        },
+        "plateau_diagnosis": {
+          "type": ["string", "null"],
+          "enum": ["same_bottleneck", "new_bottleneck", "broad_stall", null],
+          "description": "'same_bottleneck' = same cell/path stuck (try ECO, vt_swap-first, or backtrack). 'new_bottleneck' = different worst path emerged (prior repairs shifted the critical path — good sign). 'broad_stall' = TNS improved but WNS didn't (worst path is structural). null if not in plateau."
+        },
+        "guidance": {
+          "type": "array",
+          "description": "Actionable strategic hints for the Planner. Be specific — name stuck cell instances, exhausted sequences, untried angles. No length cap: quality of guidance directly determines next-iteration improvement.",
+          "items": { "type": "string" }
+        },
+        "avoid_strategies": {
+          "type": "array",
+          "description": "Strategies tried and failed — the Planner must not repeat these. Populate especially on 'backtrack' decisions, listing everything tried from the backtrack point onward.",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "more_info": {
+      "type": "string",
+      "description": "1-2 sentences: what additional data or context would have helped you assess plans or steer the Planner better? Not parsed by infrastructure — for human review only."
+    }
+
+  },
+
+  "additionalProperties": true,
+
+  "x-more-info-note": "The 'more_info' field is optional free text — 1-2 sentences on what additional data would have helped. Not parsed by infrastructure, for human review only.",
+
+  "allOf": [
+    {
+      "if":   { "properties": { "decision": { "const": "stop" } } },
+      "then": { "properties": { "stop_reason": { "type": "string", "not": { "type": "null" } } } }
+    },
+    {
+      "if":   { "properties": { "decision": { "const": "backtrack" } } },
+      "then": { "properties": { "backtrack_to_iteration": { "type": "integer", "not": { "type": "null" } } } }
+    }
+  ]
+}
