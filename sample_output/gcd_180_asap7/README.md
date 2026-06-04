@@ -1,29 +1,7 @@
 # Sample Output — gcd_180 / asap7 (control)
 
-A real `run.py` invocation produces the directory layout below. This sample is
-the first iteration of an actual `gcd_180` run on `asap7` with the **control**
-configuration (no ablations). It is meant as a tour of what each file is and
-what to read first.
-
-## What the control flow does
-
-For one design, the control flow is:
-
-1. **`base`** — run `make cts` in Docker via the chosen ORFS image, copy the raw
-   post-CTS database (no `repair_timing` applied). Generates `base_*` reports.
-2. **`default`** — apply ORFS's default `repair_timing` invocation once;
-   record metrics as the baseline the LLM loop must beat.
-3. **`LLM_iterations/Iteration<N>`** — for up to N iterations:
-   - **Reporter** (pure Python) — parse the seed ODB's reports and assemble a
-     prompt for the Planner.
-   - **Planner** (Opus) — read the prompt, emit `planner_decision.json` with
-     1–7 plans of types `sequence` / `staged` / `eco`.
-   - **Executor** (Python TCL generator + per-plan Docker run) — turn each plan
-     into a `run_plan.tcl` and execute it; collect metrics per plan.
-   - **Selector** (Opus) — rate each plan, pick the best, emit
-     `selector_decision.json` and seed the next iteration.
-4. **`Best_solutions/rankings.json`** — running cross-iteration ranking of
-   every successful plan by WNS.
+A real tool invocation produces the directory layout below. This sample is
+the first iteration of an actual `gcd_180` run on `asap7` with the **ResizerAgent**. It is meant as a guide of what each file is and what to read first.
 
 The sample shown here is exactly what one design's results directory looks
 like after Iteration1 finishes — everything Iteration2..N would mirror the
@@ -33,7 +11,6 @@ same shape under sibling `Iteration<N>/` directories.
 
 ```
 gcd_180_asap7/
-├── README.md
 ├── base/                    # Raw post-CTS — no repair_timing applied
 ├── default/                 # ORFS default repair_timing baseline
 ├── LLM_iterations/
@@ -67,9 +44,8 @@ Absolute host paths inside logs / CSVs / JSONs have been replaced with
 
 ## Stage 2 — `default/` (ORFS default baseline)
 
-Same file set as `base/`, but the database (`default.odb`) is post-default-
-`repair_timing` and parasitics are **post-GR** rather than placement. This
-is the bar the LLM loop must beat. `default_gr_status.txt` records whether
+Same file set as `base/`, but the database (`default.odb`) is post-default 
+`repair_timing` and parasitics are **post-GR**. `default_gr_status.txt` records whether
 the global route succeeded or fell back to estimated parasitics.
 
 ## Stage 3 — `LLM_iterations/Iteration1/`
@@ -187,7 +163,7 @@ ORFS stage logs (these run **outside** the LLM loop, once per design):
 
 | File | Columns | What it's for |
 |---|---|---|
-| `runtimes.csv` | `iteration, stage, runtime_s, started_at` | Wall-time per stage (reporter / planner / planN / selector / base / default). Use for performance breakdowns. |
+| `runtimes.csv` | `iteration, stage, runtime_s, started_at` | Wall-time per stage (reporter/planner / planN / selector/base/default). Use for performance breakdowns. |
 | `tokens.csv` | `iteration, role, model, input_tokens, output_tokens, cache_creation_tokens, cache_read_tokens, cost_usd, duration_s, started_at` | LLM cost ledger. |
 | `apicall.csv` | `iteration, role, model, api_calls` | Number of API turns per role per iteration (a request_data path causes >1 turn for the Planner). |
 
@@ -208,8 +184,8 @@ This sample's source run stopped before that phase, so those files are absent.
 
 ## Reading order for first-time users
 
-1. `LLM_iterations/Iteration1/reporter_baseline_prompt.txt` — what the LLM sees.
-2. `LLM_iterations/Iteration1/planner_decision.json` — what it decided.
-3. `LLM_iterations/Iteration1/plan1/run_plan.tcl` — what that decision becomes.
-4. `LLM_iterations/Iteration1/iteration_summary.csv` — what came out.
-5. `LLM_iterations/Iteration1/selector_decision.json` — how the loop reacts.
+1. `LLM_iterations/Iteration1/reporter_baseline_prompt.txt` — what the Planner agent LLM sees.
+2. `LLM_iterations/Iteration1/planner_decision.json` — what the Planner agent decided.
+3. `LLM_iterations/Iteration1/plan1/run_plan.tcl` — what that decision becomes in tcl.
+4. `LLM_iterations/Iteration1/iteration_summary.csv` — what the metric values are post-execution of the tcl.
+5. `LLM_iterations/Iteration1/selector_decision.json` — what the Selector agent decides, looking at the post-run database.
