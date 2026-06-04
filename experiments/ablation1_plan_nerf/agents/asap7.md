@@ -1,8 +1,8 @@
 # ASAP7 Cell Library Reference
 
 This is a shared reference file. All agents in this framework must read it
-before analyzing cell names, proposing cell changes, or interpreting timing
-reports.
+before analyzing cell names, evaluating sizeup / vt_swap headroom, or
+interpreting timing reports.
 
 ---
 
@@ -40,7 +40,7 @@ Full example: `NAND2x2_ASAP7_75t_SL` — 2-input NAND, 2× drive strength, SLVT
 
 Sizes increase monotonically: `xp5 < x1 < x1p5 < x2 < x4 < x6f < x8`.
 Not all cell families have all sizes — use `query_cell_catalog.py` to check
-what is available for a specific family before proposing a resize.
+what is available for a specific family before relying on a `sizeup` move.
 
 ---
 
@@ -81,11 +81,11 @@ returns false immediately.
 
 ## Unsizable Cells
 
-Some cells exist at only one drive strength. `repair_timing` and `sizeup` ECO
-actions cannot help them directly. The most common:
+Some cells exist at only one drive strength. `repair_timing` and `sizeup`
+cannot help them directly. The most common:
 
-| Cell | Only Size | Correct ECO approach |
-|------|-----------|----------------------|
+| Cell | Only Size | Correct approach |
+|------|-----------|------------------|
 | `HAxp5` | xp5 only | Target upstream drivers (reduce input slew) or buffer output net |
 | `FAx1` | x1 only | Same — buffer output net or upsize the cell feeding it |
 
@@ -97,19 +97,18 @@ not the cell itself.
 
 ## Checking Valid Sizes for a Cell
 
-Use `Scripts/python/utils/query_cell_catalog.py`:
+Use `scripts/python/utils/query_cell_catalog.py`:
 
 ```bash
 # Look up one cell
-python3 Scripts/python/utils/query_cell_catalog.py --cells NAND2x2_ASAP7_75t_SL
+python3 scripts/python/utils/query_cell_catalog.py --cells NAND2x2_ASAP7_75t_SL
 
 # Look up multiple cells
-python3 Scripts/python/utils/query_cell_catalog.py --cells "BUFx4_ASAP7_75t_R,HAxp5_ASAP7_75t_SL"
+python3 scripts/python/utils/query_cell_catalog.py --cells "BUFx4_ASAP7_75t_R,HAxp5_ASAP7_75t_SL"
 
 # Look up all cells on a timing path
-python3 Scripts/python/utils/query_cell_catalog.py \
+python3 scripts/python/utils/query_cell_catalog.py \
     --from-timing work_dir/<agent>/<design>/base/base_worst_paths.txt
 ```
 
 Output shows available sizes (weak→strong) and VT tiers for each cell family.
-Always check before proposing a `resize` ECO action or a `new_master` field.

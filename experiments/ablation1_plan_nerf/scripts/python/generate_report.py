@@ -5,7 +5,7 @@ generate_report.py — Compiled text report for a 4-agent timing-closure run.
 Usage (standard work_dir layout):
     python3 scripts/python/generate_report.py \
         --design <design> --agent <agent> --pdk <asap7|nangate45> \
-        [--output report.txt]
+        --orfs <old|new|fix> [--output report.txt]
 
 Usage (explicit path — clock_sweep or custom layouts):
     python3 scripts/python/generate_report.py \
@@ -88,12 +88,6 @@ def _plan_desc(plan: dict) -> str:
         stages = plan.get("stages", [])
         moves = [s.get("move", "?") for s in stages]
         return f"staged ({len(stages)} stages): {', '.join(moves)}"
-    elif ptype == "eco":
-        changes = plan.get("changes", [])
-        brief = [f"{c.get('action','?')}({c.get('inst', c.get('net','?'))})"
-                 for c in changes[:3]]
-        suffix = f" +{len(changes)-3} more" if len(changes) > 3 else ""
-        return f"eco ({len(changes)} actions): {', '.join(brief)}{suffix}"
     return ptype
 
 
@@ -412,7 +406,7 @@ def main() -> None:
                     help="Explicit path to the design work directory (overrides --agent/--pdk/--orfs)")
     ap.add_argument("--agent",  default="claude")
     ap.add_argument("--pdk",    default="asap7", choices=["asap7", "nangate45"])
-    ap.add_argument("--orfs",   default="fix",   choices=["fix"])
+    ap.add_argument("--orfs",   default="fix",   choices=["old", "new", "fix"])
     ap.add_argument("--output", default=None,
                     help="Write report to file instead of stdout")
     args = ap.parse_args()

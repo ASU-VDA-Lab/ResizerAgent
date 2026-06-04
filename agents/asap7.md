@@ -89,17 +89,17 @@ not the cell itself.
 
 ## Checking Valid Sizes for a Cell
 
-Use `Scripts/python/utils/query_cell_catalog.py`:
+Use `scripts/python/utils/query_cell_catalog.py`:
 
 ```bash
 # Look up one cell
-python3 Scripts/python/utils/query_cell_catalog.py --cells NAND2x2_ASAP7_75t_SL
+python3 scripts/python/utils/query_cell_catalog.py --cells NAND2x2_ASAP7_75t_SL
 
 # Look up multiple cells
-python3 Scripts/python/utils/query_cell_catalog.py --cells "BUFx4_ASAP7_75t_R,HAxp5_ASAP7_75t_SL"
+python3 scripts/python/utils/query_cell_catalog.py --cells "BUFx4_ASAP7_75t_R,HAxp5_ASAP7_75t_SL"
 
 # Look up all cells on a timing path
-python3 Scripts/python/utils/query_cell_catalog.py \
+python3 scripts/python/utils/query_cell_catalog.py \
     --from-timing work_dir/<agent>/<design>/base/base_worst_paths.txt
 ```
 

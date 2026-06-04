@@ -1,4 +1,4 @@
-# `Scripts/`
+# `scripts/`
 
 All non-orchestrator code consumed by `run.py`. Three subtrees:
 
@@ -47,7 +47,7 @@ All non-orchestrator code consumed by `run.py`. Three subtrees:
 
 | File | Description |
 |------|-------------|
-| `build_cell_catalog.py` | Run **once** when adding a new PDK. Parses the PDK's Liberty (`.lib`) files and writes `Platforms/<pdk>/cell_catalog.xml`, which the Reporter loads at runtime to show the Planner available cell sizes and sizeup targets. |
+| `build_cell_catalog.py` | Run **once** when adding a new PDK. Parses the PDK's Liberty (`.lib`) files and writes `platforms/<pdk>/cell_catalog.xml`, which the Reporter loads at runtime to show the Planner available cell sizes and sizeup targets. |
 | `extract_max_paths.py` | Parses an OpenROAD timing report into an enumerated list of violating paths with 7 fields per pin: `inst/pin master cell_dly_ps net_dly_ps slew_ps cap_fF net`. Used by the Reporter when building per-path context for the Planner. |
 
 ### `python/pdk_configs/`

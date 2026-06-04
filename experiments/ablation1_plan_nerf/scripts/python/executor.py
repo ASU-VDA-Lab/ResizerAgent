@@ -22,43 +22,6 @@ VALID_MOVES = {
     "split", "unbuffer", "clone", "sizeup_match", "swap",
 }
 MAX_SEQ_LEN = 9
-VALID_ECO_ACTIONS = {"resize", "delete_buffer", "insert_buffer"}
-
-# Instance name prefixes that identify clock tree cells inserted by CTS.
-# ECO actions on these cells change clock skew on ALL endpoints simultaneously
-# and invalidate the CTS result — they must never be targeted by the Planner.
-_CLOCK_TREE_PREFIXES = (
-    "clkbuf_", "clknet_", "clkgate_", "cts_", "clkinv_",
-    "clkload_", "clkmux_", "clkskew_",
-)
-
-def _is_clock_tree_inst(inst: str) -> bool:
-    """Return True if the instance name matches a CTS-inserted clock tree cell."""
-    low = inst.lower()
-    return any(low.startswith(p) for p in _CLOCK_TREE_PREFIXES)
-
-
-# Sequential cell detection — DFFs and latches must not be targeted by ECO.
-# Repair of sequential cells (resizing FFs) changes setup/hold timing behaviour
-# and Q-to-output delay in ways that affect all paths through that FF.
-# Only combinational cells between FFs should be targeted.
-_SEQ_MASTER_PREFIXES = (
-    "dff", "dffe", "dffa", "dffr", "dffs",   # standard DFF variants
-    "latch", "dlatch", "sdff",                 # latches and scan FFs
-)
-_SEQ_INST_SUBSTRINGS = (
-    "$_dff", "$_dffe", "$_dffsr", "$_dlatch",  # yosys-mapped sequential cells
-)
-
-def _is_sequential_cell(inst: str, master: str = "") -> bool:
-    """Return True if inst or master indicates a flip-flop or latch."""
-    inst_low   = inst.lower()
-    master_low = master.lower()
-    if any(s in inst_low for s in _SEQ_INST_SUBSTRINGS):
-        return True
-    if any(master_low.startswith(p) for p in _SEQ_MASTER_PREFIXES):
-        return True
-    return False
 
 
 # ---------------------------------------------------------------------------
@@ -82,7 +45,7 @@ def _validate_plan(plan: dict, idx: int) -> List[str]:
     errs: List[str] = []
     prefix = f"plan{idx}"
     ptype = plan.get("plan_type")
-    if ptype not in ("sequence", "staged", "eco"):
+    if ptype not in ("sequence", "staged"):
         errs.append(f"{prefix}: invalid plan_type '{ptype}'")
         return errs
 
@@ -114,51 +77,6 @@ def _validate_plan(plan: dict, idx: int) -> List[str]:
             errs += _validate_run_knobs(st.get("run_knobs") or {},
                                         f"{prefix}.stage{si}.run_knobs")
 
-    elif ptype == "eco":
-        changes = plan.get("changes")
-        if not isinstance(changes, list) or not changes:
-            errs.append(f"{prefix}: eco plan needs non-empty changes")
-            return errs
-        if len(changes) > 20:
-            errs.append(f"{prefix}: eco plan has {len(changes)} changes (max 20)")
-        for ci, ch in enumerate(changes, 1):
-            act = ch.get("action")
-            if act not in VALID_ECO_ACTIONS:
-                errs.append(f"{prefix}.change{ci}: invalid action '{act}'")
-                continue
-            if act == "resize":
-                if not ch.get("inst") or not ch.get("new_master"):
-                    errs.append(f"{prefix}.change{ci}: resize needs inst + new_master")
-                elif _is_clock_tree_inst(ch["inst"]):
-                    errs.append(
-                        f"{prefix}.change{ci}: BLOCKED — '{ch['inst']}' is a clock tree "
-                        f"cell (CTS-inserted). Modifying clock cells changes skew on ALL "
-                        f"endpoints and invalidates CTS. Only target data path instances."
-                    )
-                elif _is_sequential_cell(ch["inst"], ch.get("new_master", "")):
-                    errs.append(
-                        f"{prefix}.change{ci}: BLOCKED — '{ch['inst']}' is a sequential "
-                        f"cell (DFF/latch). ECO resize must only target combinational cells. "
-                        f"DFF resizing changes Q-to-output delay and setup/hold constraints "
-                        f"on ALL paths through that register."
-                    )
-            elif act == "delete_buffer":
-                if not ch.get("inst"):
-                    errs.append(f"{prefix}.change{ci}: delete_buffer needs inst")
-                elif _is_clock_tree_inst(ch["inst"]):
-                    errs.append(
-                        f"{prefix}.change{ci}: BLOCKED — '{ch['inst']}' is a clock tree "
-                        f"cell. Do not remove CTS-inserted buffers."
-                    )
-                elif _is_sequential_cell(ch["inst"]):
-                    errs.append(
-                        f"{prefix}.change{ci}: BLOCKED — '{ch['inst']}' appears to be a "
-                        f"sequential cell. delete_buffer only applies to combinational buffers."
-                    )
-            elif act == "insert_buffer":
-                for fld in ("net", "driver_pin", "buf_cell", "buf_name"):
-                    if not ch.get(fld):
-                        errs.append(f"{prefix}.change{ci}: insert_buffer needs '{fld}'")
     return errs
 
 
@@ -272,6 +190,9 @@ if {[info exists ::env(CELL_PAD_IN_SITES_DETAIL_PLACEMENT)] && $::env(CELL_PAD_I
 }
 set_propagated_clock [all_clocks]
 estimate_parasitics -global_routing
+if {[info exists ::env(DONT_USE_CELLS)] && $::env(DONT_USE_CELLS) ne ""} {
+    set_dont_use $::env(DONT_USE_CELLS)
+}
 
 # --- Extract artifacts (POST-GR) ---
 set generate_design_artifacts_skip_load 1
@@ -340,45 +261,12 @@ def _staged_tcl(plan: dict, it: int, idx: int) -> str:
     return out
 
 
-def _eco_tcl(plan: dict, it: int, idx: int) -> str:
-    # ECO plans skip estimate_parasitics -placement before changes
-    # (replace_cell invalidates parasitic state; postamble re-estimates after DPL)
-    changes = plan["changes"]
-    needs_buf_insert = any(ch["action"] == "insert_buffer" for ch in changes)
-
-    out = _PREAMBLE.format(ptype="eco", it=it, idx=idx)
-    if needs_buf_insert:
-        out += "\n# --- Load eco_insert_buffer proc ---\n"
-        out += "source scripts/tcl/eco_buf_insert.tcl\n"
-    out += "\n# --- Directed ECO changes ---\n"
-    for ch in changes:
-        act = ch["action"]
-        if act == "resize":
-            out += f"replace_cell {{{ch['inst']}}} {ch['new_master']}\n"
-        elif act == "delete_buffer":
-            out += f"remove_buffers [get_cells {{{ch['inst']}}}]\n"
-        elif act == "insert_buffer":
-            sinks = ch.get("sinks", "all")
-            at    = ch.get("at", "centroid")
-            in_p  = ch.get("in_pin", "A")
-            out_p = ch.get("out_pin", "Y")
-            sinks_arg = (f"-sinks {{{' '.join(sinks)}}}" if isinstance(sinks, list)
-                         else "")
-            out += (f"eco_insert_buffer {{{ch['net']}}} {{{ch['driver_pin']}}} "
-                    f"{ch['buf_cell']} {ch['buf_name']} "
-                    f"-at {at} -in_pin {in_p} -out_pin {out_p} {sinks_arg}\n")
-    out += _POSTAMBLE
-    return out
-
-
 def generate_run_plan_tcl(plan: dict, iteration: int, plan_index: int) -> str:
     ptype = plan.get("plan_type", "sequence")
     if ptype == "sequence":
         return _sequence_tcl(plan, iteration, plan_index)
     if ptype == "staged":
         return _staged_tcl(plan, iteration, plan_index)
-    if ptype == "eco":
-        return _eco_tcl(plan, iteration, plan_index)
     raise ValueError(f"unknown plan_type: {ptype}")
 
 
@@ -433,10 +321,7 @@ def build_plans(iter_dir: pathlib.Path) -> Tuple[bool, List[str]]:
 # Retry — deterministic fixes for known TCL-error patterns
 # ---------------------------------------------------------------------------
 
-_TCL_FIXES: List[Tuple[str, str, str]] = [
-    ("invalid command name \"resize_cell\"", r"\bresize_cell\b",  "replace_cell"),
-    ("invalid command name \"unbuffer\"",    r"\bunbuffer\b ",    "remove_buffers "),
-]
+_TCL_FIXES: List[Tuple[str, str, str]] = []
 
 
 def _fix_braced_sequence(tcl: str) -> Tuple[str, bool]:

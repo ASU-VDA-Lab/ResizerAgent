@@ -60,7 +60,7 @@ from typing import Dict, List, Optional, Tuple
 WORKSPACE = pathlib.Path(__file__).resolve().parent          # run.py lives at root
 
 # ---------------------------------------------------------------------------
-# ORFS configuration — pinned to ORFS_fix.
+# ORFS configuration — selectable via --orfs {old,new}
 # ---------------------------------------------------------------------------
 
 @dataclass
@@ -68,18 +68,38 @@ class OrfsConfig:
     name: str
     root_dir_name: str       # directory name relative to WORKSPACE
     docker_image: str        # Docker image tag
-    cts_make_target: str     # make target that produces post-CTS ODB
+    cts_make_target: str     # "cts-a" (old) or "cts" (new)
     cts_odb_name: str        # ODB file produced by CTS stage
     cts_sdc_name: str        # SDC file produced by CTS stage
 
-_ORFS_CFG: OrfsConfig = OrfsConfig(
-    name="fix",
-    root_dir_name="ORFS_fix",
-    docker_image="rsz_fix",
-    cts_make_target="cts",
-    cts_odb_name="4_1_cts.odb",
-    cts_sdc_name="4_cts.sdc",
-)
+_ORFS_CONFIGS: Dict[str, "OrfsConfig"] = {
+    "old": OrfsConfig(
+        name="old",
+        root_dir_name="ORFS_old",
+        docker_image="openroad/flow-ubuntu22.04-builder:0b569c",
+        cts_make_target="cts-a",
+        cts_odb_name="4_1_cts.odb",
+        cts_sdc_name="4_1_cts.sdc",
+    ),
+    "new": OrfsConfig(
+        name="new",
+        root_dir_name="ORFS_new",
+        docker_image="orfs:final",
+        cts_make_target="cts",
+        cts_odb_name="4_1_cts.odb",
+        cts_sdc_name="4_cts.sdc",
+    ),
+    "fix": OrfsConfig(
+        name="fix",
+        root_dir_name="ORFS_fix",
+        docker_image="rsz_fix",
+        cts_make_target="cts",
+        cts_odb_name="4_1_cts.odb",
+        cts_sdc_name="4_cts.sdc",
+    ),
+}
+
+_ORFS_CFG: OrfsConfig = _ORFS_CONFIGS["old"]   # default; overridden by set_orfs()
 
 SCRIPTS_PY  = WORKSPACE / "scripts" / "python"
 SCRIPTS_TCL = WORKSPACE / "scripts" / "tcl"
@@ -98,6 +118,15 @@ ORFS_PDK   = ORFS_FLOW / "platforms" / PDK_NAME
 LEF_DIR    = ORFS_PDK / "lef"
 LIB_DIR    = ORFS_PDK / "lib" / _PDK_CFG.lib_subdir if _PDK_CFG.lib_subdir else ORFS_PDK / "lib"
 SETRC_TCL  = ORFS_PDK / _PDK_CFG.setrc_tcl
+
+
+def set_orfs(name: str) -> None:
+    """Switch the global ORFS config. Must be called before set_pdk()."""
+    global _ORFS_CFG, ORFS_FLOW, DOCKER_IMAGE, DOCKER_FLOW_HOME
+    _ORFS_CFG        = _ORFS_CONFIGS[name]
+    ORFS_FLOW        = WORKSPACE / _ORFS_CFG.root_dir_name / "flow"
+    DOCKER_IMAGE     = _ORFS_CFG.docker_image
+    DOCKER_FLOW_HOME = f"/workspace/{_ORFS_CFG.root_dir_name}/flow"
 
 
 def set_pdk(name: str) -> None:
@@ -174,8 +203,8 @@ def env_to_docker(env_vars: dict) -> dict:
 
 
 def design_dir(agent: str, design: str) -> pathlib.Path:
-    # work_dir/<agent>/orfs_fix/<pdk>/<design>/  — PDK and design namespaced so
-    # asap7/nangate45 coexist without collision.
+    # work_dir/<agent>/orfs_<tag>/<pdk>/<design>/  — ORFS-version, PDK, and design
+    # are all namespaced so old/new ORFS and asap7/nangate45 coexist without collision.
     return WORK_DIR / agent / f"orfs_{_ORFS_CFG.name}" / PDK_NAME / design
 
 
@@ -1087,7 +1116,6 @@ def run_reporter(agent: str, design: str, iterN: int,
             f"    The Liberty library has only one VT tier, so OpenROAD silently skips vt_swap\n"
             f"    without changing any cell. Including it wastes a slot and gives false signal.\n"
             f"  - skip_crit_vt_swap knob has no effect — do not set it; it's handled internally.\n"
-            f"  - ECO actions must NOT use VT suffixes in new_master (e.g., use INV_X4, not INV_LVT_X4).\n"
             f"  - Primary levers on this PDK: sizeup, sizeup_match, buffer, clone, split, swap, unbuffer."
         )
     else:
@@ -1196,9 +1224,6 @@ def run_reporter(agent: str, design: str, iterN: int,
                 elif pt == "staged":
                     moves = "→".join(s.get("move", "?") for s in p.get("stages", []))
                     out[name] = f"staged[{moves}]"
-                elif pt == "eco":
-                    changes = p.get("changes", [])
-                    out[name] = f"eco[{len(changes)} changes]"
                 else:
                     out[name] = pt
             return out
@@ -1379,8 +1404,6 @@ Placement report (current seed):
                                 seq = "staged:" + "→".join(
                                     s.get("move", "") for s in (p.get("stages") or [])
                                 )
-                            elif pt == "eco":
-                                seq = "eco"
                             else:
                                 seq = ",".join(p.get("sequence") or [])
                             seq_lookup[pid] = seq
@@ -1848,7 +1871,7 @@ def _pdk_hint() -> str:
     base = f"PDK: {PDK_NAME}."
     if not _PDK_CFG.vt_tiers:
         base += (f" IMPORTANT: {PDK_NAME} is SINGLE-VT — do NOT propose vt_swap in any "
-                 f"sequence/staged plan or include VT suffixes in ECO new_master values. "
+                 f"sequence/staged plan. "
                  f"OpenROAD silently no-ops vt_swap on single-VT PDKs.")
     return base
 
@@ -1967,9 +1990,7 @@ def invoke_executor_retry(agent: str, design: str, iteration: int,
         f"to the SAME path. Fix ONLY the specific error, do not restructure the file.\n"
         f"     Common fixes: "
         f"(a) `-sequence` must use comma-separated moves not space-separated or braced; "
-        f"(b) `resize_cell` → `replace_cell`; "
-        f"(c) `unbuffer` → `remove_buffers`; "
-        f"(d) instance names with `$` or `[` must be wrapped in `{{}}`.\n"
+        f"(b) instance names with `$` or `[` must be wrapped in `{{}}`.\n"
         f"  3. If the error is an UNFIXABLE OpenROAD error (tool bug, missing feature, "
         f"infrastructure failure) — do NOT rewrite the TCL. Instead append a single comment "
         f"line to the top of run_plan.tcl: `# UNFIXABLE: <reason>`.\n"
@@ -2589,8 +2610,6 @@ def _build_experiment_summary_csv(agent: str, design: str) -> pathlib.Path:
             pt = p.get("plan_type", "sequence")
             if pt == "staged":
                 moves = " | ".join(s.get("move", "") for s in p.get("stages", []))
-            elif pt == "eco":
-                moves = str(p.get("eco_changes", ""))
             else:
                 moves = ",".join(p.get("sequence", []))
             plan_info[f"plan{i}"] = {"plan_type": pt, "sequence_or_moves": moves}
@@ -3163,6 +3182,10 @@ def parse_args() -> argparse.Namespace:
                     help="Resume LLM-iterations from this iteration (default 1)")
     ap.add_argument("--claude-bin",      default="claude",
                     help="Path to Claude CLI binary (default: claude)")
+    ap.add_argument("--orfs",            choices=["old", "new", "fix"], default="old",
+                    help="ORFS version: 'old' (ORFS_old, builder:0b569c), "
+                         "'new' (ORFS_new, orfs:final), or "
+                         "'fix' (ORFS_fix, rsz_fix). Default: old")
     args = ap.parse_args()
     if not args.clean and not args.run_stage:
         ap.error("must specify --clean or --run-stage")
@@ -3199,6 +3222,7 @@ def _dispatch_run_stage(stage: str, agent: str, design: str, args: argparse.Name
 
 def main() -> int:
     args = parse_args()
+    set_orfs(args.orfs)   # must come before set_pdk() so ORFS_FLOW is correct
     set_pdk(args.pdk)
     design, agent = args.design, args.agent
 

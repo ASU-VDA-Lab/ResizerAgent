@@ -25,7 +25,7 @@ run.py (orchestrator)
                   outcomes.
 
        Execute  — hybrid. First pass is pure Python
-                  (Scripts/python/executor.py): validates the planner JSON
+                  (scripts/python/executor.py): validates the planner JSON
                   and emits one run_plan.tcl per plan; launch_workers.py
                   then runs the plans in parallel inside Docker. If a
                   worker hits a TCL error, the Executor agent (Claude CLI,
@@ -47,9 +47,9 @@ run.py (orchestrator)
 | Path | Contents |
 |------|----------|
 | `run.py` | Single entry-point orchestrator (all stages, CLI parse, dispatch). |
-| [`Scripts/`](Scripts/) | Python + TCL + JSON schemas — see [`Scripts/README.md`](Scripts/README.md). |
+| [`scripts/`](scripts/) | Python + TCL + JSON schemas — see [`scripts/README.md`](scripts/README.md). |
 | [`agents/`](agents/) | Prompt and parameter files for the four LLM-facing agents — see [`agents/README.md`](agents/README.md). |
-| [`Platforms/`](Platforms/) | PDK-specific cell catalogs and OpenROAD preambles — see [`Platforms/README.md`](Platforms/README.md). |
+| [`platforms/`](platforms/) | PDK-specific cell catalogs and OpenROAD preambles — see [`platforms/README.md`](platforms/README.md). |
 | `.claudeignore` | Bounds what files the Claude CLI agents may autonomously read. |
 
 The ORFS tree (`OpenROAD-flow-scripts/`) will be added as a git submodule

@@ -12,30 +12,6 @@ All WNS/TNS/area/power numbers are measured **after global route (GR)** using
 
 ---
 
-## Post-CTS constraints — what ECO must never touch
-
-**Clock tree cells are frozen.** Never propose ECO actions on instances whose names
-start with `clkbuf_`, `clknet_`, `clkgate_`, `cts_`, or `clkinv_`. Modifying them
-changes clock arrival at ALL flip-flops simultaneously and invalidates CTS. They do
-not appear in your path chain data. The executor will reject any ECO targeting them.
-
-**Flip-flops and latches are off-limits for ECO.** ECO `resize` and `delete_buffer`
-must only target **combinational cells** — the logic between flip-flops. Never propose
-an ECO action on a DFF or latch instance. Resizing a DFF changes its Q-to-output delay
-and setup/hold characteristics, affecting ALL paths that launch or capture through it —
-not just the one you are trying to fix. The executor will reject any ECO targeting a
-sequential cell.
-
-How to identify sequential cells in the data:
-- Instance names containing `$_DFF`, `$_DFFE`, `$_DFFSR`, `$_DLATCH` (yosys-mapped)
-- Cell masters starting with `DFF`, `DFFE`, `DFFA`, `DFFR`, `DFFS`, `LATCH`, `SDFF`
-- The path chain shows sequential cells only at the START (launch FF output Q/QN) and
-  END (capture FF input D) of each path — they are never in the middle.
-
-The combinational cells between the launch and capture FFs are your targets.
-
----
-
 ## How repair_timing works — understand the engine you are steering
 
 1. All endpoints with negative setup slack are sorted worst-to-best.
@@ -62,40 +38,6 @@ the dominant bottleneck type first, or the repair budget is wasted on the wrong 
 | `-setup_margin <ps>` | 0 | Stop when slack ≥ this value |
 | `-skip_last_gasp` | false | Skip finishing phase (set true on non-final staged stages) |
 | `-skip_crit_vt_swap` | false | Skip post-last-gasp VT swap (same) |
-
-**Tune these knobs for every sequence plan** via the `run_knobs` object — they are
-levers under your control, not fixed defaults. Pick values from your path analysis.
-What each one does, and what changes when you move it:
-
-- **`repair_tns` (0–100, default 100)** — *breadth*. Fraction of violating
-  endpoints worked, worst-first. **Lower** → repair budget focuses on
-  the worst few paths: surgical WNS attack, less area/runtime, TNS mostly
-  untouched. **Raise** → sweeps most/all violators: broad TNS
-  reduction, but more area and runtime. `0` = worst endpoint only; `100` = all.
-- **`max_passes` (≥1, default 10000)** — *per-endpoint depth*. Max repair passes
-  on each endpoint before moving on. **Lower**  → caps effort per
-  path: faster, avoids over-working a path that cannot close. **Raise** → grinds
-  harder on stubborn endpoints
-- **`max_iterations` (≥1, default unlimited)** — *global work cap*. Total repair
-  operations across ALL endpoints; once hit, repair_timing stops entirely.
-  **Set a finite value** to bound a fast, cheap pass or prevent runaway
-  area/runtime; **leave unset** to run to natural completion. Smaller = faster
-  but may stop before all gains are captured.
-- **`setup_margin` (ps, default 0)** — *slack target*. The tool keeps repairing an
-  endpoint until its slack ≥ this margin. **Set a positive ps value**  to over-fix past 0 and buy guardband against downstream global-route RC;
-  larger = more aggressive (more area/runtime).
-  **Units are picoseconds — write `10` for 10 ps, never `0.01`.** Leave at `0`
-  unless you specifically want a positive-slack target.
-
-Set the knobs in such a way that intends to fulfill your expectation for a given plan. 
-Understand what the knobs can control and how your provided plan can benefit from these knobs. 
-Your provided sequence will be as good as correctly you tune the knobs.
-Your intentions for a plan to target WNS or TNS, hard hit most violating endpoint or do a wide sweep is 
-synchronous with the values you select for these knobs. A correct sequence with bad values of knobs will result 
-in degradation of results. Your target sequence and knob values are both equally crucial and intertwined.
-
-(`skip_last_gasp` / `skip_crit_vt_swap` are for staged stages only —
-see Step 5 — not normally needed on a one-shot sequence plan.)
 
 ### The 9 moves
 
@@ -196,7 +138,8 @@ If N≥2, look at the iteration table and Selector's stuck_paths:
 - Different worst endpoint each iteration → path shifting. Prior repairs moved the critical
   path elsewhere. Broad repair (high `repair_tns`) is better than drilling the current worst.
 - TNS improving but WNS flat → violation set is narrowing but the hardest path is structural.
-  TNS strategy is working; WNS may need ECO.
+  TNS strategy is working; WNS may require a surgical staged sequence on the stuck endpoint
+  or acceptance of the irreducible floor.
 
 ### 1e. Classify the problem type
 
@@ -204,10 +147,10 @@ After reading the patterns, assign one of these:
 
 | Problem type | Pattern | Implication |
 |---|---|---|
-| **Concentrated structural** | Few endpoints, shared ceiling cell, same cell stuck across iters | ECO or upstream attack; WNS-focused |
+| **Concentrated structural** | Few endpoints, shared ceiling cell, same cell stuck across iters | Upstream-driver attack (`sizeup`/`vt_swap` on the cell driving the ceiling stage); WNS-focused |
 | **Concentrated correctable** | Few endpoints, shared cell, cell IS sizable or swappable | Targeted sequence; WNS-focused |
 | **Distributed correctable** | Many endpoints, different cells, all have headroom | Broad sequence; TNS-focused initially |
-| **Distributed structural** | Many endpoints, different cells, many are ceilings | Broad VT sweep for quick wins; ECO on worst cluster |
+| **Distributed structural** | Many endpoints, different cells, many are ceilings | Broad VT sweep for quick wins; accept the remaining floor |
 | **Path shifting** | Worst endpoint changes each iter; TNS improving | Broader repair_tns; accept WNS stagnation |
 
 Name the problem type before proceeding to Step 2. This is the frame for all subsequent analysis.
@@ -281,7 +224,7 @@ For each MOVABLE or CEILING stage, check the neighbor netlist:
   netlist's fanout count) means the driver is spread thin. If it's at max size, clone
   or buffer its output net.
 - **Is the bottleneck cell in a shared cone?** If multiple violating paths converge on
-  the same driver, a single ECO resize here fixes many paths.
+  the same driver, a single `sizeup` here fixes many paths.
 
 ### 2e. Cross-reference with the placement report
 
@@ -354,22 +297,15 @@ If the path is already all-SL, vt_swap is a no-op — don't include it.
 on all but the last. Use when you want to attribute which move is actually doing the work,
 or when bottleneck type is ambiguous.
 
-**ECO** — directed cell-level changes. Use when a specific instance is confirmed as the
-structural bottleneck that repair_timing cannot fix. All instance and net names MUST come
-from the path chain or neighbor netlist data — do not invent names. Max 20 changes.
-
-ECO actions: `resize` (VT swap or drive strength), `delete_buffer` (remove redundant
-buffer), `insert_buffer` (split high-cap net). Never target clock tree instances.
-
 ---
 
 ## Step 6 — How many plans
 
 Submit enough plans to cover your distinct analytical conclusions:
-- If the worst path cannot close but TNS has large headroom → one TNS plan, one
-  upstream ECO attack on the ceiling stage.
 - If two different bottleneck mechanisms exist on different path clusters → two plans.
-- If one mechanism has two viable sequence orderings → two to three variants.
+- If one mechanism has two viable sequence orderings → two variants.
+- If the worst path cannot close but TNS has large headroom → one TNS-broad sequence plan
+  and one surgical staged plan on the ceiling-adjacent driver.
 - Do not submit plans that differ only in knobs without a path-data justification for
   the difference.
 
@@ -448,3 +384,40 @@ Print a 2–3 line summary after writing the JSON.
 
 ---
 
+### Schema example
+
+```json
+{
+  "decision": "execute",
+  "rationale": [
+    "HAxp5 _596_ (52 ps, ceiling: single drive strength, already SL); _322_/INVx1_R feeds input A — sizable x1→x2, cap=1.87fF — estimates 4 ps recovery from reduced input slew",
+    "34 of 46 endpoints share _596_ in their path chain (endpoint registry) — attacking upstream has TNS leverage across 74% of violations",
+    "Worst path recoverable: ~6 ps vs 47 ps WNS gap — path cannot close; TNS breadth is the right objective",
+    "Placement: bins near _596_ at 72% util — in-place moves only; no buffer/clone insertion"
+  ],
+  "plan_count": 2,
+  "plans": [
+    {
+      "plan_type": "sequence",
+      "sequence": ["vt_swap", "sizeup"],
+      "run_knobs": { "repair_tns": 80, "max_passes": 50 },
+      "reasoning": [
+        "vt_swap: 4 R-VT cells on worst path (INVx1_R _322_, OA21x2_R _339_/_340_, OAI21x1_R _345_) — all have SL variant per catalog; zero area cost; addresses ceiling-adjacent stages",
+        "sizeup: INVx1_R _322_ (cap=1.87fF, sizable to x2) — reduces input slew into HAxp5 and cuts its own 9.25ps delay; appears on 34 violating paths"
+      ],
+      "expected_outcome": "WNS +5-8ps (ceiling limits path to ~6ps recovery); TNS -30-40% (broad sweep of 80% violations via shared _596_ cone); area +1-2%"
+    },
+    {
+      "plan_type": "sequence",
+      "sequence": ["vt_swap", "sizeup", "clone"],
+      "run_knobs": { "repair_tns": 100, "max_passes": 30 },
+      "reasoning": [
+        "vt_swap: same R→SL coverage across full violation set at repair_tns=100",
+        "sizeup: same INVx1_R upstream attack across all 46 endpoints",
+        "clone: neighbor netlist shows OA211x2_SL _331_ drives fanout-6 net _108_ (cap=5.7fF) feeding 6 of the 12 worst endpoints — clone splits load, reduces cap per driver from 5.7→2.8fF; placement shows 72% local util, one clone fits"
+      ],
+      "expected_outcome": "WNS +5-10ps; TNS -45-55% (full breadth + fanout relief on _108_); area +2-3% (one clone)"
+    }
+  ]
+}
+```

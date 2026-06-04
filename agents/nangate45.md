@@ -41,7 +41,7 @@ Drive strengths are **integers only** (no fractional or variant forms):
 
 Sizes monotonically increase: `X1 < X2 < X4 < X8 < X16 < X32`.
 Not all cell families have all sizes — most logic gates stop at `X4`.
-Use the cell catalog XML (`Platforms/nangate45/cell_catalog.xml`) or query utility
+Use the cell catalog XML (`platforms/nangate45/cell_catalog.xml`) or query utility
 to check what is available for a specific family before proposing a resize.
 
 ---
@@ -117,8 +117,8 @@ correct strategy is either:
 Use the cell catalog XML directly, or run:
 
 ```bash
-python3 Scripts/python/utils/query_cell_catalog.py --cells INV_X16
-python3 Scripts/python/utils/query_cell_catalog.py --cells "BUF_X32,NAND2_X2"
+python3 scripts/python/utils/query_cell_catalog.py --cells INV_X16
+python3 scripts/python/utils/query_cell_catalog.py --cells "BUF_X32,NAND2_X2"
 ```
 
-(The query utility must support the PDK's regex; see `Scripts/python/pdk_configs/nangate45.py`.)
+(The query utility must support the PDK's regex; see `scripts/python/pdk_configs/nangate45.py`.)

@@ -1,24 +1,29 @@
-# generate_placement_report.tcl
+# generate_base_artifacts.tcl
 #
-# Generate a placement/floorplan report for LLM planner context.
-# Reports die dimensions, spatial utilization grid, critical path cell
-# locations with local density, worst-path bounding box, and free row
-# slot count.  All configuration via environment variables.
+# Base-stage combined artifact generator: one Docker invocation, one OpenROAD
+# session. Produces the full timing/area/power/worst-paths/metrics set AND
+# the placement report from the raw post-CTS base_cts.odb in one shot.
 #
-# Required:
-#   INPUT_DB    - path to input .odb file
-#   SDC_FILE    - path to .sdc constraints file
-#   OUTPUT_DIR  - directory to write the report into
-#   LEF_DIR     - directory containing ASAP7 .lef files
-#   LIB_DIR     - directory containing ASAP7 .lib files
-#   SETRC_TCL   - path to platform setRC.tcl
+# Self-contained — no `source` calls to other generate_*.tcl files. Uses
+# placement parasitics (raw post-CTS ODB has no GR).
 #
-# Optional:
-#   STAGE_TAG       - label prefix for output filenames (default: base)
-#   GRID_ROWS       - utilization grid rows (default: 5)
-#   GRID_COLS       - utilization grid columns (default: 5)
+# Required env vars:
+#   INPUT_DB     - raw post-CTS ODB (base/base_cts.odb)
+#   SDC_FILE     - post-CTS SDC
+#   OUTPUT_DIR   - directory to write artifacts into
+#   LEF_DIR, LIB_DIR, SETRC_TCL, PDK_PREAMBLE
+#
+# Optional env vars:
+#   STAGE_TAG       - output filename prefix (default: "base")
+#   NWORST          - worst-endpoint count for timing paths (default: 50)
+#   GRID_ROWS       - placement-grid rows (default: 5)
+#   GRID_COLS       - placement-grid cols (default: 5)
 #   DENSITY_RADIUS  - local-density half-window in um (default: 20)
-#   NWORST_PATHS    - number of worst paths to extract for bounding box (default: 5)
+#   NWORST_PATHS    - worst paths to extract for critical-path bbox (default: 5)
+
+# ---------------------------------------------------------------------------
+# Env helpers
+# ---------------------------------------------------------------------------
 
 proc require_env {var} {
     if {![info exists ::env($var)] || $::env($var) eq ""} {
@@ -41,44 +46,145 @@ set lef_dir    [require_env LEF_DIR]
 set lib_dir    [require_env LIB_DIR]
 set setrc_tcl  [require_env SETRC_TCL]
 
-set stage_tag      [optional_env STAGE_TAG "default"]
+set stage_tag      [optional_env STAGE_TAG "base"]
+set nworst         [optional_env NWORST 50]
 set grid_rows      [optional_env GRID_ROWS 5]
 set grid_cols      [optional_env GRID_COLS 5]
 set density_radius [optional_env DENSITY_RADIUS 20]
 set nworst_paths   [optional_env NWORST_PATHS 5]
 
+if {![file exists $input_db]} { error "INPUT_DB not found: $input_db" }
+if {![file exists $sdc_file]} { error "SDC_FILE not found: $sdc_file" }
+
 file mkdir $output_dir
 
-# --- Load libraries and design ---
-# Skipped when sourced from within an existing OpenROAD session (design already loaded).
-# Set placement_report_skip_load 1 before sourcing to skip this block.
-if {![info exists placement_report_skip_load] || !$placement_report_skip_load} {
-    if {![file exists $input_db]} { error "INPUT_DB not found: $input_db" }
-    if {![file exists $sdc_file]}  { error "SDC_FILE not found: $sdc_file" }
+# ---------------------------------------------------------------------------
+# Load design once. Raw post-CTS → placement parasitics.
+# ---------------------------------------------------------------------------
 
-    # PDK-specific LEF + Liberty (platforms/<pdk>/preamble.tcl)
-    source [require_env PDK_PREAMBLE]
+source [require_env PDK_PREAMBLE]
 
-    puts "Reading DB: $input_db"
-    read_db $input_db
-    puts "Reading SDC: $sdc_file"
-    read_sdc $sdc_file
-    source $setrc_tcl
-    # Standalone path: assumes caller passes an after-GR ODB. For raw
-    # post-CTS ODBs, use generate_base_artifacts.tcl instead.
-    set_propagated_clock [all_clocks]
-    estimate_parasitics -global_routing
+puts "Reading DB:  $input_db"
+read_db $input_db
+puts "Reading SDC: $sdc_file"
+read_sdc $sdc_file
+source $setrc_tcl
+
+estimate_parasitics -placement
+
+# ===========================================================================
+# PART A — timing/area/power/worst-paths/metrics
+# ===========================================================================
+
+set wns [sta::worst_slack -max]
+set tns [sta::total_negative_slack -max]
+
+sta::redirect_string_begin
+report_checks -path_delay max -format full_clock_expanded \
+    -fields {slew capacitance input_pin net} -digits 4 \
+    -endpoint_path_count 5 -group_path_count [expr {$nworst * 5}] \
+    -sort_by_slack -slack_max 0.0
+set worst_paths_report [sta::redirect_string_end]
+
+sta::redirect_string_begin
+report_design_area
+set area_report [sta::redirect_string_end]
+
+sta::redirect_string_begin
+report_power -digits 3
+set power_report [sta::redirect_string_end]
+
+# Count all violating endpoints.
+set violating_endpoints 0
+if {[catch {
+    sta::redirect_string_begin
+    report_checks -path_delay max -format full_clock_expanded \
+        -fields {slew capacitance input_pin net} -digits 4 \
+        -endpoint_path_count 1 -group_path_count 100000 \
+        -sort_by_slack -slack_max 0.0
+    set viol_rpt [sta::redirect_string_end]
+    set violating_endpoints [regexp -all -line {^Startpoint:} $viol_rpt]
+} err]} {
+    puts "Warning: failed to count violating endpoints: $err"
 }
 
+set area_um2 ""
+set util_percent ""
+if {[regexp {Design area ([0-9.eE+-]+) um\^2 ([0-9.eE+-]+)% utilization\.} $area_report -> area_val util_val]} {
+    set area_um2 $area_val
+    set util_percent $util_val
+}
+
+set total_power ""
+foreach line [split $power_report "\n"] {
+    if {[regexp {^Total\s+([0-9.eE+-]+)\s+([0-9.eE+-]+)\s+([0-9.eE+-]+)\s+([0-9.eE+-]+)} $line -> p_int p_switch p_leak p_total]} {
+        set total_power $p_total
+        break
+    }
+}
+
+set timing_file  [file join $output_dir ${stage_tag}_timing.txt]
+set worst_file   [file join $output_dir ${stage_tag}_worst_paths.txt]
+set area_file    [file join $output_dir ${stage_tag}_area.rpt]
+set power_file   [file join $output_dir ${stage_tag}_power.rpt]
+set netlist_file [file join $output_dir ${stage_tag}_netlist.v]
+set viol_file    [file join $output_dir violating_endpoint.txt]
+set metrics_csv  [file join $output_dir ${stage_tag}_metrics.csv]
+
+set fh [open $timing_file w]
+puts $fh [format "WNS: %.6f\nTNS: %.6f" $wns $tns]
+close $fh
+
+set fh [open $worst_file w]
+puts $fh $worst_paths_report
+close $fh
+
+set fh [open $area_file w]
+puts $fh $area_report
+close $fh
+
+set fh [open $power_file w]
+puts $fh $power_report
+close $fh
+
+set fh [open $viol_file w]
+puts $fh $violating_endpoints
+close $fh
+
+write_verilog $netlist_file
+
+set need_header [expr {![file exists $metrics_csv]}]
+set fh [open $metrics_csv a+]
+if {$need_header} {
+    puts $fh "stage,wns,tns,area_um2,util_percent,power_mw,violating_endpoints,input_db,sdc_file"
+}
+puts $fh [format {"%s",%.6f,%.6f,%s,%s,%s,%d,"%s","%s"} \
+    $stage_tag $wns $tns $area_um2 $util_percent $total_power \
+    $violating_endpoints $input_db $sdc_file]
+close $fh
+
+puts "Generated timing/area/power artifacts in: $output_dir"
+puts "  $timing_file"
+puts "  $worst_file"
+puts "  $area_file"
+puts "  $power_file"
+puts "  $viol_file"
+puts "  $netlist_file"
+puts "  $metrics_csv"
+
 # ===========================================================================
-# 1. Die and core dimensions
+# PART B — placement report (die/core, spatial utilization grid, critical
+#           path cell locations, bounding box, free slot estimate,
+#           check_placement output)
 # ===========================================================================
+
+# --- 1. Die and core dimensions ---
 set db   [ord::get_db]
 set chip [$db getChip]
 set blk  [$chip getBlock]
 set die  [$blk getDieArea]
 
-# OpenROAD coordinates are in DBU; 1 um = 1000 DBU for ASAP7
+# OpenROAD coordinates are in DBU; 1 um = 1000 DBU for both asap7 and nangate45.
 set dbu_per_um 1000.0
 
 set die_x0 [expr {[$die xMin] / $dbu_per_um}]
@@ -88,7 +194,6 @@ set die_y1 [expr {[$die yMax] / $dbu_per_um}]
 set die_w  [expr {$die_x1 - $die_x0}]
 set die_h  [expr {$die_y1 - $die_y0}]
 
-# Core area (first row group bounding box, or use die if core not set)
 set core [$blk getCoreArea]
 set core_x0 [expr {[$core xMin] / $dbu_per_um}]
 set core_y0 [expr {[$core yMin] / $dbu_per_um}]
@@ -99,10 +204,7 @@ set core_h  [expr {$core_y1 - $core_y0}]
 
 puts "Die: ${die_w}x${die_h} um  Core: ${core_w}x${core_h} um"
 
-# ===========================================================================
-# 2. Collect all placed cell locations and areas
-# ===========================================================================
-# cell_x/y in um; cell_area in um^2; cell_name -> list {x y area}
+# --- 2. Collect all placed cell locations and areas ---
 array set cell_info {}
 set total_placed 0
 set total_cell_area 0.0
@@ -123,15 +225,11 @@ foreach inst [$blk getInsts] {
 
 puts "Placed cells: $total_placed  Total cell area: [format %.2f $total_cell_area] um^2"
 
-# ===========================================================================
-# 3. Spatial utilization grid  (grid_rows x grid_cols)
-# ===========================================================================
-# Each grid cell tracks sum of placed cell area.
+# --- 3. Spatial utilization grid ---
 set grid_cell_area [expr {$core_w * $core_h / ($grid_rows * $grid_cols)}]
 set col_w [expr {$core_w / double($grid_cols)}]
 set row_h [expr {$core_h / double($grid_rows)}]
 
-# grid_occ(r,c) = sum of placed-cell areas in that bin (um^2)
 for {set r 0} {$r < $grid_rows} {incr r} {
     for {set c 0} {$c < $grid_cols} {incr c} {
         set grid_occ($r,$c) 0.0
@@ -142,7 +240,6 @@ foreach inst_name [array names cell_info] {
     lassign $cell_info($inst_name) cx cy area
     set c [expr {int(($cx - $core_x0) / $col_w)}]
     set r [expr {int(($cy - $core_y0) / $row_h)}]
-    # clamp to grid bounds
     if {$c < 0} {set c 0}
     if {$c >= $grid_cols} {set c [expr {$grid_cols - 1}]}
     if {$r < 0} {set r 0}
@@ -150,10 +247,7 @@ foreach inst_name [array names cell_info] {
     set grid_occ($r,$c) [expr {$grid_occ($r,$c) + $area}]
 }
 
-# ===========================================================================
-# 4. Identify critical path cells and their locations
-# ===========================================================================
-# Get worst $nworst_paths paths by re-running report_checks
+# --- 4. Identify critical path cells and their locations ---
 sta::redirect_string_begin
 report_checks -path_delay max -format full_clock_expanded \
     -fields {slew capacitance input_pin net} -digits 4 \
@@ -161,11 +255,6 @@ report_checks -path_delay max -format full_clock_expanded \
     -sort_by_slack -slack_max 0.0
 set worst_rpt [sta::redirect_string_end]
 
-# Extract instance names from path lines:
-# Lines like:  <delay>  <...>  inst_name/pin_name  (net_name)
-# We target the "inst/pin" column which starts at col 0 after leading spaces
-# The full_clock_expanded format has the instance column clearly identifiable.
-# We stop at "data arrival time" to skip clock path cells.
 set path_insts {}
 set in_data_path 0
 foreach line [split $worst_rpt "\n"] {
@@ -177,13 +266,7 @@ foreach line [split $worst_rpt "\n"] {
         set in_data_path 0
         continue
     }
-    # Match pin references: leading whitespace, optional delay, then inst/pin
-    # Format: "  <float>  <float>  <float>  inst_name/pin"
-    # Lines with pin references have direction char (^ or v) before inst/pin
-    # Format: "  cap  slew  delay  time  ^ inst_name/pin_name  (master)"
-    # Instance names may include $, _, digits, letters, brackets
     if {[regexp {[\^v]\s+([A-Za-z_\$\[][A-Za-z0-9_.\$\[\]]*)/[A-Za-z_][A-Za-z0-9_.]*} $line -> inst]} {
-        # Skip clock buffers
         if {[regexp {^clkbuf_} $inst]} continue
         if {[lsearch -exact $path_insts $inst] < 0} {
             lappend path_insts $inst
@@ -191,7 +274,6 @@ foreach line [split $worst_rpt "\n"] {
     }
 }
 
-# For each critical-path inst, look up location and compute local density
 set crit_cells {}
 set bbox_xmin  1e18
 set bbox_ymin  1e18
@@ -202,13 +284,11 @@ foreach inst_name $path_insts {
     if {![info exists cell_info($inst_name)]} continue
     lassign $cell_info($inst_name) cx cy area
 
-    # Bounding box update
     if {$cx < $bbox_xmin} {set bbox_xmin $cx}
     if {$cy < $bbox_ymin} {set bbox_ymin $cy}
     if {$cx > $bbox_xmax} {set bbox_xmax $cx}
     if {$cy > $bbox_ymax} {set bbox_ymax $cy}
 
-    # Local density: sum area of all cells within density_radius
     set local_occ  0.0
     set win_area   [expr {(2.0 * $density_radius) * (2.0 * $density_radius)}]
     set x0 [expr {$cx - $density_radius}]
@@ -223,7 +303,6 @@ foreach inst_name $path_insts {
     }
     set local_density [expr {$local_occ / $win_area * 100.0}]
 
-    # Grid bin
     set col [expr {int(($cx - $core_x0) / $col_w)}]
     set row [expr {int(($cy - $core_y0) / $row_h)}]
     if {$col < 0} {set col 0}
@@ -235,7 +314,6 @@ foreach inst_name $path_insts {
 }
 
 if {$bbox_xmin > 1e17} {
-    # No critical cells found with placement info; set bbox to full core
     set bbox_xmin $core_x0 ; set bbox_ymin $core_y0
     set bbox_xmax $core_x1 ; set bbox_ymax $core_y1
 }
@@ -245,11 +323,7 @@ set bbox_area [expr {$bbox_w * $bbox_h}]
 set core_area [expr {$core_w * $core_h}]
 set bbox_pct  [expr {$core_area > 0 ? $bbox_area / $core_area * 100.0 : 0.0}]
 
-# ===========================================================================
-# 5. Free row slot estimation
-# ===========================================================================
-# Use report_design_area to get authoritative utilization, then derive free area.
-# ASAP7 standard cell height = 2.16 um (7.5-track cell @ 0.288 um pitch × 7.5).
+# --- 5. Free row slot estimation ---
 sta::redirect_string_begin
 report_design_area
 set area_rpt [sta::redirect_string_end]
@@ -261,12 +335,10 @@ if {[regexp {Design area ([0-9.eE+-]+) um\^2 ([0-9.eE+-]+)% utilization} $area_r
     set util_pct_da [expr {double($uv)}]
 }
 
-# ASAP7 single-height row = 2.16 um
+# ASAP7 single-height row = 2.16 um (nangate45 = 1.40 um; value is estimate-only)
 set row_height_um 2.16
 set row_count     [expr {int(ceil($core_h / $row_height_um))}]
 
-# Derive total placeable area from utilization and placed-cell area
-# util% = placed_cell_area / total_placeable_area * 100
 set total_row_area 0.0
 if {$util_pct_da > 0} {
     set total_row_area [expr {$area_um2_da / ($util_pct_da / 100.0)}]
@@ -277,22 +349,17 @@ if {$util_pct_da > 0} {
 set free_area_um2 [expr {$total_row_area - $area_um2_da}]
 if {$free_area_um2 < 0} { set free_area_um2 0.0 }
 
-# Express free area as number of x4-drive-strength standard cells.
-# ASAP7 BUFx4 footprint ≈ 0.864 um wide × 2.16 um tall = ~1.87 um^2
+# ASAP7 BUFx4 footprint ≈ 0.864 x 2.16 = ~1.87 um²
 set std_cell_area_est 1.87
 set free_slots_est [expr {int($free_area_um2 / $std_cell_area_est)}]
 set free_pct [expr {$total_row_area > 0 ? $free_area_um2 / $total_row_area * 100.0 : 0.0}]
 
-# ===========================================================================
-# 6. Run detailed_placement and capture its output
-# ===========================================================================
+# --- 6. Placement check output ---
 sta::redirect_string_begin
 check_placement -verbose
 set placement_check_rpt [sta::redirect_string_end]
 
-# ===========================================================================
-# 7. Assemble and write the report
-# ===========================================================================
+# --- 7. Assemble and write the report ---
 set report_file [file join $output_dir ${stage_tag}_placement_report.txt]
 set fh [open $report_file w]
 
@@ -301,7 +368,6 @@ puts $fh "PLACEMENT REPORT  stage=${stage_tag}"
 puts $fh "================================================================="
 puts $fh ""
 
-# --- Die / Core ---
 puts $fh "--- Die & Core Dimensions ---"
 puts $fh [format "Die  : %.3f x %.3f um  (LL: %.3f,%.3f  UR: %.3f,%.3f)" \
     $die_w $die_h $die_x0 $die_y0 $die_x1 $die_y1]
@@ -310,7 +376,6 @@ puts $fh [format "Core : %.3f x %.3f um  (LL: %.3f,%.3f  UR: %.3f,%.3f)" \
 puts $fh [format "Rows : %d  (row height: %.3f um)" $row_count $row_height_um]
 puts $fh ""
 
-# --- Area summary ---
 puts $fh "--- Cell Area Summary ---"
 puts $fh [format "Total placed cells      : %d" $total_placed]
 puts $fh [format "Total placed cell area  : %.2f um^2" $total_cell_area]
@@ -320,14 +385,12 @@ puts $fh [format "Free site area          : %.2f um^2  (%.1f%% free)" \
 puts $fh [format "Free slots (est. x4 BUF): ~%d cells" $free_slots_est]
 puts $fh ""
 
-# --- Spatial utilization grid ---
 puts $fh [format "--- Spatial Utilization Grid (%dx%d)  (row 0=bottom, col 0=left) ---" \
     $grid_rows $grid_cols]
 puts $fh [format "Each bin is %.2f x %.2f um  (bin area: %.2f um^2)" \
     $col_w $row_h [expr {$col_w * $row_h}]]
 puts $fh ""
 
-# Header row
 set hdr "     |"
 for {set c 0} {$c < $grid_cols} {incr c} {
     append hdr [format " col%-2d|" $c]
@@ -335,7 +398,6 @@ for {set c 0} {$c < $grid_cols} {incr c} {
 puts $fh $hdr
 puts $fh [string repeat "-" [string length $hdr]]
 
-# Print from top row down (row grid_rows-1 first for natural orientation)
 for {set r [expr {$grid_rows - 1}]} {$r >= 0} {incr r -1} {
     set line [format "row%-2d|" $r]
     for {set c 0} {$c < $grid_cols} {incr c} {
@@ -348,7 +410,6 @@ for {set r [expr {$grid_rows - 1}]} {$r >= 0} {incr r -1} {
 }
 puts $fh ""
 
-# --- Critical path cell locations ---
 puts $fh [format "--- Critical Path Cells (top %d worst paths) ---" $nworst_paths]
 if {[llength $crit_cells] == 0} {
     puts $fh "  (no critical path cells with placement information found)"
@@ -364,7 +425,6 @@ if {[llength $crit_cells] == 0} {
 }
 puts $fh ""
 
-# --- Worst-path bounding box ---
 puts $fh "--- Critical Path Bounding Box ---"
 puts $fh [format "  BBox LL : (%.3f, %.3f) um" $bbox_xmin $bbox_ymin]
 puts $fh [format "  BBox UR : (%.3f, %.3f) um" $bbox_xmax $bbox_ymax]
@@ -372,7 +432,6 @@ puts $fh [format "  BBox W x H : %.3f x %.3f um" $bbox_w $bbox_h]
 puts $fh [format "  BBox area  : %.2f um^2  (%.1f%% of core)" $bbox_area $bbox_pct]
 puts $fh ""
 
-# --- Placement check output ---
 puts $fh "--- Placement Check (check_placement -verbose) ---"
 if {[string trim $placement_check_rpt] eq ""} {
     puts $fh "  (no output — placement is clean)"
@@ -385,3 +444,4 @@ puts $fh "================================================================="
 close $fh
 
 puts "Placement report written: $report_file"
+puts "Base artifacts complete."

@@ -42,28 +42,11 @@ PDK_PATTERNS = {
 CELL_DEF_RE = re.compile(r'^\s*cell\s*\(\s*["\']?([A-Za-z0-9_]+)["\']?\s*\)')
 
 
-def is_dont_use(cell_name: str, pdk: str) -> bool:
-    """Exclude DONT_USE_CELLS so the catalog never lists forbidden cells as
-    available sizing/VT targets. Mirrors the ORFS platform config.mk
-    DONT_USE_CELLS globs (which the standalone OpenROAD process never sees)."""
-    if pdk == "asap7":
-        # config.mk: *x1p*_ASAP7*  *xp*_ASAP7*  SDF*  ICG*
-        return ("x1p" in cell_name or "xp" in cell_name
-                or cell_name.startswith("SDF") or cell_name.startswith("ICG"))
-    return False
-
-
 def parse_cells_from_lib(lib_path: pathlib.Path) -> List[str]:
-    """Return every cell name found in a Liberty file (.lib or .lib.gz)."""
+    """Return every cell name found in a Liberty file."""
     names: List[str] = []
     try:
-        if lib_path.suffix == ".gz":
-            import gzip
-            with gzip.open(lib_path, "rt", errors="replace") as fh:
-                text = fh.read()
-        else:
-            text = lib_path.read_text(errors="replace")
-        for line in text.splitlines():
+        for line in lib_path.read_text(errors="replace").splitlines():
             m = CELL_DEF_RE.match(line)
             if m:
                 names.append(m.group(1))
@@ -100,22 +83,17 @@ def size_sort_key(size: str) -> float:
 def build_catalog(lib_dir: pathlib.Path, pdk: str) -> Dict[str, List[str]]:
     """Scan lib_dir, extract (family, size) pairs, return sorted catalog."""
     catalog: Dict[str, set] = defaultdict(set)
-    lib_files = sorted(lib_dir.rglob("*.lib")) + sorted(lib_dir.rglob("*.lib.gz"))
+    lib_files = sorted(lib_dir.rglob("*.lib"))
     if not lib_files:
-        print(f"[ERROR] No .lib/.lib.gz files found under {lib_dir}", file=sys.stderr)
+        print(f"[ERROR] No .lib files found under {lib_dir}", file=sys.stderr)
         sys.exit(1)
-    print(f"Scanning {len(lib_files)} liberty file(s) in {lib_dir}")
-    n_skipped = 0
+    print(f"Scanning {len(lib_files)} .lib file(s) in {lib_dir}")
     for f in lib_files:
         for cell in parse_cells_from_lib(f):
-            if is_dont_use(cell, pdk):
-                n_skipped += 1
-                continue
             result = extract_family_size(cell, pdk)
             if result:
                 family, size = result
                 catalog[family].add(size)
-    print(f"Skipped {n_skipped} don't-use cell(s) (DONT_USE_CELLS filter)")
 
     return {
         family: sorted(sizes, key=size_sort_key)
