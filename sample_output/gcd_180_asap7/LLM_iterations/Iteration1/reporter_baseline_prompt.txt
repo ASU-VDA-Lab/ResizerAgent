@@ -1,0 +1,807 @@
+Design gcd_180 — Reporter Data
+
+Clock domains (multi-clock designs: WNS/severity are always relative to the path's OWN clock period, not the first one):
+  core_clock: period=180ps  WNS=-67.76ps  violators=240  severity=37.6% ← worst-path clock
+
+Target: WNS ≥ 0 on every clock domain
+
+PDK-SPECIFIC CONSTRAINTS (asap7, multi-VT library with tiers ['SL', 'L', 'R']):
+  - vt_swap is available and moves cells toward the faster tier (e.g. R→L→SL for asap7).
+  - A cell already at the fastest VT (SL) cannot be swapped further.
+
+Base metrics (post-CTS, no repair):
+Design gcd_180: WNS=-67.757 ps, TNS=-1145.036 ps, Area=50 um^2 (85% util), Power=1.8540e-03 W, Violating endpoints=48
+
+Default repair_timing metrics (reference baseline — bar to beat):
+Design gcd_180: WNS=-65.597 ps, TNS=-1243.205 ps, Area=52 um^2 (89% util), Power=2.0730e-03 W, Violating endpoints=48
+
+Default vs Base delta: ΔWNS=+2.2 ps, ΔTNS=-98.2 ps, ΔArea=+2 um^2 (+4% util), ΔViolations=+0
+
+Default-stage global route (post-DPL handoff measurement):
+Global route summary:
+  Wirelength:             1,526 um
+  Vias:                   3,581
+  Routed nets:              495
+  3D usage:              12,359 tracks
+  Overall usage:          23.53 %
+  Overflow (H/V/Tot): 0 / 0 / 0  [clean]
+  Top congested:   M2 52%, M3 44%, M4 11%
+  Max layer reduction: 55.1% (on M7)
+  GR runtime:      0s
+  Routing layers:  M2–M7
+
+Worst-path info (base database, pre-repair):
+
+Number of worst paths: 240 (up to 25 unique endpoints, 5 paths per endpoint)
+Top worst paths summary (columns: inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net):
+  cell_dly_ps = intrinsic gate delay; net_dly_ps = wire RC delay to next stage input;
+  slew_ps = output transition time; cap_fF = output load capacitance; net = connecting net name.
+1) dpath.a_reg.out[4]$_DFFE_PP_ -> resp_msg[13] (output port clocked by core_clock) (slack -67.7570 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[4]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.55  0.07  14.85  1.5331  _009_
+  _312_/Y  INVx2_ASAP7_75t_SL  5.57  0.07  9.50  2.7047  dpath.a_lt_b$in0[4]
+  _590_/SN  HAxp5_ASAP7_75t_SL  33.94  0.08  43.36  3.2081  _047_
+  _326_/Y  OR2x2_ASAP7_75t_SL  17.80  0.03  7.84  0.7920  _103_
+  _327_/Y  AO21x1_ASAP7_75t_SL  12.67  0.05  10.02  1.4326  _104_
+  _331_/Y  OA211x2_ASAP7_75t_SL  22.22  0.66  19.74  5.6024  _108_
+  _389_/Y  OA21x2_ASAP7_75t_SL  14.38  0.02  6.45  0.6499  _164_
+  _393_/Y  OR5x2_ASAP7_75t_SL  23.09  0.17  14.39  1.7622  net41
+  output41/Y  BUFx2_ASAP7_75t_L  12.08  0.01  4.15  0.2284  resp_msg[13]
+Data arrival time: -211.7570
+Data required time: 144.0000
+Slack: -67.7570
+
+2) dpath.a_reg.out[4]$_DFFE_PP_ -> resp_msg[13] (output port clocked by core_clock) (slack -66.6766 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[4]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.55  0.07  14.85  1.5331  _009_
+  _312_/Y  INVx2_ASAP7_75t_SL  5.57  0.07  9.50  2.7047  dpath.a_lt_b$in0[4]
+  _590_/SN  HAxp5_ASAP7_75t_SL  33.94  0.08  43.36  3.2081  _047_
+  _326_/Y  OR2x2_ASAP7_75t_SL  17.80  0.03  7.84  0.7920  _103_
+  _327_/Y  AO21x1_ASAP7_75t_SL  11.59  0.05  10.02  1.4326  _104_
+  _331_/Y  OA211x2_ASAP7_75t_SL  22.22  0.66  19.74  5.6024  _108_
+  _389_/Y  OA21x2_ASAP7_75t_SL  14.38  0.02  6.45  0.6499  _164_
+  _393_/Y  OR5x2_ASAP7_75t_SL  23.09  0.17  14.39  1.7622  net41
+  output41/Y  BUFx2_ASAP7_75t_L  12.08  0.01  4.15  0.2284  resp_msg[13]
+Data arrival time: -210.6766
+Data required time: 144.0000
+Slack: -66.6766
+
+3) dpath.a_reg.out[4]$_DFFE_PP_ -> resp_msg[13] (output port clocked by core_clock) (slack -65.9961 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[4]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.55  0.07  14.85  1.5331  _009_
+  _312_/Y  INVx2_ASAP7_75t_SL  5.57  0.07  9.50  2.7047  dpath.a_lt_b$in0[4]
+  _590_/SN  HAxp5_ASAP7_75t_SL  33.94  0.08  43.36  3.2081  _047_
+  _326_/Y  OR2x2_ASAP7_75t_SL  17.80  0.03  7.84  0.7920  _103_
+  _327_/Y  AO21x1_ASAP7_75t_SL  10.91  0.05  10.02  1.4326  _104_
+  _331_/Y  OA211x2_ASAP7_75t_SL  22.22  0.66  19.74  5.6024  _108_
+  _389_/Y  OA21x2_ASAP7_75t_SL  14.38  0.02  6.45  0.6499  _164_
+  _393_/Y  OR5x2_ASAP7_75t_SL  23.09  0.17  14.39  1.7622  net41
+  output41/Y  BUFx2_ASAP7_75t_L  12.08  0.01  4.15  0.2284  resp_msg[13]
+Data arrival time: -209.9961
+Data required time: 144.0000
+Slack: -65.9961
+
+4) dpath.a_reg.out[6]$_DFFE_PP_ -> resp_msg[13] (output port clocked by core_clock) (slack -63.1967 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[6]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.58  0.07  14.90  1.5445  _011_
+  _314_/Y  INVx2_ASAP7_75t_SL  4.77  0.06  8.32  2.1067  dpath.a_lt_b$in0[6]
+  _588_/SN  HAxp5_ASAP7_75t_SL  38.00  0.15  50.73  3.7908  _041_
+  _330_/Y  OA21x2_ASAP7_75t_SL  17.62  0.08  10.12  1.9772  _107_
+  _335_/Y  AND2x2_ASAP7_75t_SL  12.55  0.12  7.33  1.7359  _112_
+  _386_/Y  OR3x2_ASAP7_75t_SL  17.77  0.12  12.52  2.3444  _161_
+  _389_/Y  OA21x2_ASAP7_75t_SL  11.99  0.02  6.45  0.6499  _164_
+  _393_/Y  OR5x2_ASAP7_75t_SL  23.09  0.17  14.39  1.7622  net41
+  output41/Y  BUFx2_ASAP7_75t_L  12.08  0.01  4.15  0.2284  resp_msg[13]
+Data arrival time: -207.1967
+Data required time: 144.0000
+Slack: -63.1967
+
+5) dpath.a_reg.out[10]$_DFFE_PP_ -> resp_msg[15] (output port clocked by core_clock) (slack -61.9857 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[10]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  30.19  0.15  16.15  1.7972  _015_
+  _318_/Y  INVx2_ASAP7_75t_SL  5.54  0.13  9.65  2.6172  dpath.a_lt_b$in0[10]
+  _584_/SN  HAxp5_ASAP7_75t_SL  44.52  0.25  61.58  4.6468  _029_
+  _342_/Y  AO21x1_ASAP7_75t_SL  19.66  0.04  10.83  1.3854  _119_
+  _343_/Y  OA21x2_ASAP7_75t_R  18.62  0.06  8.21  1.5012  _120_
+  _344_/Y  AND2x2_ASAP7_75t_SL  11.12  0.05  6.79  1.4446  _121_
+  _345_/Y  OAI21x1_ASAP7_75t_R  4.89  0.03  13.24  0.6778  _122_
+  _354_/Y  AO221x1_ASAP7_75t_SL  20.36  0.33  15.42  2.1610  net43
+  output43/Y  BUFx2_ASAP7_75t_L  11.31  0.00  3.98  0.1352  resp_msg[15]
+Data arrival time: -205.9857
+Data required time: 144.0000
+Slack: -61.9857
+
+6) dpath.a_reg.out[4]$_DFFE_PP_ -> resp_msg[9] (output port clocked by core_clock) (slack -61.5473 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[4]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.55  0.07  14.85  1.5331  _009_
+  _312_/Y  INVx2_ASAP7_75t_SL  5.57  0.07  9.50  2.7047  dpath.a_lt_b$in0[4]
+  _590_/SN  HAxp5_ASAP7_75t_SL  33.94  0.08  43.36  3.2081  _047_
+  _326_/Y  OR2x2_ASAP7_75t_SL  17.80  0.03  7.84  0.7920  _103_
+  _327_/Y  AO21x1_ASAP7_75t_SL  12.67  0.05  10.02  1.4326  _104_
+  _331_/Y  OA211x2_ASAP7_75t_SL  22.22  0.69  19.74  5.6024  _108_
+  _405_/Y  OA21x2_ASAP7_75t_SL  15.19  0.07  7.52  1.2934  _176_
+  _406_/Y  XOR2x2_ASAP7_75t_SL  18.22  0.11  8.10  1.5584  net52
+  output52/Y  BUFx2_ASAP7_75t_L  9.92  0.00  3.70  0.1567  resp_msg[9]
+Data arrival time: -205.5473
+Data required time: 144.0000
+Slack: -61.5473
+
+7) dpath.a_reg.out[6]$_DFFE_PP_ -> resp_msg[11] (output port clocked by core_clock) (slack -61.4682 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[6]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.58  0.07  14.90  1.5445  _011_
+  _314_/Y  INVx2_ASAP7_75t_SL  4.77  0.06  8.32  2.1067  dpath.a_lt_b$in0[6]
+  _588_/SN  HAxp5_ASAP7_75t_SL  38.00  0.15  50.73  3.7908  _041_
+  _330_/Y  OA21x2_ASAP7_75t_SL  17.62  0.08  10.12  1.9772  _107_
+  _335_/Y  AND2x2_ASAP7_75t_SL  12.55  0.12  7.33  1.7359  _112_
+  _336_/Y  OR4x1_ASAP7_75t_SL  20.70  0.15  17.31  2.7756  _113_
+  _401_/Y  OA21x2_ASAP7_75t_SL  14.70  0.08  7.41  1.3054  _174_
+  _402_/Y  XOR2x2_ASAP7_75t_SL  18.04  0.06  7.79  1.4255  net39
+  output39/Y  BUFx2_ASAP7_75t_L  9.81  0.00  3.64  0.1328  resp_msg[11]
+Data arrival time: -205.4682
+Data required time: 144.0000
+Slack: -61.4682
+
+8) dpath.a_reg.out[10]$_DFFE_PP_ -> resp_msg[12] (output port clocked by core_clock) (slack -61.0471 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[10]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  30.19  0.15  16.15  1.7972  _015_
+  _318_/Y  INVx2_ASAP7_75t_SL  5.54  0.13  9.65  2.6172  dpath.a_lt_b$in0[10]
+  _584_/SN  HAxp5_ASAP7_75t_SL  44.52  0.27  61.58  4.6468  _029_
+  _370_/Y  OR2x2_ASAP7_75t_SL  20.93  0.50  15.61  4.5111  _146_
+  _398_/Y  OA21x2_ASAP7_75t_SL  15.38  0.11  8.85  2.1259  _172_
+  place116/Y  BUFx3_ASAP7_75t_L  11.16  0.05  5.14  1.3029  net116
+  _399_/Y  OA21x2_ASAP7_75t_SL  9.16  0.05  7.30  1.2024  _173_
+  _400_/Y  XOR2x2_ASAP7_75t_SL  18.14  0.08  8.02  1.5241  net40
+  output40/Y  BUFx2_ASAP7_75t_L  9.97  0.01  3.82  0.2059  resp_msg[12]
+Data arrival time: -205.0471
+Data required time: 144.0000
+Slack: -61.0471
+
+9) dpath.a_reg.out[10]$_DFFE_PP_ -> resp_msg[12] (output port clocked by core_clock) (slack -60.9936 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[10]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  30.19  0.15  16.15  1.7972  _015_
+  _318_/Y  INVx2_ASAP7_75t_SL  5.54  0.13  9.65  2.6172  dpath.a_lt_b$in0[10]
+  _584_/SN  HAxp5_ASAP7_75t_SL  44.52  0.27  61.58  4.6468  _029_
+  _370_/Y  OR2x2_ASAP7_75t_SL  20.93  0.50  15.61  4.5111  _146_
+  _398_/Y  OA21x2_ASAP7_75t_SL  15.38  0.11  8.85  2.1259  _172_
+  place116/Y  BUFx3_ASAP7_75t_L  11.16  0.05  5.14  1.3029  net116
+  _399_/Y  OA21x2_ASAP7_75t_SL  9.11  0.05  7.30  1.2024  _173_
+  _400_/Y  XOR2x2_ASAP7_75t_SL  18.14  0.08  8.02  1.5241  net40
+  output40/Y  BUFx2_ASAP7_75t_L  9.97  0.01  3.82  0.2059  resp_msg[12]
+Data arrival time: -204.9936
+Data required time: 144.0000
+Slack: -60.9936
+
+10) dpath.a_reg.out[10]$_DFFE_PP_ -> resp_msg[12] (output port clocked by core_clock) (slack -60.6230 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[10]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  30.19  0.15  16.15  1.7972  _015_
+  _318_/Y  INVx2_ASAP7_75t_SL  5.54  0.13  9.65  2.6172  dpath.a_lt_b$in0[10]
+  _584_/SN  HAxp5_ASAP7_75t_SL  44.52  0.27  61.58  4.6468  _029_
+  _370_/Y  OR2x2_ASAP7_75t_SL  20.93  0.50  15.61  4.5111  _146_
+  _398_/Y  OA21x2_ASAP7_75t_SL  15.38  0.11  8.85  2.1259  _172_
+  place116/Y  BUFx3_ASAP7_75t_L  11.16  0.05  5.14  1.3029  net116
+  _399_/Y  OA21x2_ASAP7_75t_SL  8.74  0.05  7.30  1.2024  _173_
+  _400_/Y  XOR2x2_ASAP7_75t_SL  18.14  0.08  8.02  1.5241  net40
+  output40/Y  BUFx2_ASAP7_75t_L  9.97  0.01  3.82  0.2059  resp_msg[12]
+Data arrival time: -204.6230
+Data required time: 144.0000
+Slack: -60.6230
+
+11) dpath.a_reg.out[4]$_DFFE_PP_ -> resp_msg[9] (output port clocked by core_clock) (slack -60.4668 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[4]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.55  0.07  14.85  1.5331  _009_
+  _312_/Y  INVx2_ASAP7_75t_SL  5.57  0.07  9.50  2.7047  dpath.a_lt_b$in0[4]
+  _590_/SN  HAxp5_ASAP7_75t_SL  33.94  0.08  43.36  3.2081  _047_
+  _326_/Y  OR2x2_ASAP7_75t_SL  17.80  0.03  7.84  0.7920  _103_
+  _327_/Y  AO21x1_ASAP7_75t_SL  11.59  0.05  10.02  1.4326  _104_
+  _331_/Y  OA211x2_ASAP7_75t_SL  22.22  0.69  19.74  5.6024  _108_
+  _405_/Y  OA21x2_ASAP7_75t_SL  15.19  0.07  7.52  1.2934  _176_
+  _406_/Y  XOR2x2_ASAP7_75t_SL  18.22  0.11  8.10  1.5584  net52
+  output52/Y  BUFx2_ASAP7_75t_L  9.92  0.00  3.70  0.1567  resp_msg[9]
+Data arrival time: -204.4668
+Data required time: 144.0000
+Slack: -60.4668
+
+12) dpath.a_reg.out[10]$_DFFE_PP_ -> resp_msg[11] (output port clocked by core_clock) (slack -60.4606 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[10]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  30.19  0.15  16.15  1.7972  _015_
+  _318_/Y  INVx2_ASAP7_75t_SL  5.54  0.13  9.65  2.6172  dpath.a_lt_b$in0[10]
+  _584_/SN  HAxp5_ASAP7_75t_SL  44.52  0.27  61.58  4.6468  _029_
+  place133/Y  BUFx3_ASAP7_75t_L  19.38  0.02  6.71  0.7304  net133
+  _336_/Y  OR4x1_ASAP7_75t_SL  22.71  0.15  17.31  2.7756  _113_
+  _401_/Y  OA21x2_ASAP7_75t_SL  14.70  0.08  7.41  1.3054  _174_
+  _402_/Y  XOR2x2_ASAP7_75t_SL  18.04  0.06  7.79  1.4255  net39
+  output39/Y  BUFx2_ASAP7_75t_L  9.81  0.00  3.64  0.1328  resp_msg[11]
+Data arrival time: -204.4606
+Data required time: 144.0000
+Slack: -60.4606
+
+13) dpath.a_reg.out[10]$_DFFE_PP_ -> resp_msg[14] (output port clocked by core_clock) (slack -60.1696 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[10]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  30.19  0.15  16.15  1.7972  _015_
+  _318_/Y  INVx2_ASAP7_75t_SL  5.54  0.13  9.65  2.6172  dpath.a_lt_b$in0[10]
+  _584_/SN  HAxp5_ASAP7_75t_SL  44.52  0.27  61.58  4.6468  _029_
+  _370_/Y  OR2x2_ASAP7_75t_SL  20.93  0.39  15.61  4.5111  _146_
+  _375_/Y  OR3x1_ASAP7_75t_R  23.99  0.08  12.04  1.4066  _151_
+  _377_/Y  AOI21x1_ASAP7_75t_SL  7.64  0.06  13.16  1.4131  _153_
+  _378_/Y  AOI21x1_ASAP7_75t_SL  6.51  0.05  11.28  1.4780  _154_
+  _379_/Y  NAND3x1_ASAP7_75t_SL  12.68  0.21  20.27  1.8872  net42
+  output42/Y  BUFx2_ASAP7_75t_L  12.11  0.00  4.18  0.1102  resp_msg[14]
+Data arrival time: -204.1696
+Data required time: 144.0000
+Slack: -60.1696
+
+14) dpath.a_reg.out[10]$_DFFE_PP_ -> resp_msg[14] (output port clocked by core_clock) (slack -60.1003 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[10]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  30.19  0.15  16.15  1.7972  _015_
+  _318_/Y  INVx2_ASAP7_75t_SL  5.54  0.13  9.65  2.6172  dpath.a_lt_b$in0[10]
+  _584_/SN  HAxp5_ASAP7_75t_SL  44.52  0.27  61.58  4.6468  _029_
+  _370_/Y  OR2x2_ASAP7_75t_SL  20.93  0.49  15.61  4.5111  _146_
+  _376_/Y  OA211x2_ASAP7_75t_R  24.53  0.05  10.95  1.4120  _152_
+  _377_/Y  AOI21x1_ASAP7_75t_SL  6.96  0.06  13.16  1.4131  _153_
+  _378_/Y  AOI21x1_ASAP7_75t_SL  6.51  0.05  11.28  1.4780  _154_
+  _379_/Y  NAND3x1_ASAP7_75t_SL  12.68  0.21  20.27  1.8872  net42
+  output42/Y  BUFx2_ASAP7_75t_L  12.11  0.00  4.18  0.1102  resp_msg[14]
+Data arrival time: -204.1003
+Data required time: 144.0000
+Slack: -60.1003
+
+15) dpath.a_reg.out[9]$_DFFE_PP_ -> resp_msg[14] (output port clocked by core_clock) (slack -59.8613 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[9]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.49  0.06  14.81  1.5258  _014_
+  _317_/Y  INVx2_ASAP7_75t_SL  5.63  0.21  9.68  2.7699  dpath.a_lt_b$in0[9]
+  _585_/SN  HAxp5_ASAP7_75t_SL  41.28  0.21  55.87  4.1975  _032_
+  _364_/Y  OA21x2_ASAP7_75t_L  25.31  0.29  11.61  2.6775  _140_
+  _376_/Y  OA211x2_ASAP7_75t_R  23.99  0.05  10.95  1.4120  _152_
+  _377_/Y  AOI21x1_ASAP7_75t_SL  6.96  0.06  13.16  1.4131  _153_
+  _378_/Y  AOI21x1_ASAP7_75t_SL  6.51  0.05  11.28  1.4780  _154_
+  _379_/Y  NAND3x1_ASAP7_75t_SL  12.68  0.21  20.27  1.8872  net42
+  output42/Y  BUFx2_ASAP7_75t_L  12.11  0.00  4.18  0.1102  resp_msg[14]
+Data arrival time: -203.8613
+Data required time: 144.0000
+Slack: -59.8613
+
+16) dpath.a_reg.out[4]$_DFFE_PP_ -> resp_msg[9] (output port clocked by core_clock) (slack -59.7864 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[4]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.55  0.07  14.85  1.5331  _009_
+  _312_/Y  INVx2_ASAP7_75t_SL  5.57  0.07  9.50  2.7047  dpath.a_lt_b$in0[4]
+  _590_/SN  HAxp5_ASAP7_75t_SL  33.94  0.08  43.36  3.2081  _047_
+  _326_/Y  OR2x2_ASAP7_75t_SL  17.80  0.03  7.84  0.7920  _103_
+  _327_/Y  AO21x1_ASAP7_75t_SL  10.91  0.05  10.02  1.4326  _104_
+  _331_/Y  OA211x2_ASAP7_75t_SL  22.22  0.69  19.74  5.6024  _108_
+  _405_/Y  OA21x2_ASAP7_75t_SL  15.19  0.07  7.52  1.2934  _176_
+  _406_/Y  XOR2x2_ASAP7_75t_SL  18.22  0.11  8.10  1.5584  net52
+  output52/Y  BUFx2_ASAP7_75t_L  9.92  0.00  3.70  0.1567  resp_msg[9]
+Data arrival time: -203.7864
+Data required time: 144.0000
+Slack: -59.7864
+
+17) dpath.a_reg.out[9]$_DFFE_PP_ -> resp_msg[12] (output port clocked by core_clock) (slack -59.7264 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[9]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.49  0.06  14.81  1.5258  _014_
+  _317_/Y  INVx2_ASAP7_75t_SL  5.63  0.21  9.68  2.7699  dpath.a_lt_b$in0[9]
+  _585_/SN  HAxp5_ASAP7_75t_SL  41.28  0.21  55.87  4.1975  _032_
+  _364_/Y  OA21x2_ASAP7_75t_L  25.31  0.30  11.61  2.6775  _140_
+  _398_/Y  OA21x2_ASAP7_75t_SL  13.75  0.11  8.85  2.1259  _172_
+  place116/Y  BUFx3_ASAP7_75t_L  11.16  0.05  5.14  1.3029  net116
+  _399_/Y  OA21x2_ASAP7_75t_SL  9.16  0.05  7.30  1.2024  _173_
+  _400_/Y  XOR2x2_ASAP7_75t_SL  18.14  0.08  8.02  1.5241  net40
+  output40/Y  BUFx2_ASAP7_75t_L  9.97  0.01  3.82  0.2059  resp_msg[12]
+Data arrival time: -203.7264
+Data required time: 144.0000
+Slack: -59.7264
+
+18) dpath.a_reg.out[10]$_DFFE_PP_ -> resp_msg[14] (output port clocked by core_clock) (slack -59.6912 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[10]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  30.19  0.15  16.15  1.7972  _015_
+  _318_/Y  INVx2_ASAP7_75t_SL  5.54  0.13  9.65  2.6172  dpath.a_lt_b$in0[10]
+  _584_/SN  HAxp5_ASAP7_75t_SL  44.52  0.27  61.58  4.6468  _029_
+  _370_/Y  OR2x2_ASAP7_75t_SL  20.93  0.39  15.61  4.5111  _146_
+  _375_/Y  OR3x1_ASAP7_75t_R  23.99  0.08  12.04  1.4066  _151_
+  _377_/Y  AOI21x1_ASAP7_75t_SL  7.64  0.06  13.16  1.4131  _153_
+  _378_/Y  AOI21x1_ASAP7_75t_SL  6.03  0.05  11.28  1.4780  _154_
+  _379_/Y  NAND3x1_ASAP7_75t_SL  12.68  0.21  20.27  1.8872  net42
+  output42/Y  BUFx2_ASAP7_75t_L  12.11  0.00  4.18  0.1102  resp_msg[14]
+Data arrival time: -203.6912
+Data required time: 144.0000
+Slack: -59.6912
+
+19) dpath.a_reg.out[10]$_DFFE_PP_ -> resp_msg[14] (output port clocked by core_clock) (slack -59.6679 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[10]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  30.19  0.15  16.15  1.7972  _015_
+  _318_/Y  INVx2_ASAP7_75t_SL  5.54  0.13  9.65  2.6172  dpath.a_lt_b$in0[10]
+  _584_/SN  HAxp5_ASAP7_75t_SL  44.52  0.27  61.58  4.6468  _029_
+  _370_/Y  OR2x2_ASAP7_75t_SL  20.93  0.39  15.61  4.5111  _146_
+  _375_/Y  OR3x1_ASAP7_75t_R  23.99  0.08  12.04  1.4066  _151_
+  _377_/Y  AOI21x1_ASAP7_75t_SL  7.64  0.06  13.16  1.4131  _153_
+  _378_/Y  AOI21x1_ASAP7_75t_SL  6.00  0.05  11.28  1.4780  _154_
+  _379_/Y  NAND3x1_ASAP7_75t_SL  12.68  0.21  20.27  1.8872  net42
+  output42/Y  BUFx2_ASAP7_75t_L  12.11  0.00  4.18  0.1102  resp_msg[14]
+Data arrival time: -203.6679
+Data required time: 144.0000
+Slack: -59.6679
+
+20) dpath.a_reg.out[4]$_DFFE_PP_ -> resp_msg[11] (output port clocked by core_clock) (slack -59.5467 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[4]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.55  0.07  14.85  1.5331  _009_
+  _312_/Y  INVx2_ASAP7_75t_SL  5.57  0.07  9.50  2.7047  dpath.a_lt_b$in0[4]
+  _590_/SN  HAxp5_ASAP7_75t_SL  33.94  0.08  43.36  3.2081  _047_
+  _326_/Y  OR2x2_ASAP7_75t_SL  17.80  0.03  7.84  0.7920  _103_
+  _327_/Y  AO21x1_ASAP7_75t_SL  12.67  0.05  10.02  1.4326  _104_
+  _331_/Y  OA211x2_ASAP7_75t_SL  22.22  0.53  19.74  5.6024  _108_
+  _401_/Y  OA21x2_ASAP7_75t_SL  13.68  0.08  7.41  1.3054  _174_
+  _402_/Y  XOR2x2_ASAP7_75t_SL  18.04  0.06  7.79  1.4255  net39
+  output39/Y  BUFx2_ASAP7_75t_L  9.81  0.00  3.64  0.1328  resp_msg[11]
+Data arrival time: -203.5467
+Data required time: 144.0000
+Slack: -59.5467
+
+21) dpath.a_reg.out[6]$_DFFE_PP_ -> resp_msg[11] (output port clocked by core_clock) (slack -59.3391 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[6]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.58  0.07  14.90  1.5445  _011_
+  _314_/Y  INVx2_ASAP7_75t_SL  4.77  0.06  8.32  2.1067  dpath.a_lt_b$in0[6]
+  _588_/SN  HAxp5_ASAP7_75t_SL  38.00  0.15  50.73  3.7908  _041_
+  _334_/Y  OR2x2_ASAP7_75t_SL  16.42  0.05  9.05  1.4373  _111_
+  _335_/Y  AND2x2_ASAP7_75t_SL  11.64  0.12  7.33  1.7359  _112_
+  _336_/Y  OR4x1_ASAP7_75t_SL  20.70  0.15  17.31  2.7756  _113_
+  _401_/Y  OA21x2_ASAP7_75t_SL  14.70  0.08  7.41  1.3054  _174_
+  _402_/Y  XOR2x2_ASAP7_75t_SL  18.04  0.06  7.79  1.4255  net39
+  output39/Y  BUFx2_ASAP7_75t_L  9.81  0.00  3.64  0.1328  resp_msg[11]
+Data arrival time: -203.3391
+Data required time: 144.0000
+Slack: -59.3391
+
+22) dpath.a_reg.out[4]$_DFFE_PP_ -> resp_msg[9] (output port clocked by core_clock) (slack -58.0488 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[4]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.55  0.07  14.85  1.5331  _009_
+  _312_/Y  INVx2_ASAP7_75t_SL  5.57  0.07  9.50  2.7047  dpath.a_lt_b$in0[4]
+  _590_/SN  HAxp5_ASAP7_75t_SL  33.94  0.08  43.36  3.2081  _047_
+  _326_/Y  OR2x2_ASAP7_75t_SL  17.80  0.03  7.84  0.7920  _103_
+  _327_/Y  AO21x1_ASAP7_75t_SL  12.67  0.05  10.02  1.4326  _104_
+  _331_/Y  OA211x2_ASAP7_75t_SL  22.22  0.69  19.74  5.6024  _108_
+  _405_/Y  OA21x2_ASAP7_75t_SL  15.19  0.07  7.52  1.2934  _176_
+  _406_/Y  XOR2x2_ASAP7_75t_SL  14.24  0.11  8.02  1.5577  net52
+  output52/Y  BUFx2_ASAP7_75t_L  10.40  0.00  3.68  0.1567  resp_msg[9]
+Data arrival time: -202.0488
+Data required time: 144.0000
+Slack: -58.0488
+
+23) dpath.a_reg.out[8]$_DFFE_PP_ -> resp_msg[10] (output port clocked by core_clock) (slack -53.9388 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[8]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.56  0.07  14.95  1.5539  _013_
+  _316_/Y  INVx2_ASAP7_75t_SL  5.51  0.12  9.46  2.6594  dpath.a_lt_b$in0[8]
+  _586_/SN  HAxp5_ASAP7_75t_SL  39.17  0.15  52.33  3.9161  _035_
+  _333_/Y  OR2x2_ASAP7_75t_SL  22.92  0.10  14.28  4.0579  _110_
+  _361_/Y  OR3x1_ASAP7_75t_SL  18.32  0.13  15.70  2.4671  _137_
+  _403_/Y  OA21x2_ASAP7_75t_SL  14.57  0.10  7.59  1.4689  _175_
+  _404_/Y  XOR2x2_ASAP7_75t_SL  18.49  0.08  7.93  1.4867  net38
+  output38/Y  BUFx2_ASAP7_75t_L  9.87  0.00  3.68  0.1473  resp_msg[10]
+Data arrival time: -197.9388
+Data required time: 144.0000
+Slack: -53.9388
+
+24) dpath.a_reg.out[9]$_DFFE_PP_ -> resp_msg[10] (output port clocked by core_clock) (slack -53.2952 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.a_reg.out[9]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  29.49  0.06  14.81  1.5258  _014_
+  _317_/Y  INVx2_ASAP7_75t_SL  5.63  0.21  9.68  2.7699  dpath.a_lt_b$in0[9]
+  _585_/SN  HAxp5_ASAP7_75t_SL  41.28  0.18  55.87  4.1975  _032_
+  _333_/Y  OR2x2_ASAP7_75t_SL  20.01  0.10  14.28  4.0579  _110_
+  _361_/Y  OR3x1_ASAP7_75t_SL  18.32  0.13  15.70  2.4671  _137_
+  _403_/Y  OA21x2_ASAP7_75t_SL  14.57  0.10  7.59  1.4689  _175_
+  _404_/Y  XOR2x2_ASAP7_75t_SL  18.49  0.08  7.93  1.4867  net38
+  output38/Y  BUFx2_ASAP7_75t_L  9.87  0.00  3.68  0.1473  resp_msg[10]
+Data arrival time: -197.2952
+Data required time: 144.0000
+Slack: -53.2952
+
+25) dpath.b_reg.out[0]$_DFFE_PP_ -> resp_msg[8] (output port clocked by core_clock) (slack -52.8677 ns)
+Path chain:
+  # inst/pin  master  cell_dly_ps  net_dly_ps  slew_ps  cap_fF  net
+  dpath.b_reg.out[0]$_DFFE_PP_/QN  DFFHQNx1_ASAP7_75t_SL  32.95  0.11  20.70  2.7708  _020_
+  _323_/Y  INVx2_ASAP7_75t_SL  4.94  0.08  9.40  2.0051  dpath.a_lt_b$in1[0]
+  _594_/CON  HAxp5_ASAP7_75t_SL  10.86  0.08  22.48  1.5768  _057_
+  _325_/Y  INVx2_ASAP7_75t_SL  7.02  0.12  12.80  3.4306  _021_
+  _582_/CON  FAx1_ASAP7_75t_SL  16.18  0.13  32.27  1.8085  _023_
+  _357_/Y  INVx1_ASAP7_75t_SL  6.90  0.04  13.71  1.4101  _133_
+  _358_/Y  OA211x2_ASAP7_75t_SL  18.14  0.06  12.16  1.4692  _134_
+  _394_/Y  OA211x2_ASAP7_75t_SL  22.57  0.17  19.05  5.3554  _168_
+  _407_/Y  NOR2x1p5_ASAP7_75t_SL  7.16  0.11  12.04  1.5026  _177_
+  _408_/Y  XNOR2x2_ASAP7_75t_SL  18.90  0.08  7.91  1.4778  net51
+  output51/Y  BUFx2_ASAP7_75t_L  10.36  0.00  3.68  0.1536  resp_msg[8]
+Data arrival time: -196.8677
+Data required time: 144.0000
+Slack: -52.8677
+
+Startpoint → Endpoint violation registry (unique violating setup pairs, worst slack first):
+Slack distribution (48 violating endpoints):
+  0–10 ps: 3
+  10–25 ps: 32
+  25–50 ps: 4
+  50–100 ps: 9
+
+resp_msg[13] | #SPs=2 | worst=-67.8 | from: dpath.a_reg.out[4]$_DFFE_PP_(-67.8), dpath.a_reg.out[6]$_DFFE_PP_(-63.2)
+resp_msg[15] | #SPs=1 | worst=-62.0 | from: dpath.a_reg.out[10]$_DFFE_PP_(-62.0)
+resp_msg[9] | #SPs=1 | worst=-61.5 | from: dpath.a_reg.out[4]$_DFFE_PP_(-61.5)
+resp_msg[11] | #SPs=3 | worst=-61.5 | from: dpath.a_reg.out[6]$_DFFE_PP_(-61.5), dpath.a_reg.out[10]$_DFFE_PP_(-60.5), dpath.a_reg.out[4]$_DFFE_PP_(-59.5)
+resp_msg[12] | #SPs=2 | worst=-61.0 | from: dpath.a_reg.out[10]$_DFFE_PP_(-61.0), dpath.a_reg.out[9]$_DFFE_PP_(-59.7)
+resp_msg[14] | #SPs=2 | worst=-60.2 | from: dpath.a_reg.out[10]$_DFFE_PP_(-60.2), dpath.a_reg.out[9]$_DFFE_PP_(-59.9)
+resp_msg[10] | #SPs=5 | worst=-53.9 | from: dpath.a_reg.out[8]$_DFFE_PP_(-53.9), dpath.a_reg.out[9]$_DFFE_PP_(-53.3), dpath.b_reg.out[0]$_DFFE_PP_(-51.5), dpath.b_reg.out[8]$_DFFE_PP_(-51.0)
+resp_msg[8] | #SPs=3 | worst=-52.9 | from: dpath.b_reg.out[0]$_DFFE_PP_(-52.9), dpath.a_reg.out[5]$_DFFE_PP_(-51.2), dpath.a_reg.out[4]$_DFFE_PP_(-50.5)
+resp_msg[7] | #SPs=1 | worst=-50.9 | from: dpath.a_reg.out[4]$_DFFE_PP_(-50.9)
+resp_msg[6] | #SPs=2 | worst=-46.5 | from: dpath.b_reg.out[0]$_DFFE_PP_(-46.5), dpath.a_reg.out[4]$_DFFE_PP_(-45.7)
+resp_msg[4] | #SPs=2 | worst=-46.0 | from: dpath.b_reg.out[0]$_DFFE_PP_(-46.0), dpath.a_reg.out[2]$_DFFE_PP_(-44.5)
+resp_msg[5] | #SPs=1 | worst=-44.7 | from: dpath.a_reg.out[4]$_DFFE_PP_(-44.7)
+resp_msg[3] | #SPs=2 | worst=-28.2 | from: dpath.a_reg.out[2]$_DFFE_PP_(-28.2), dpath.a_reg.out[1]$_DFFE_PP_(-26.9)
+resp_msg[2] | #SPs=1 | worst=-18.3 | from: dpath.b_reg.out[0]$_DFFE_PP_(-18.3)
+dpath.a_reg.out[13]$_DFFE_PP_ | #SPs=1 | worst=-15.5 | from: dpath.a_reg.out[10]$_DFFE_PP_(-15.5)
+dpath.b_reg.out[10]$_DFFE_PP_ | #SPs=2 | worst=-14.4 | from: dpath.a_reg.out[6]$_DFFE_PP_(-14.4), dpath.a_reg.out[10]$_DFFE_PP_(-11.6)
+dpath.a_reg.out[6]$_DFFE_PP_ | #SPs=1 | worst=-14.3 | from: dpath.a_reg.out[10]$_DFFE_PP_(-14.3)
+dpath.b_reg.out[8]$_DFFE_PP_ | #SPs=2 | worst=-14.0 | from: dpath.a_reg.out[6]$_DFFE_PP_(-14.0), dpath.a_reg.out[10]$_DFFE_PP_(-11.1)
+dpath.b_reg.out[7]$_DFFE_PP_ | #SPs=2 | worst=-13.9 | from: dpath.a_reg.out[6]$_DFFE_PP_(-13.9), dpath.a_reg.out[10]$_DFFE_PP_(-11.1)
+dpath.b_reg.out[13]$_DFFE_PP_ | #SPs=2 | worst=-13.8 | from: dpath.a_reg.out[6]$_DFFE_PP_(-13.8), dpath.a_reg.out[10]$_DFFE_PP_(-12.7)
+dpath.a_reg.out[5]$_DFFE_PP_ | #SPs=1 | worst=-13.7 | from: dpath.a_reg.out[10]$_DFFE_PP_(-13.7)
+dpath.a_reg.out[4]$_DFFE_PP_ | #SPs=1 | worst=-13.6 | from: dpath.a_reg.out[10]$_DFFE_PP_(-13.6)
+dpath.a_reg.out[3]$_DFFE_PP_ | #SPs=1 | worst=-13.6 | from: dpath.a_reg.out[10]$_DFFE_PP_(-13.6)
+dpath.b_reg.out[9]$_DFFE_PP_ | #SPs=2 | worst=-13.6 | from: dpath.a_reg.out[6]$_DFFE_PP_(-13.6), dpath.a_reg.out[10]$_DFFE_PP_(-10.8)
+dpath.a_reg.out[2]$_DFFE_PP_ | #SPs=1 | worst=-13.6 | from: dpath.a_reg.out[10]$_DFFE_PP_(-13.6)
+dpath.b_reg.out[12]$_DFFE_PP_ | #SPs=2 | worst=-13.4 | from: dpath.a_reg.out[6]$_DFFE_PP_(-13.4), dpath.a_reg.out[10]$_DFFE_PP_(-12.3)
+dpath.b_reg.out[11]$_DFFE_PP_ | #SPs=2 | worst=-13.4 | from: dpath.a_reg.out[6]$_DFFE_PP_(-13.4), dpath.a_reg.out[10]$_DFFE_PP_(-12.3)
+dpath.b_reg.out[14]$_DFFE_PP_ | #SPs=2 | worst=-13.3 | from: dpath.a_reg.out[6]$_DFFE_PP_(-13.3), dpath.a_reg.out[10]$_DFFE_PP_(-12.2)
+dpath.a_reg.out[11]$_DFFE_PP_ | #SPs=1 | worst=-13.1 | from: dpath.a_reg.out[10]$_DFFE_PP_(-13.1)
+dpath.a_reg.out[12]$_DFFE_PP_ | #SPs=1 | worst=-12.9 | from: dpath.a_reg.out[10]$_DFFE_PP_(-12.9)
+dpath.a_reg.out[0]$_DFFE_PP_ | #SPs=1 | worst=-12.9 | from: dpath.a_reg.out[10]$_DFFE_PP_(-12.9)
+dpath.a_reg.out[14]$_DFFE_PP_ | #SPs=1 | worst=-12.9 | from: dpath.a_reg.out[10]$_DFFE_PP_(-12.9)
+dpath.a_reg.out[1]$_DFFE_PP_ | #SPs=1 | worst=-12.8 | from: dpath.a_reg.out[10]$_DFFE_PP_(-12.8)
+dpath.b_reg.out[6]$_DFFE_PP_ | #SPs=2 | worst=-12.6 | from: dpath.b_reg.out[0]$_DFFE_PP_(-12.6), dpath.a_reg.out[10]$_DFFE_PP_(-12.5)
+dpath.b_reg.out[2]$_DFFE_PP_ | #SPs=2 | worst=-12.4 | from: dpath.a_reg.out[6]$_DFFE_PP_(-12.4), dpath.a_reg.out[10]$_DFFE_PP_(-11.3)
+dpath.b_reg.out[1]$_DFFE_PP_ | #SPs=2 | worst=-12.4 | from: dpath.a_reg.out[6]$_DFFE_PP_(-12.4), dpath.a_reg.out[10]$_DFFE_PP_(-11.3)
+dpath.b_reg.out[15]$_DFFE_PP_ | #SPs=2 | worst=-12.3 | from: dpath.a_reg.out[6]$_DFFE_PP_(-12.3), dpath.a_reg.out[10]$_DFFE_PP_(-11.2)
+dpath.b_reg.out[4]$_DFFE_PP_ | #SPs=2 | worst=-12.3 | from: dpath.b_reg.out[0]$_DFFE_PP_(-12.3), dpath.a_reg.out[10]$_DFFE_PP_(-12.2)
+dpath.b_reg.out[3]$_DFFE_PP_ | #SPs=2 | worst=-12.1 | from: dpath.b_reg.out[0]$_DFFE_PP_(-12.1), dpath.a_reg.out[10]$_DFFE_PP_(-12.0)
+dpath.a_reg.out[15]$_DFFE_PP_ | #SPs=1 | worst=-12.1 | from: dpath.a_reg.out[10]$_DFFE_PP_(-12.1)
+dpath.b_reg.out[5]$_DFFE_PP_ | #SPs=2 | worst=-12.0 | from: dpath.b_reg.out[0]$_DFFE_PP_(-12.0), dpath.a_reg.out[10]$_DFFE_PP_(-11.9)
+dpath.a_reg.out[8]$_DFFE_PP_ | #SPs=1 | worst=-11.9 | from: dpath.a_reg.out[10]$_DFFE_PP_(-11.9)
+dpath.a_reg.out[10]$_DFFE_PP_ | #SPs=1 | worst=-11.7 | from: dpath.a_reg.out[10]$_DFFE_PP_(-11.7)
+dpath.a_reg.out[7]$_DFFE_PP_ | #SPs=1 | worst=-11.7 | from: dpath.a_reg.out[10]$_DFFE_PP_(-11.7)
+dpath.a_reg.out[9]$_DFFE_PP_ | #SPs=1 | worst=-11.7 | from: dpath.a_reg.out[10]$_DFFE_PP_(-11.7)
+ctrl.state.out[1]$_DFF_P_ | #SPs=5 | worst=-9.7 | from: dpath.a_reg.out[6]$_DFFE_PP_(-9.7), dpath.a_reg.out[10]$_DFFE_PP_(-8.6), dpath.a_reg.out[5]$_DFFE_PP_(-7.2), dpath.b_reg.out[0]$_DFFE_PP_(-7.2)
+ctrl.state.out[2]$_DFF_P_ | #SPs=2 | worst=-9.2 | from: dpath.a_reg.out[6]$_DFFE_PP_(-9.2), dpath.a_reg.out[10]$_DFFE_PP_(-8.1)
+dpath.b_reg.out[0]$_DFFE_PP_ | #SPs=2 | worst=-7.0 | from: dpath.a_reg.out[6]$_DFFE_PP_(-7.0), dpath.a_reg.out[10]$_DFFE_PP_(-5.9)
+
+1-hop netlist neighborhood of top 10 unique worst-endpoint paths:
+Path 1 (slack=-67.8, endpoint=resp_msg[13]):
+  DFFHQNx1_ASAP7_75t_SL dpath.a_reg.out[4]$_DFFE_PP_ | in: D←_092_(_552_) | out: QN→_009_(1:_312_)
+  INVx2_ASAP7_75t_SL _312_ | in: A←_009_(dpath.a_reg.out[4]$_DFFE_PP_) | out: Y→\dpath.a_lt_b$in0[4](3:_484_,_550_,_590_)
+  HAxp5_ASAP7_75t_SL _590_ | in: A←\dpath.a_lt_b$in0[4](_312_) B←_045_(dpath.b_reg.out[4]$_DFFE_PP_) | out: CON→_046_(2:_329_,_359_) SN→_047_(4:_326_,_329_,_355_,_416_)
+  OR2x2_ASAP7_75t_SL _326_ | in: A←_050_(_591_) B←_047_(_590_) | out: Y→_103_(1:_327_)
+  AO21x1_ASAP7_75t_SL _327_ | in: A1←_052_(_592_) A2←_053_(_592_) B←_103_(_326_) | out: Y→_104_(2:_331_,_409_)
+  OA211x2_ASAP7_75t_SL _331_ | in: A1←_105_(_328_) A2←_104_(_327_) B←_106_(_329_) C←_107_(_330_) | out: Y→_108_(6:_345_,_352_,_389_,_401_,...)
+  OA21x2_ASAP7_75t_SL _389_ | in: A1←_161_(_386_) A2←_108_(_331_) B←_163_(_388_) | out: Y→_164_(1:_393_)
+  OR5x2_ASAP7_75t_SL _393_ | in: A←_164_(_389_) B←_160_(_385_) C←_158_(_383_) D←_166_(_391_) | out: Y→net41(2:_518_,output41)
+  BUFx2_ASAP7_75t_L output41 | in: A←net41(_393_) | out: Y→resp_msg[13](0:)
+
+Path 6 (slack=-62.0, endpoint=resp_msg[15]):
+  DFFHQNx1_ASAP7_75t_SL dpath.a_reg.out[10]$_DFFE_PP_ | in: D←_085_(_530_) | out: QN→_015_(1:_318_)
+  INVx2_ASAP7_75t_SL _318_ | in: A←_015_(dpath.a_reg.out[10]$_DFFE_PP_) | out: Y→\dpath.a_lt_b$in0[10](3:_528_,_580_,_584_)
+  HAxp5_ASAP7_75t_SL _584_ | in: A←\dpath.a_lt_b$in0[10](_318_) B←_027_(dpath.b_reg.out[10]$_DFFE_PP_) | out: CON→_028_(4:_343_,_351_,_366_,_381_) SN→_029_(6:_342_,_370_,_381_,_384_,...)
+  AO21x1_ASAP7_75t_SL _342_ | in: A1←_031_(_585_) A2←_032_(_585_) B←_029_(_584_) | out: Y→_119_(2:_343_,_350_)
+  OA21x2_ASAP7_75t_R _343_ | in: A1←_118_(_341_) A2←_119_(_342_) B←_028_(_584_) | out: Y→_120_(2:_344_,_401_)
+  AND2x2_ASAP7_75t_SL _344_ | in: A←_117_(_340_) B←_120_(_343_) | out: Y→_121_(1:_345_)
+  OAI21x1_ASAP7_75t_R _345_ | in: A1←_108_(_331_) A2←_113_(_336_) B←_121_(_344_) | out: Y→_122_(1:_354_)
+  AO221x1_ASAP7_75t_SL _354_ | in: A1←_122_(_345_) A2←_126_(_349_) B1←_128_(_351_) B2←_129_(_352_) | out: Y→net43(2:_578_,output43)
+  BUFx2_ASAP7_75t_L output43 | in: A←net43(_354_) | out: Y→resp_msg[15](0:)
+
+Path 11 (slack=-61.5, endpoint=resp_msg[9]):
+  DFFHQNx1_ASAP7_75t_SL dpath.a_reg.out[4]$_DFFE_PP_ | in: D←_092_(_552_) | out: QN→_009_(1:_312_)
+  INVx2_ASAP7_75t_SL _312_ | in: A←_009_(dpath.a_reg.out[4]$_DFFE_PP_) | out: Y→\dpath.a_lt_b$in0[4](3:_484_,_550_,_590_)
+  HAxp5_ASAP7_75t_SL _590_ | in: A←\dpath.a_lt_b$in0[4](_312_) B←_045_(dpath.b_reg.out[4]$_DFFE_PP_) | out: CON→_046_(2:_329_,_359_) SN→_047_(4:_326_,_329_,_355_,_416_)
+  OR2x2_ASAP7_75t_SL _326_ | in: A←_050_(_591_) B←_047_(_590_) | out: Y→_103_(1:_327_)
+  AO21x1_ASAP7_75t_SL _327_ | in: A1←_052_(_592_) A2←_053_(_592_) B←_103_(_326_) | out: Y→_104_(2:_331_,_409_)
+  OA211x2_ASAP7_75t_SL _331_ | in: A1←_105_(_328_) A2←_104_(_327_) B←_106_(_329_) C←_107_(_330_) | out: Y→_108_(6:_345_,_352_,_389_,_401_,...)
+  OA21x2_ASAP7_75t_SL _405_ | in: A1←_161_(_386_) A2←_108_(_331_) B←_162_(_387_) | out: Y→_176_(1:_406_)
+  XOR2x2_ASAP7_75t_SL _406_ | in: A←_176_(_405_) B←net131(place131) | out: Y→net52(2:_533_,output52)
+  BUFx2_ASAP7_75t_L output52 | in: A←net52(_406_) | out: Y→resp_msg[9](0:)
+
+Path 13 (slack=-61.5, endpoint=resp_msg[11]):
+  DFFHQNx1_ASAP7_75t_SL dpath.a_reg.out[6]$_DFFE_PP_ | in: D←_090_(_546_) | out: QN→_011_(1:_314_)
+  INVx2_ASAP7_75t_SL _314_ | in: A←_011_(dpath.a_reg.out[6]$_DFFE_PP_) | out: Y→\dpath.a_lt_b$in0[6](2:_588_,place142)
+  HAxp5_ASAP7_75t_SL _588_ | in: A←\dpath.a_lt_b$in0[6](_314_) B←_039_(dpath.b_reg.out[6]$_DFFE_PP_) | out: CON→_040_(3:_330_,_363_,_395_) SN→_041_(5:_330_,_334_,_361_,_395_,...)
+  OA21x2_ASAP7_75t_SL _330_ | in: A1←_041_(_588_) A2←_043_(_589_) B←_040_(_588_) | out: Y→_107_(3:_331_,_335_,_410_)
+  AND2x2_ASAP7_75t_SL _335_ | in: A←_107_(_330_) B←_111_(_334_) | out: Y→_112_(2:_336_,_386_)
+  OR4x1_ASAP7_75t_SL _336_ | in: A←_112_(_335_) B←net129(place129) C←_110_(_333_) D←net133(place133) | out: Y→_113_(3:_345_,_352_,_401_)
+  OA21x2_ASAP7_75t_SL _401_ | in: A1←_108_(_331_) A2←_113_(_336_) B←_120_(_343_) | out: Y→_174_(1:_402_)
+  XOR2x2_ASAP7_75t_SL _402_ | in: A←_174_(_401_) B←net134(place134) | out: Y→net39(2:_526_,output39)
+  BUFx2_ASAP7_75t_L output39 | in: A←net39(_402_) | out: Y→resp_msg[11](0:)
+
+Path 14 (slack=-61.0, endpoint=resp_msg[12]):
+  DFFHQNx1_ASAP7_75t_SL dpath.a_reg.out[10]$_DFFE_PP_ | in: D←_085_(_530_) | out: QN→_015_(1:_318_)
+  INVx2_ASAP7_75t_SL _318_ | in: A←_015_(dpath.a_reg.out[10]$_DFFE_PP_) | out: Y→\dpath.a_lt_b$in0[10](3:_528_,_580_,_584_)
+  HAxp5_ASAP7_75t_SL _584_ | in: A←\dpath.a_lt_b$in0[10](_318_) B←_027_(dpath.b_reg.out[10]$_DFFE_PP_) | out: CON→_028_(4:_343_,_351_,_366_,_381_) SN→_029_(6:_342_,_370_,_381_,_384_,...)
+  OR2x2_ASAP7_75t_SL _370_ | in: A←_029_(_584_) B←_026_(_583_) | out: Y→_146_(6:_373_,_374_,_375_,_376_,...)
+  OA21x2_ASAP7_75t_SL _398_ | in: A1←_140_(_364_) A2←_146_(_370_) B←_142_(_366_) | out: Y→_172_(3:_441_,_452_,place116)
+  BUFx3_ASAP7_75t_L place116 | in: A←_172_(_398_) | out: Y→net116(2:_399_,_503_)
+  OA21x2_ASAP7_75t_SL _399_ | in: A1←_171_(_397_) A2←_168_(_394_) B←net116(place116) | out: Y→_173_(1:_400_)
+  XOR2x2_ASAP7_75t_SL _400_ | in: A←_173_(_399_) B←net122(place122) | out: Y→net40(2:_522_,output40)
+  BUFx2_ASAP7_75t_L output40 | in: A←net40(_400_) | out: Y→resp_msg[12](0:)
+
+Path 20 (slack=-60.2, endpoint=resp_msg[14]):
+  DFFHQNx1_ASAP7_75t_SL dpath.a_reg.out[10]$_DFFE_PP_ | in: D←_085_(_530_) | out: QN→_015_(1:_318_)
+  INVx2_ASAP7_75t_SL _318_ | in: A←_015_(dpath.a_reg.out[10]$_DFFE_PP_) | out: Y→\dpath.a_lt_b$in0[10](3:_528_,_580_,_584_)
+  HAxp5_ASAP7_75t_SL _584_ | in: A←\dpath.a_lt_b$in0[10](_318_) B←_027_(dpath.b_reg.out[10]$_DFFE_PP_) | out: CON→_028_(4:_343_,_351_,_366_,_381_) SN→_029_(6:_342_,_370_,_381_,_384_,...)
+  OR2x2_ASAP7_75t_SL _370_ | in: A←_029_(_584_) B←_026_(_583_) | out: Y→_146_(6:_373_,_374_,_375_,_376_,...)
+  OR3x1_ASAP7_75t_R _375_ | in: A←_110_(_333_) B←_139_(_363_) C←_146_(_370_) | out: Y→_151_(1:_377_)
+  AOI21x1_ASAP7_75t_SL _377_ | in: A1←_152_(_376_) A2←_151_(_375_) B←_148_(_372_) | out: Y→_153_(1:_378_)
+  AOI21x1_ASAP7_75t_SL _378_ | in: A1←net120(place120) A2←_150_(_374_) B←_153_(_377_) | out: Y→_154_(1:_379_)
+  NAND3x1_ASAP7_75t_SL _379_ | in: A←_145_(_369_) B←_149_(_373_) C←_154_(_378_) | out: Y→net42(2:_513_,output42)
+  BUFx2_ASAP7_75t_L output42 | in: A←net42(_379_) | out: Y→resp_msg[14](0:)
+
+Path 31 (slack=-53.9, endpoint=resp_msg[10]):
+  DFFHQNx1_ASAP7_75t_SL dpath.a_reg.out[8]$_DFFE_PP_ | in: D←_087_(_536_) | out: QN→_013_(1:_316_)
+  INVx2_ASAP7_75t_SL _316_ | in: A←_013_(dpath.a_reg.out[8]$_DFFE_PP_) | out: Y→\dpath.a_lt_b$in0[8](3:_467_,_534_,_586_)
+  HAxp5_ASAP7_75t_SL _586_ | in: A←\dpath.a_lt_b$in0[8](_316_) B←_033_(dpath.b_reg.out[8]$_DFFE_PP_) | out: CON→_034_(3:_341_,_364_,_387_) SN→_035_(5:_333_,_341_,_386_,_387_,...)
+  OR2x2_ASAP7_75t_SL _333_ | in: A←_032_(_585_) B←_035_(_586_) | out: Y→_110_(5:_336_,_361_,_365_,_375_,...)
+  OR3x1_ASAP7_75t_SL _361_ | in: A←net128(place128) B←_041_(_588_) C←_110_(_333_) | out: Y→_137_(3:_373_,_403_,place117)
+  OA21x2_ASAP7_75t_SL _403_ | in: A1←_136_(_360_) A2←_137_(_361_) B←_141_(_365_) | out: Y→_175_(1:_404_)
+  XOR2x2_ASAP7_75t_SL _404_ | in: A←net132(place132) B←_175_(_403_) | out: Y→net38(2:_530_,output38)
+  BUFx2_ASAP7_75t_L output38 | in: A←net38(_404_) | out: Y→resp_msg[10](0:)
+
+Path 33 (slack=-52.9, endpoint=resp_msg[8]):
+  DFFHQNx1_ASAP7_75t_SL dpath.b_reg.out[0]$_DFFE_PP_ | in: D←_080_(_501_) | out: QN→_020_(2:_323_,_435_)
+  INVx2_ASAP7_75t_SL _323_ | in: A←_020_(dpath.b_reg.out[0]$_DFFE_PP_) | out: Y→\dpath.a_lt_b$in1[0](2:_594_,place139)
+  HAxp5_ASAP7_75t_SL _594_ | in: A←_058_(dpath.a_reg.out[0]$_DFFE_PP_) B←\dpath.a_lt_b$in1[0](_323_) | out: CON→_057_(1:_325_) SN→net37(2:_563_,output37)
+  INVx2_ASAP7_75t_SL _325_ | in: A←_057_(_594_) | out: Y→_021_(3:_328_,_417_,_582_)
+  FAx1_ASAP7_75t_SL _582_ | in: A←net157(place157) B←\dpath.a_lt_b$in1[1](_324_) CI←_021_(_325_) | out: CON→_023_(2:_357_,place118) SN→net44(2:_561_,output44)
+  INVx1_ASAP7_75t_SL _357_ | in: A←_023_(_582_) | out: Y→_133_(2:_358_,_414_)
+  OA211x2_ASAP7_75t_SL _358_ | in: A1←_053_(_592_) A2←_133_(_357_) B←_052_(_592_) C←_049_(_591_) | out: Y→_134_(2:_360_,_394_)
+  OA211x2_ASAP7_75t_SL _394_ | in: A1←_132_(_356_) A2←_134_(_358_) B←_139_(_363_) C←_135_(_359_) | out: Y→_168_(5:_399_,_407_,_441_,_453_,...)
+  NOR2x1p5_ASAP7_75t_SL _407_ | in: A←_170_(_396_) B←_168_(_394_) | out: Y→_177_(1:_408_)
+  XNOR2x2_ASAP7_75t_SL _408_ | in: A←_177_(_407_) B←net130(place130) | out: Y→net51(2:_536_,output51)
+  BUFx2_ASAP7_75t_L output51 | in: A←net51(_408_) | out: Y→resp_msg[8](0:)
+
+Path 39 (slack=-50.9, endpoint=resp_msg[7]):
+  DFFHQNx1_ASAP7_75t_SL dpath.a_reg.out[4]$_DFFE_PP_ | in: D←_092_(_552_) | out: QN→_009_(1:_312_)
+  INVx2_ASAP7_75t_SL _312_ | in: A←_009_(dpath.a_reg.out[4]$_DFFE_PP_) | out: Y→\dpath.a_lt_b$in0[4](3:_484_,_550_,_590_)
+  HAxp5_ASAP7_75t_SL _590_ | in: A←\dpath.a_lt_b$in0[4](_312_) B←_045_(dpath.b_reg.out[4]$_DFFE_PP_) | out: CON→_046_(2:_329_,_359_) SN→_047_(4:_326_,_329_,_355_,_416_)
+  OR2x2_ASAP7_75t_SL _326_ | in: A←_050_(_591_) B←_047_(_590_) | out: Y→_103_(1:_327_)
+  AO21x1_ASAP7_75t_SL _327_ | in: A1←_052_(_592_) A2←_053_(_592_) B←_103_(_326_) | out: Y→_104_(2:_331_,_409_)
+  OA21x2_ASAP7_75t_SL _409_ | in: A1←_104_(_327_) A2←_105_(_328_) B←_106_(_329_) | out: Y→_178_(2:_410_,_413_)
+  OA21x2_ASAP7_75t_SL _410_ | in: A1←_111_(_334_) A2←_178_(_409_) B←_107_(_330_) | out: Y→_179_(1:_411_)
+  XOR2x2_ASAP7_75t_SL _411_ | in: A←net129(place129) B←_179_(_410_) | out: Y→net50(2:_539_,output50)
+  BUFx2_ASAP7_75t_L output50 | in: A←net50(_411_) | out: Y→resp_msg[7](0:)
+
+Path 46 (slack=-46.5, endpoint=resp_msg[6]):
+  DFFHQNx1_ASAP7_75t_SL dpath.b_reg.out[0]$_DFFE_PP_ | in: D←_080_(_501_) | out: QN→_020_(2:_323_,_435_)
+  INVx2_ASAP7_75t_SL _323_ | in: A←_020_(dpath.b_reg.out[0]$_DFFE_PP_) | out: Y→\dpath.a_lt_b$in1[0](2:_594_,place139)
+  HAxp5_ASAP7_75t_SL _594_ | in: A←_058_(dpath.a_reg.out[0]$_DFFE_PP_) B←\dpath.a_lt_b$in1[0](_323_) | out: CON→_057_(1:_325_) SN→net37(2:_563_,output37)
+  INVx2_ASAP7_75t_SL _325_ | in: A←_057_(_594_) | out: Y→_021_(3:_328_,_417_,_582_)
+  FAx1_ASAP7_75t_SL _582_ | in: A←net157(place157) B←\dpath.a_lt_b$in1[1](_324_) CI←_021_(_325_) | out: CON→_023_(2:_357_,place118) SN→net44(2:_561_,output44)
+  INVx1_ASAP7_75t_SL _357_ | in: A←_023_(_582_) | out: Y→_133_(2:_358_,_414_)
+  OA211x2_ASAP7_75t_SL _358_ | in: A1←_053_(_592_) A2←_133_(_357_) B←_052_(_592_) C←_049_(_591_) | out: Y→_134_(2:_360_,_394_)
+  OA21x2_ASAP7_75t_SL _360_ | in: A1←_134_(_358_) A2←_132_(_356_) B←_135_(_359_) | out: Y→_136_(4:_369_,_373_,_403_,_412_)
+  XOR2x2_ASAP7_75t_R _412_ | in: A←net127(place127) B←_136_(_360_) | out: Y→net49(2:_546_,output49)
+  BUFx2_ASAP7_75t_L output49 | in: A←net49(_412_) | out: Y→resp_msg[6](0:)
+
+
+Cell catalog for worst-path cells:
+AND2:
+  Available sizes: x2, x4, x6
+  Available VTs:   SL, L, R
+    AND2x2_ASAP7_75t_SL: size=x2 vt=SL  → sizeup to x4
+
+AND4:
+  Available sizes: x1, x2
+  Available VTs:   SL, L, R
+    AND4x1_ASAP7_75t_SL: size=x1 vt=SL  → sizeup to x2
+
+AO21:
+  Available sizes: x1, x2
+  Available VTs:   SL, L, R
+    AO21x1_ASAP7_75t_SL: size=x1 vt=SL  → sizeup to x2
+
+AO221:
+  Available sizes: x1, x2
+  Available VTs:   SL, L, R
+    AO221x1_ASAP7_75t_SL: size=x1 vt=SL  → sizeup to x2
+    AO221x2_ASAP7_75t_SL: size=x2 vt=SL  (max size or unsizable)
+
+AO32:
+  Available sizes: x1, x2
+  Available VTs:   SL, L, R
+    AO32x1_ASAP7_75t_SL: size=x1 vt=SL  → sizeup to x2
+
+AOI21:
+  Available sizes: x1
+  Available VTs:   SL, L, R
+    AOI21x1_ASAP7_75t_SL: size=x1 vt=SL  (max size or unsizable)
+
+BUF:
+  Available sizes: x2, x3, x4, x4f, x5, x6f, x8, x10, x12, x12f, x16f, x24
+  Available VTs:   SL, L, R
+    BUFx2_ASAP7_75t_L: size=x2 vt=L  → sizeup to x3 | vt_swap L→SL possible
+    BUFx2_ASAP7_75t_R: size=x2 vt=R  → sizeup to x3 | vt_swap R→SL possible
+    BUFx3_ASAP7_75t_L: size=x3 vt=L  → sizeup to x4 | vt_swap L→SL possible
+    BUFx6f_ASAP7_75t_L: size=x6f vt=L  → sizeup to x8 | vt_swap L→SL possible
+
+DFFHQN:
+  Available sizes: x1, x2, x3
+  Available VTs:   SL, L, R
+    DFFHQNx1_ASAP7_75t_SL: size=x1 vt=SL  → sizeup to x2
+
+FA:
+  Available sizes: x1
+  Available VTs:   SL, L, R
+    FAx1_ASAP7_75t_SL: size=x1 vt=SL  (max size or unsizable)
+
+HA:
+  Available sizes: NONE (unsizable)
+  Available VTs:   unknown
+    HAxp5_ASAP7_75t_SL: size=xp5 vt=SL  (max size or unsizable)
+
+INV:
+  Available sizes: x1, x2, x3, x4, x5, x6, x8, x11, x13
+  Available VTs:   SL, L, R
+    INVx1_ASAP7_75t_SL: size=x1 vt=SL  → sizeup to x2
+    INVx2_ASAP7_75t_SL: size=x2 vt=SL  → sizeup to x3
+
+NAND3:
+  Available sizes: x1, x2
+  Available VTs:   SL, L, R
+    NAND3x1_ASAP7_75t_SL: size=x1 vt=SL  → sizeup to x2
+
+NOR2:
+  Available sizes: x1, x2
+  Available VTs:   SL, L, R
+    NOR2x1p5_ASAP7_75t_SL: size=x1p5 vt=SL  (max size or unsizable)
+    NOR2x2_ASAP7_75t_SL: size=x2 vt=SL  (max size or unsizable)
+
+OA21:
+  Available sizes: x2
+  Available VTs:   SL, L, R
+    OA21x2_ASAP7_75t_L: size=x2 vt=L  (max size or unsizable) | vt_swap L→SL possible
+    OA21x2_ASAP7_75t_R: size=x2 vt=R  (max size or unsizable) | vt_swap R→SL possible
+    OA21x2_ASAP7_75t_SL: size=x2 vt=SL  (max size or unsizable)
+
+OA211:
+  Available sizes: x2
+  Available VTs:   SL, L, R
+    OA211x2_ASAP7_75t_R: size=x2 vt=R  (max size or unsizable) | vt_swap R→SL possible
+    OA211x2_ASAP7_75t_SL: size=x2 vt=SL  (max size or unsizable)
+
+OAI21:
+  Available sizes: x1
+  Available VTs:   SL, L, R
+    OAI21x1_ASAP7_75t_R: size=x1 vt=R  (max size or unsizable) | vt_swap R→SL possible
+
+OR2:
+  Available sizes: x2, x4, x6
+  Available VTs:   SL, L, R
+    OR2x2_ASAP7_75t_SL: size=x2 vt=SL  → sizeup to x4
+
+OR3:
+  Available sizes: x1, x2, x4
+  Available VTs:   SL, L, R
+    OR3x1_ASAP7_75t_R: size=x1 vt=R  → sizeup to x2 | vt_swap R→SL possible
+    OR3x1_ASAP7_75t_SL: size=x1 vt=SL  → sizeup to x2
+    OR3x2_ASAP7_75t_SL: size=x2 vt=SL  → sizeup to x4
+
+OR4:
+  Available sizes: x1, x2
+  Available VTs:   SL, L, R
+    OR4x1_ASAP7_75t_SL: size=x1 vt=SL  → sizeup to x2
+
+OR5:
+  Available sizes: x1, x2
+  Available VTs:   SL, L, R
+    OR5x2_ASAP7_75t_SL: size=x2 vt=SL  (max size or unsizable)
+
+XNOR2:
+  Available sizes: x1, x2
+  Available VTs:   SL, L, R
+    XNOR2x2_ASAP7_75t_R: size=x2 vt=R  (max size or unsizable) | vt_swap R→SL possible
+    XNOR2x2_ASAP7_75t_SL: size=x2 vt=SL  (max size or unsizable)
+
+XOR2:
+  Available sizes: x1, x2
+  Available VTs:   SL, L, R
+    XOR2x2_ASAP7_75t_R: size=x2 vt=R  (max size or unsizable) | vt_swap R→SL possible
+    XOR2x2_ASAP7_75t_SL: size=x2 vt=SL  (max size or unsizable)
+
+
+Placement and floorplan context:
+=================================================================
+PLACEMENT REPORT  stage=base
+=================================================================
+
+--- Die & Core Dimensions ---
+Die  : 8.806 x 8.806 um  (LL: 0.000,0.000  UR: 8.806,8.806)
+Core : 7.722 x 7.560 um  (LL: 0.540,0.540  UR: 8.262,8.100)
+Rows : 4  (row height: 2.160 um)
+
+--- Cell Area Summary ---
+Total placed cells      : 481
+Total placed cell area  : 49.60 um^2
+Total row (site) area   : 58.82 um^2
+Free site area          : 8.82 um^2  (15.0% free)
+Free slots (est. x4 BUF): ~4 cells
+
+--- Spatial Utilization Grid (5x5)  (row 0=bottom, col 0=left) ---
+Each bin is 1.54 x 1.51 um  (bin area: 2.34 um^2)
+
+     | col0 | col1 | col2 | col3 | col4 |
+-----------------------------------------
+row4 |  103%|   81%|   98%|  105%|   81%|
+row3 |   84%|   67%|   65%|   82%|   72%|
+row2 |   97%|   80%|   75%|   88%|   94%|
+row1 |   62%|   91%|   69%|   74%|   81%|
+row0 |   99%|   91%|   91%|  101%|   94%|
+
+--- Critical Path Cells (top 5 worst paths) ---
+  Instance                                     X(um)     Y(um)  LocalDens%     Row     Col
+  -------------------------------------------------------------------------------------
+  _312_                                        2.646     6.615       3.1%       4       1
+  _590_                                        2.619     6.345       3.1%       3       1
+  _326_                                        2.862     5.805       3.1%       3       1
+  _327_                                        2.970     5.265       3.1%       3       1
+  _331_                                        3.996     5.265       3.1%       3       2
+  _389_                                        6.939     4.455       3.1%       2       4
+  _393_                                        7.425     4.455       3.1%       2       4
+  output41                                     7.911     1.485       3.1%       0       4
+  _318_                                        6.912     6.345       3.1%       3       4
+  _584_                                        6.507     5.535       3.1%       3       3
+  _342_                                        5.724     4.995       3.1%       2       3
+  _343_                                        5.805     4.725       3.1%       2       3
+  _344_                                        5.724     4.185       3.1%       2       3
+  _345_                                        5.670     4.455       3.1%       2       3
+  _354_                                        5.616     3.915       3.1%       2       3
+  output43                                     3.537     0.675       3.1%       0       1
+  _405_                                        6.561     4.995       3.1%       2       3
+  _406_                                        6.615     6.075       3.1%       3       3
+  output52                                     7.047     7.965       3.1%       4       4
+  _314_                                        4.104     6.885       3.1%       4       2
+  _588_                                        4.347     6.615       3.1%       4       2
+  _330_                                        4.185     6.075       3.1%       3       2
+  _335_                                        4.212     5.535       3.1%       3       2
+  _336_                                        5.535     5.265       3.1%       3       3
+  _401_                                        6.075     4.185       3.1%       2       3
+  _402_                                        6.777     3.645       3.1%       2       4
+  output39                                     8.019     3.375       3.1%       1       4
+  _370_                                        6.048     4.455       3.1%       2       3
+  _398_                                        3.807     3.645       3.1%       2       2
+  place116                                     4.536     2.835       3.1%       1       2
+  _399_                                        5.103     2.565       3.1%       1       2
+  _400_                                        5.211     2.025       3.1%       0       3
+  output40                                     5.967     1.215       3.1%       0       3
+
+--- Critical Path Bounding Box ---
+  BBox LL : (2.619, 0.675) um
+  BBox UR : (8.019, 7.965) um
+  BBox W x H : 5.400 x 7.290 um
+  BBox area  : 39.37 um^2  (67.4% of core)
+
+--- Placement Check (check_placement -verbose) ---
+  (no output — placement is clean)
+
+=================================================================

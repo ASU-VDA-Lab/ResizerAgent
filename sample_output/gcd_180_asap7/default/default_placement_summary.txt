@@ -1,0 +1,6 @@
+Pre-GR (placement-parasitic) summary — post-repair_timing, post-DPL
+WNS:         -58.382674
+TNS:         -906.889678
+Area:        52 um^2
+Utilization: 89%
+Power:       2.073e-03 W

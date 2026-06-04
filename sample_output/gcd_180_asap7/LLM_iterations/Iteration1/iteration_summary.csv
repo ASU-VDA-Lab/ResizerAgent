@@ -1,0 +1,4 @@
+plan,status,error_type,first_error,wns,tns,area_um2,util_percent,power_mw,violating_endpoints,log
+plan1,success,,,-71.575607,-1499.878339,50.0,85.0,0.00203,49,<sample_root>/LLM_iterations/Iteration1/plan1/plan1.log
+plan2,success,,,-71.967446,-1480.540585,50.0,85.0,0.002038,49,<sample_root>/LLM_iterations/Iteration1/plan2/plan2.log
+plan3,success,,,-69.325795,-1433.474012,50.0,85.0,0.001925,49,<sample_root>/LLM_iterations/Iteration1/plan3/plan3.log

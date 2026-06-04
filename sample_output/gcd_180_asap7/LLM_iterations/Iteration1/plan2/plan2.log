@@ -1,0 +1,243 @@
+=== plan2 — Iteration 1 ===
+Command: docker run --rm --user root -e INPUT_DB=/workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/input.odb -e OUTPUT_DB=/workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/output.odb -e OUTPUT_DIR=/workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/ -e SDC_FILE=/workspace/work_dir/claude/orfs_fix/asap7/gcd_180/base/constraint.sdc -e LEF_DIR=/workspace/ORFS_fix/flow/platforms/asap7/lef/ -e LIB_DIR=/workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/ -e SETRC_TCL=/workspace/ORFS_fix/flow/platforms/asap7/setRC.tcl -e PDK_PREAMBLE=/workspace/Platforms/asap7/preamble.tcl -e STAGE_TAG=plan2 -e FLOW_HOME=/workspace/ORFS_fix/flow -e MIN_ROUTING_LAYER=M2 -e MAX_ROUTING_LAYER=M7 -e ROUTING_LAYER_ADJUSTMENT=0.5 -v <project_root>:/workspace -w /workspace rsz_fix /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/run_plan.tcl
+Started: 2026-05-27 06:11:37
+============================================================
+
+OpenROAD HEAD-HASH-NOTFOUND 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /workspace/ORFS_fix/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /workspace/ORFS_fix/flow/platforms/asap7/lef/asap7sc7p5t_28_L_1x_220121a.lef, created 212 library cells
+[INFO ODB-0394] Duplicate site asap7sc7p5t in asap7sc7p5t_28_R_1x_220121a already seen in asap7sc7p5t_28_L_1x_220121a
+[INFO ODB-0227] LEF file: /workspace/ORFS_fix/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0394] Duplicate site asap7sc7p5t in asap7sc7p5t_28_SL_1x_220121a already seen in asap7sc7p5t_28_L_1x_220121a
+[INFO ODB-0227] LEF file: /workspace/ORFS_fix/flow/platforms/asap7/lef/asap7sc7p5t_28_SL_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /workspace/ORFS_fix/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 14814, timing group from output port.
+[INFO RSZ-0100] Repair move sequence: SizeUpMove VTSwapSpeed SwapPinsMove 
+[INFO RSZ-0094] Found 48 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 12 out of 48 (25.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   TNS      |  Viol  | Worst
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            | Endpts | Endpt
+--------------------------------------------------------------------------------------------------------------
+        0 |       0 |       0 |        0 |      0 |     0 |    +0.0% |  -67.757 |    -1145.0 |     48 | resp_msg[13]
+    final |       0 |      83 |        0 |      0 |    60 |    +0.3% |  -66.378 |    -1162.9 |     48 | resp_msg[13]
+--------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0051] Resized 83 instances: 10 up, 0 up match, 0 down, 73 VT
+[INFO RSZ-0043] Swapped pins on 60 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO DPL-0005] Max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+Movements Summary
+---------------------------------------
+Total cells:                     425
+Diamond Move Success:            425 (100.00%)
+Diamond Move Failure:              0
+Rip-up and replace Success:        0 (  0.00% of diamond failures)
+Rip-up and replace Failure:        0
+Total Placement Failures:          0
+---------------------------------------
+Placement Analysis
+---------------------------------
+total displacement          0.8 u
+average displacement        0.0 u
+max displacement            0.3 u
+original HPWL             704.4 u
+legalized HPWL            704.7 u
+delta HPWL                    0 %
+
+Die: 8.806x8.806 um  Core: 7.722x7.56 um
+Placed cells: 481  Total cell area: 49.73 um^2
+Placement report written: /workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/plan2_placement_report.txt
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     636
+Number of vias:       14
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   gcd
+Die area:                 ( 0 0 ) ( 8806 8806 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     481
+Number of terminals:      56
+Number of snets:          2
+Number of nets:           475
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 124.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 7365.
+[INFO DRT-0033] V1 shape region query size = 6534.
+[INFO DRT-0033] M2 shape region query size = 226.
+[INFO DRT-0033] V2 shape region query size = 174.
+[INFO DRT-0033] M3 shape region query size = 174.
+[INFO DRT-0033] V3 shape region query size = 116.
+[INFO DRT-0033] M4 shape region query size = 141.
+[INFO DRT-0033] V4 shape region query size = 116.
+[INFO DRT-0033] M5 shape region query size = 99.
+[INFO DRT-0033] V5 shape region query size = 16.
+[INFO DRT-0033] M6 shape region query size = 16.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0078]   Complete 662 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0081]   Complete 124 unique inst patterns.
+[INFO DRT-0084]   Complete 234 groups.
+#scanned instances     = 481
+#unique  instances     = 124
+#stdCellGenAp          = 2799
+#stdCellValidPlanarAp  = 12
+#stdCellValidViaAp     = 2352
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 1409
+#instTermValidViaApCnt = 0
+#macroGenAp            = 0
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:00:11, elapsed time = 00:00:10, memory = 414.17 (MB), peak = 419.46 (MB)
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 105
+[INFO GRT-0019] Found 6 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 28
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal       2611          1249          52.16%
+M3         Vertical         3254          1612          50.46%
+M4         Horizontal       2502          1221          51.20%
+M5         Vertical         2400          1178          50.92%
+M6         Horizontal       1638           742          54.70%
+M7         Vertical         1932           868          55.07%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 2661
+[INFO GRT-0198] Via related Steiner nodes: 34
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 3387
+[INFO GRT-0112] Final usage 3D: 11582
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Overflow
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                1249           606           48.52%             0 /  0 /  0
+M3                1612           661           41.00%             0 /  0 /  0
+M4                1221            90            7.37%             0 /  0 /  0
+M5                1178            64            5.43%             0 /  0 /  0
+M6                 742             0            0.00%             0 /  0 /  0
+M7                 868             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total             6870          1421           20.68%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 1376 um
+[INFO GRT-0014] Routed nets: 475
+[INFO GRT-0303] Global routing runtime = 00:00:00
+Generated artifacts in: /workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/
+  /workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/plan2_timing.txt
+  /workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/plan2_worst_paths.txt
+  /workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/plan2_area.rpt
+  /workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/plan2_power.rpt
+  /workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/violating_endpoint.txt
+  /workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/plan2_netlist.v
+  /workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/plan2_metrics.csv
+
+============================================================
+Exit code: 0  |  Elapsed: 17.4s
