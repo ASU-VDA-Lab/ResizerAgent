@@ -1,9 +1,5 @@
 # lexicographic_priority_power  —  Power-priority variant
 
-Lexicographic-priority variant of ResizerAgent. The selector agent's ranking
-policy Π_rank is reordered so power is ranked above WNS and TNS — same
-architecture as RA, only the user-defined priority and the corresponding
-ε_metric thresholds change.
 
 ## Run
 
