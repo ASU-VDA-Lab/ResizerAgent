@@ -11,7 +11,7 @@ plan, single-operation fix plan, and targeted fix plan, to minimize user-provide
 - Docker, with the `orfs_ra:latest` image available locally [Can be made available on request]
 - Claude CLI on `$PATH`, with model access to `claude-opus-4-7` (planner and
   selector agents) and `claude-sonnet-4-6` (executor agent)
-- ASAP7 PDK from the bundled `openroad-flow-scripts/` submodule
+- The `openroad-flow-scripts/` submodule (cloned with `--recurse-submodules`), which ships both the ORFS flow and its PDK platforms (ASAP7, NanGate45)
 
 ## Setup
 
@@ -40,7 +40,7 @@ python3 run.py --design aes --agent claude --pdk asap7 --run-stage backend
 |------|----------|-------------------|---------|
 | `--design` | yes | e.g. `aes`, `jpeg`, `ibex` | Design name under `openroad-flow-scripts/flow/designs/<pdk>/`. |
 | `--agent` | yes | e.g. `claude` | Agent label; namespaces the output tree. |
-| `--pdk` | yes | `asap7` | Target PDK. |
+| `--pdk` | yes | `asap7` \| `nangate45` | Target PDK. |
 | `--run-stage` | one of run-stage / clean | `base`, `default`, `LLM-iterations`, `backend_default`, `backend_best`, `backend_rank2..4`, `backend`, `all` | Single stage to run and exit. |
 | `--clean` | one of run-stage / clean | `base`, `default`, `agentic_flow`, `all` | Delete a stage's artifacts and exit. |
 | `--max-iterations` | no | `15` | Iteration cap for `LLM-iterations`. |
