@@ -1,45 +1,50 @@
 # experiments/
 
-Variants of the control 4-phase flow (Report → Plan → Execute → Select) that
-ships at the repo root. Each subdirectory is a self-contained copy with a
-single design choice changed, so its results can be compared directly against
-the control on the same design / PDK / iteration budget.
+Companion configurations to **ResizerAgent (RA)** — the LLM-based timing
+optimization framework that drives OpenROAD's Resizer through a closed-loop
+agentic flow (*Report → Plan → Execute → Select*). The full RA system lives at
+the repo root; each subdirectory here is either an **ablation** (paper §5.2)
+or a **lexicographic-priority variant** (paper §5.3) of RA, plus a local
+build of the **AutoTuner baseline (AT)** used in the evaluation.
 
-## Variants
+## Ablations (paper §5.2)
 
-### `ablation1_no_targeted_fixes`
-Drops the `eco` plan type from the Planner schema and prompt. The Planner can
-only emit `sequence` and `staged` plans — no per-instance surgical fixes —
-isolating how much value targeted ECO edits add on top of bulk `repair_timing`.
+### `ablation1_no_targeted_fixes`  (paper: **A1 — No targeted fixes**)
+Disables the targeted-fix plan type. RA can only emit sequence plans and
+single-operation fix plans — i.e., modify the `repair_timing -setup` knobs in
+Table 1 — with no explicit ECO-style edits.
 
-### `ablation2_single_candidate_plan`
-Constrains `plan_count` to exactly 1 per iteration (all three plan types still
-allowed). Iteration cap is unchanged, so this tests focused depth (15 × 1)
-against the control's wide search (up to 15 × 7).
+### `ablation2_single_candidate_plan`  (paper: **A2 — Single candidate plan**)
+Restricts the planner agent to generating exactly one candidate plan per
+iteration. All three plan types remain available; only the multi-plan
+exploration is removed.
 
-### `ablation3_no_physical_feedback`
-Measures WNS/TNS/area/power at **placement parasitics** instead of post-global-
-route. The LLM loop never sees GR-aware numbers; ORFS handles GR + detail
-route only in the backend stage after the loop concludes. Tests how much GR
-feedback inside the loop matters.
+### `ablation3_no_physical_feedback`  (paper: **A3 — No physical feedback**)
+Removes physical information from agent inputs, including the post-evaluation
+feedback signal — i.e., the report phase drops placement/routing context and
+the loop no longer measures with post-global-route parasitics.
+
+## Lexicographic-priority variant (paper §5.3)
 
 ### `lexicographic_priority_power`
-Re-ranks the objective: the Selector prefers the lowest-power plan among
-those that hold WNS within ~10 ps of seed. Planner prompt rewritten around
-power-reducing moves (`unbuffer`, `sizedown`). Tests power-aware
-timing closure under the same iteration budget.
+Reorders the selector's lexicographic ranking policy (Π_rank) so power is
+ranked above WNS and TNS. Same architecture as RA; only the user-defined
+priority and the corresponding ε_metric thresholds change.
+
+## AutoTuner baseline (paper §4)
 
 ### `autotuner_rsz`
-Replaces the LLM Planner with an Optuna TPE search over the same
-`repair_timing` sequence + knobs. No reasoning, no Selector — independent
-trials starting from the same `base_cts.odb`. Baseline for "what would a
-classical hyperparameter optimizer get on this problem."
+Local build of the **AT** baseline. An Optuna 3.x TPE sampler tunes the same
+Table 1 knobs RA controls (sequence encoded as 18 parameters: a binary
+`include_move` flag and a continuous `weight_move ∈ [1.0, 10.0]` per
+operation). No planner or selector agent — the cost function is a weighted
+sum of WNS, TNS, and power (weights 0.4 / 0.4 / 0.2).
 
 ## Layout
 
-Every variant mirrors the control's layout (`run.py` at the top, `scripts/`,
-`agents/`, `platforms/`) except `autotuner_rsz`, which has its own
-`run_autotuner.py` + stage scripts and a local `README.md` with its CLI.
+Every ablation and the lexicographic variant mirror RA's layout (`run.py`,
+`scripts/`, `agents/`, `platforms/`). `autotuner_rsz/` has its own
+`run_autotuner.py` + stage scripts and a local `README.md` with the CLI.
 
 See `../sample_output/gcd_180_asap7/README.md` for a per-file tour of what one
-run produces.
+RA run produces.
