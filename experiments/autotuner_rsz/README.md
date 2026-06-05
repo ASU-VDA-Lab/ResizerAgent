@@ -1,13 +1,5 @@
 # autotuner_rsz  —  AT baseline
 
-Local build of the **AutoTuner (AT) baseline** for ResizerAgent. An
-Optuna 3.x TPE sampler tunes the same `repair_timing -setup` knobs RA
-controls. The sequence parameter is encoded as 18 parameters — one binary
-`include_move` flag and one continuous `weight_move ∈ [1.0, 10.0]` per
-operation — and the cost function is a weighted sum of WNS, TNS, and power
-(weights 0.4 / 0.4 / 0.2). No planner or selector agent; trials are
-independent and start from the same `base_cts.odb`.
-
 ## Prerequisites
 
 - `pip install optuna` (only external Python dependency)
