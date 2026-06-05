@@ -1,9 +1,9 @@
 # ablation2_single_candidate_plan  —  A2: Single candidate plan
 
-Ablation A2 of ResizerAgent (paper §5.2). The planner agent is restricted to
-generating exactly one candidate plan per iteration. All three plan types
-(sequence, single-operation fix, targeted fix) remain available; only the
-multi-plan exploration is removed.
+Ablation A2 of ResizerAgent. The planner agent is restricted to generating
+exactly one candidate plan per iteration. All three plan types (sequence,
+single-operation fix, targeted fix) remain available; only the multi-plan
+exploration is removed.
 
 ## Run
 

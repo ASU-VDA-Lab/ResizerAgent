@@ -1,8 +1,8 @@
 # ablation1_no_targeted_fixes  —  A1: No targeted fixes
 
-Ablation A1 of ResizerAgent (paper §5.2). The planner agent's targeted-fix
-plan type is disabled — RA can only emit sequence and single-operation fix
-plans, i.e., modify the `repair_timing -setup` knobs in Table 1.
+Ablation A1 of ResizerAgent. The planner agent's targeted-fix plan type is
+disabled — RA can only emit sequence and single-operation fix plans, i.e.,
+modify the `repair_timing -setup` knobs.
 
 ## Run
 

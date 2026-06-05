@@ -1,12 +1,12 @@
 # autotuner_rsz  —  AT baseline
 
-Local build of the **AutoTuner (AT) baseline** used in ResizerAgent
-(paper §4). An Optuna 3.x TPE sampler tunes the same `repair_timing -setup`
-knobs RA controls (Table 1). The sequence parameter is encoded as 18
-parameters — one binary `include_move` flag and one continuous
-`weight_move ∈ [1.0, 10.0]` per operation — and the cost function is a
-weighted sum of WNS, TNS, and power (weights 0.4 / 0.4 / 0.2). No planner or
-selector agent; trials are independent and start from the same `base_cts.odb`.
+Local build of the **AutoTuner (AT) baseline** for ResizerAgent. An
+Optuna 3.x TPE sampler tunes the same `repair_timing -setup` knobs RA
+controls. The sequence parameter is encoded as 18 parameters — one binary
+`include_move` flag and one continuous `weight_move ∈ [1.0, 10.0]` per
+operation — and the cost function is a weighted sum of WNS, TNS, and power
+(weights 0.4 / 0.4 / 0.2). No planner or selector agent; trials are
+independent and start from the same `base_cts.odb`.
 
 ## Prerequisites
 
@@ -54,5 +54,5 @@ Add `--resume` to a `tune` invocation to continue from `optuna_study.db`.
 ## Stage semantics
 
 - **`base`** — `make cts` in Docker, copy `base_cts.odb` + SDC, extract placement-parasitic metrics. Every trial seeds from this.
-- **`tune`** — Optuna TPE search over the Table 1 knob space. Each trial runs `repair_timing -setup` in Docker, measures WNS/TNS/area/power at placement parasitics, and reports the weighted score back to the sampler.
+- **`tune`** — Optuna TPE search over the knob space. Each trial runs `repair_timing -setup` in Docker, measures WNS/TNS/area/power at placement parasitics, and reports the weighted score back to the sampler.
 - **`backend`** — push the best trial's ODB through `make route finish` for post-DR metrics, matching how the RA loop's best ODB is finished.

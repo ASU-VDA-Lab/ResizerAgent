@@ -1,8 +1,8 @@
 # ablation3_no_physical_feedback  —  A3: No physical feedback
 
-Ablation A3 of ResizerAgent (paper §5.2). Physical information is removed
-from agent inputs, including the post-evaluation feedback signal — the report
-phase drops placement/routing context and the loop no longer measures with
+Ablation A3 of ResizerAgent. Physical information is removed from agent
+inputs, including the post-evaluation feedback signal — the report phase
+drops placement/routing context and the loop no longer measures with
 post-global-route parasitics. Global route is run only in the backend stage
 after the loop concludes.
 
