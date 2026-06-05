@@ -1,4 +1,4 @@
-# ablation2_single_candidate_plan  —  A2: Single candidate plan
+# ablation2_single_candidate_plan 
 
 Restricts the planner agent to one candidate plan per iteration. All three
 plan types remain available.
