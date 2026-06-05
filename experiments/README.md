@@ -1,7 +1,5 @@
 # experiments/
 
-Companion configurations to **ResizerAgent (RA)**. The full RA system lives at
-the repo root.
 
 ## Ablations
 
