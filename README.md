@@ -2,10 +2,8 @@
 
 This is the github repository for the implementation of ResizerAgent(RA). RA is an LLM-based timing optimization framework that drives
 OpenROAD's Resizer through a closed-loop agentic flow with adaptive optimization strategies and targeted netlist modifications. At each iteration RA
-observes timing reports, physical feedback, and prior optimization outcomes,
-then commits to `repair_timing` operations across three plan types — sequence
-plan, single-operation fix plan, and targeted fix plan — to minimize worst
-negative slack (WNS) and total negative slack (TNS) on a post-CTS design.
+observes timing reports, physical feedback, and prior optimization outcomes, then commits to `repair_timing` operations across three plan types: sequence
+plan, single-operation fix plan, and targeted fix plan, to minimize user-provided metric on a post-CTS design.
 
 ## Requirements
 
