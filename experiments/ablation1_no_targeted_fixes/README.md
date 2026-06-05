@@ -1,4 +1,4 @@
-# ablation1_no_targeted_fixes  —  A1: No targeted fixes
+# ablation1_no_targeted_fixes
 
 Disables the targeted-fix plan type. RA can only emit sequence and
 single-operation fix plans.
