@@ -1,12 +1,5 @@
 # `scripts/`
 
-
-| Subdir | What it holds |
-|--------|---------------|
-| `python/` | Python modules: report/execute/select pre-compute, worker launcher. |
-| `tcl/` | OpenROAD TCL drivers invoked inside ORFS. |
-| `schemas/` | JSON Schemas for the Planner and Selector Agents. |
-
 ## `python/`
 
 ### Run-loop modules
