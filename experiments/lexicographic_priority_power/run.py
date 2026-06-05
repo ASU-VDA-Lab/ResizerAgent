@@ -11,7 +11,7 @@ Handles the complete flow in one file:
        Executor   → claude CLI  (generates run_plan.tcl per plan)
        Workers    → Docker / OpenROAD, parallel per plan
        Selector   → claude CLI
-       Promote    → copies best-plan artifacts to Iteration<N>/best/
+       Promote    → copies best-plan artifacts to iteration<N>/best/
 
 Usage (stage-based — pick one stage per invocation, or run 'all' end-to-end):
 
@@ -180,7 +180,7 @@ def design_dir(agent: str, design: str) -> pathlib.Path:
 
 
 def iter_dir(agent: str, design: str, n: int) -> pathlib.Path:
-    return design_dir(agent, design) / "LLM_iterations" / f"Iteration{n}"
+    return design_dir(agent, design) / "llm_iterations" / f"iteration{n}"
 
 
 # ---------------------------------------------------------------------------
@@ -964,7 +964,7 @@ def _build_compact_neighbors(sections: List[str], netlist_file: pathlib.Path,
 def run_reporter(agent: str, design: str, iterN: int,
                  path_limit: int = 25, neighbor_paths: int = 10,
                  backtrack_from: Optional[int] = None) -> bool:
-    """Build the reporter baseline prompt for Iteration<N>. Returns True on success.
+    """Build the reporter baseline prompt for iteration<N>. Returns True on success.
     If backtrack_from is set, seed from that iteration's best ODB instead of N-1."""
     if backtrack_from:
         log(f"Reporter: building prompt for Iteration {iterN} (BACKTRACK seed from Iteration {backtrack_from})")
@@ -1166,12 +1166,12 @@ def run_reporter(agent: str, design: str, iterN: int,
         s_viol         = _read_violations(start_dir / "violating_endpoint.txt")
 
         # Build iteration history — compact summary + detailed last 3 iterations
-        llm_root = design_dir(agent, design) / "LLM_iterations"
+        llm_root = design_dir(agent, design) / "llm_iterations"
 
         # Part A: compact WNS trajectory across all prior iterations
         summary_rows: List[str] = []
         for k in range(1, iterN):
-            best_plan_f = llm_root / f"Iteration{k}" / "best" / "best_plan.txt"
+            best_plan_f = llm_root / f"iteration{k}" / "best" / "best_plan.txt"
             best_name = best_wns = best_tns = "?"
             if best_plan_f.exists():
                 for line in best_plan_f.read_text().splitlines():
@@ -1206,7 +1206,7 @@ def run_reporter(agent: str, design: str, iterN: int,
         detail_rows: List[str] = []
         start_k = max(1, iterN - 3)
         for k in range(start_k, iterN):
-            iter_k = llm_root / f"Iteration{k}"
+            iter_k = llm_root / f"iteration{k}"
             planner_k = iter_k / "planner_decision.json"
             best_plan_f = iter_k / "best" / "best_plan.txt"
             winner_name = "?"
@@ -1227,7 +1227,7 @@ def run_reporter(agent: str, design: str, iterN: int,
                             except (ValueError, TypeError): pass
                             break
             else:
-                prev_best = llm_root / f"Iteration{k-1}" / "best" / "best_plan.txt"
+                prev_best = llm_root / f"iteration{k-1}" / "best" / "best_plan.txt"
                 if prev_best.exists():
                     for line in prev_best.read_text().splitlines():
                         if line.startswith("wns="):
@@ -1835,7 +1835,7 @@ def _build_planner_sandbox(agent: str, design: str, iterN: int) -> pathlib.Path:
     import tempfile
     sandbox = pathlib.Path(tempfile.mkdtemp(prefix=f"planner_{design}_iter{iterN}_"))
     iter_sandbox = (sandbox / "work_dir" / agent / PDK_NAME / design
-                    / "LLM_iterations" / f"Iteration{iterN}")
+                    / "llm_iterations" / f"iteration{iterN}")
     iter_sandbox.mkdir(parents=True)
     return sandbox
 
@@ -1865,7 +1865,7 @@ def invoke_planner(agent: str, design: str, iteration: int, claude_bin: str) -> 
     reporter_content = (iter_dir(agent, design, iteration) / "reporter_baseline_prompt.txt").read_text()
     agents_context = _build_planner_context()
     output_path = (f"work_dir/{agent}/{PDK_NAME}/{design}"
-                   f"/LLM_iterations/Iteration{iteration}/planner_decision.json")
+                   f"/llm_iterations/iteration{iteration}/planner_decision.json")
     prompt = (f"=== PLANNER REFERENCE (instructions + schema + PDK) ===\n{agents_context}\n"
               f"=== END REFERENCE ===\n\n"
               f"=== REPORTER OUTPUT ===\n{reporter_content}\n=== END REPORTER OUTPUT ===\n\n"
@@ -1884,7 +1884,7 @@ def invoke_planner(agent: str, design: str, iteration: int, claude_bin: str) -> 
                            cwd=str(sandbox),
                            allowed_tools="Write")
         sandbox_json = (sandbox / "work_dir" / agent / PDK_NAME / design
-                        / "LLM_iterations" / f"Iteration{iteration}" / "planner_decision.json")
+                        / "llm_iterations" / f"iteration{iteration}" / "planner_decision.json")
         real_json = iter_dir(agent, design, iteration) / "planner_decision.json"
         if sandbox_json.exists():
             shutil.copy2(sandbox_json, real_json)
@@ -1906,7 +1906,7 @@ def _build_executor_sandbox(agent: str, design: str, iterN: int) -> pathlib.Path
             agents/openroad_reference.md                     → symlink (repair_timing knobs)
             agents/<pdk>.md                                  → symlink (cell naming/VT)
             scripts/schemas/planner_decision.schema.json     → symlink (input format)
-            work_dir/<agent>/<design>/<pdk>/LLM_iterations/Iteration<N>/
+            work_dir/<agent>/<design>/<pdk>/llm_iterations/iteration<N>/
                                                              → symlink to real iter dir
 
     The iteration symlink is a pass-through for writes: the Executor reads
@@ -1929,7 +1929,7 @@ def _build_executor_sandbox(agent: str, design: str, iterN: int) -> pathlib.Path
 
     # 2. planner_decision.json — only file the Executor needs to read from the iter dir
     iter_sandbox = (sandbox / "work_dir" / agent / PDK_NAME / design
-                    / "LLM_iterations" / f"Iteration{iterN}")
+                    / "llm_iterations" / f"iteration{iterN}")
     iter_sandbox.mkdir(parents=True)
     (iter_sandbox / "planner_decision.json").symlink_to(
         iter_dir(agent, design, iterN) / "planner_decision.json")
@@ -1982,7 +1982,7 @@ def invoke_executor_retry(agent: str, design: str, iteration: int,
         f"infrastructure failure) — do NOT rewrite the TCL. Instead append a single comment "
         f"line to the top of run_plan.tcl: `# UNFIXABLE: <reason>`.\n"
         f"Plan TCL paths: "
-        f"work_dir/{agent}/{PDK_NAME}/{design}/LLM_iterations/Iteration{{iteration}}/<plan>/run_plan.tcl"
+        f"work_dir/{agent}/{PDK_NAME}/{design}/llm_iterations/iteration{{iteration}}/<plan>/run_plan.tcl"
     )
     sandbox = _build_executor_sandbox(agent, design, iteration)
     try:
@@ -2068,7 +2068,7 @@ def _build_selector_file_context(agent: str, design: str, iteration: int,
 
     # Prior iteration worst paths
     if iteration >= 2:
-        prior_paths = idir.parent / f"Iteration{iteration - 1}" / "best" / "best_worst_paths.txt"
+        prior_paths = idir.parent / f"iteration{iteration - 1}" / "best" / "best_worst_paths.txt"
         if prior_paths.exists():
             parts.append(f"=== WORST PATHS (Iteration {iteration - 1} best plan) ===\n"
                          + _read_truncated(prior_paths))
@@ -2085,7 +2085,7 @@ def _build_selector_file_context(agent: str, design: str, iteration: int,
     used_backtracks = []
     llm_root = idir.parent
     for k in range(1, iteration):
-        sel_path = llm_root / f"Iteration{k}" / "selector_decision.json"
+        sel_path = llm_root / f"iteration{k}" / "selector_decision.json"
         if sel_path.exists():
             try:
                 sel = json.loads(sel_path.read_text())
@@ -2127,7 +2127,7 @@ def invoke_selector(agent: str, design: str, iteration: int, claude_bin: str) ->
     file_context = _build_selector_file_context(
         agent, design, iteration, ctx.best_plan if ctx else None)
     output_path = (f"work_dir/{agent}/{PDK_NAME}/{design}"
-                   f"/LLM_iterations/Iteration{iteration}/selector_decision.json")
+                   f"/llm_iterations/iteration{iteration}/selector_decision.json")
     base_prompt = (
         f"=== SELECTOR REFERENCE (instructions + schema + PDK) ===\n{selector_context}\n"
         f"=== END REFERENCE ===\n\n"
@@ -2298,7 +2298,7 @@ def update_best_solutions(agent: str, design: str, iteration: int, decision: dic
         log(f"Best_solutions: no successful plans in iteration {iteration} — skipping update.")
         return
 
-    best_dir = design_dir(agent, design) / "LLM_iterations" / "Best_solutions"
+    best_dir = design_dir(agent, design) / "llm_iterations" / "Best_solutions"
     best_dir.mkdir(parents=True, exist_ok=True)
     rankings_path = best_dir / "rankings.json"
 
@@ -2555,14 +2555,14 @@ def _write_flow_csv(path: pathlib.Path, rows: List[List]) -> None:
 def _build_experiment_summary_csv(agent: str, design: str) -> pathlib.Path:
     """Build experiment_summary.csv from all iteration selector + plan data."""
     out      = design_dir(agent, design) / "experiment_summary.csv"
-    llm_root = design_dir(agent, design) / "LLM_iterations"
+    llm_root = design_dir(agent, design) / "llm_iterations"
     all_rows: List[Dict] = []
 
     # Pre-pass: cache each iteration's selector outcome so we can look up the
     # seed (prior-iteration or backtrack-target) for every row.
     iter_data: Dict[int, Dict] = {}
     for k in range(1, 200):
-        kd = llm_root / f"Iteration{k}"
+        kd = llm_root / f"iteration{k}"
         if not kd.exists():
             break
         sp = kd / "selector_decision.json"
@@ -2578,7 +2578,7 @@ def _build_experiment_summary_csv(agent: str, design: str) -> pathlib.Path:
         }
 
     for iter_n in range(1, 200):
-        iter_d   = llm_root / f"Iteration{iter_n}"
+        iter_d   = llm_root / f"iteration{iter_n}"
         if not iter_d.exists():
             break
         sel_path = iter_d / "selector_decision.json"
@@ -2757,7 +2757,7 @@ def run_backend_rank(agent: str, design: str, rank: int) -> int:
     _build_experiment_summary_csv(agent, design)
 
     # Locate rank-N entry in Best_solutions
-    rankings_path = ddir / "LLM_iterations" / "Best_solutions" / "rankings.json"
+    rankings_path = ddir / "llm_iterations" / "Best_solutions" / "rankings.json"
     if not rankings_path.exists():
         log(f"[ERROR] Backend rank{rank}: Best_solutions/rankings.json not found — "
             f"run --run-stage LLM-iterations first.")
@@ -3011,7 +3011,7 @@ def run_llm_iterations(agent: str, design: str, claude: str,
                     return 1
                 backtrack_override[iteration + 1] = bt_iter
                 log(f"BACKTRACK #{backtrack_count}: next iteration will seed from "
-                    f"Iteration{bt_iter}/best/output.odb")
+                    f"iteration{bt_iter}/best/output.odb")
 
             elif sel_decision == "accept_regression":
                 promote_best(agent, design, iteration, sel)
@@ -3089,11 +3089,11 @@ def clean_default(agent: str, design: str) -> None:
 
 
 def clean_agentic_flow(agent: str, design: str) -> None:
-    """Delete work_dir LLM_iterations/ and reset tokens.csv + iteration rows in runtimes.csv."""
+    """Delete work_dir llm_iterations/ and reset tokens.csv + iteration rows in runtimes.csv."""
     banner(f"CLEAN agentic_flow  design={design}")
     ddir = design_dir(agent, design)
-    if (ddir / "LLM_iterations").exists():
-        _rmtree_via_docker([str(ddir / "LLM_iterations")])
+    if (ddir / "llm_iterations").exists():
+        _rmtree_via_docker([str(ddir / "llm_iterations")])
 
     # Reset tokens.csv — all rows are iteration-specific
     tpath = _tokens_csv(agent, design)

@@ -4,7 +4,7 @@
 
 Two jobs per iteration:
 
-1. **Promote** — confirm the iteration's plan; Python copies its artifacts to `Iteration<N>/best/`.
+1. **Promote** — confirm the iteration's plan; Python copies its artifacts to `iteration<N>/best/`.
 2. **Steer** — diagnose what happened, assess convergence, write guidance that tells the Planner what to do differently next iteration.
 
 All WNS/TNS/area/power metrics are **after global route (GR)** — `estimate_parasitics -global_routing`. The backend shim runs post-GR `repair_timing`, `recover_power`, antenna repair, and `detail_route` after the loop ends — your numbers are slightly pessimistic but plan ordering holds.

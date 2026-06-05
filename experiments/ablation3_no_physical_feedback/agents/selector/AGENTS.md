@@ -4,7 +4,7 @@
 
 Two jobs per iteration:
 
-1. **Promote** — choose the best plan; Python copies its artifacts to `Iteration<N>/best/`.
+1. **Promote** — choose the best plan; Python copies its artifacts to `iteration<N>/best/`.
 2. **Steer** — diagnose what happened, assess convergence, write guidance that tells the Planner what to do differently next iteration.
 
 All WNS/TNS/area/power metrics are at **placement parasitics** — `estimate_parasitics -placement`. Global route is not run inside the loop; ORFS handles GR, post-GR repair, antenna repair, and detail route in the backend stage after the loop ends. Your numbers are optimistic relative to final routed slack, but plan ordering at placement is a strong proxy for routed ordering.

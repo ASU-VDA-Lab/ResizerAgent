@@ -1,7 +1,7 @@
 # Sample Output — gcd_180 / asap7
 
-One real iteration of a `gcd_180` run on `asap7`. Iteration2..N would mirror
-the same shape under sibling `Iteration<N>/` directories.
+One real iteration of a `gcd_180` run on `asap7`. iteration2..N would mirror
+the same shape under sibling `iteration<N>/` directories.
 
 Larger artifacts (`.odb`, `.v`, full `_worst_paths.txt`) are stripped or
 truncated; stubs note the original size. Host paths in logs / CSVs / JSONs
@@ -13,8 +13,8 @@ are rewritten as `<project_root>` / `<sample_root>`.
 gcd_180_asap7/
 ├── base/                # raw post-CTS, no repair_timing
 ├── default/             # ORFS default repair_timing baseline (BL)
-├── LLM_iterations/
-    ├── Iteration1/      # one full Report → Plan → Execute → Select cycle
+├── llm_iterations/
+    ├── iteration1/      # one full Report → Plan → Execute → Select cycle
     └── Best_solutions/  # cross-iteration WNS ranking
 ├── run_logs/            # ORFS stage logs
 ├── apicall.csv          # API calls per role per iteration
@@ -38,10 +38,10 @@ gcd_180_asap7/
 
 `base/` is measured at placement parasitics; `default/` at post-GR.
 
-## `LLM_iterations/Iteration1/`
+## `llm_iterations/iteration1/`
 
 ```
-Iteration1/
+iteration1/
 ├── start/                       # seed snapshot fed into this iteration
 ├── plan1/  plan2/  plan3/       # one subdir per plan
 ├── best/                        # the plan the selector promoted
@@ -53,7 +53,7 @@ Iteration1/
 └── iteration_summary.csv        # per-plan WNS/TNS/area/util/power roll-up
 ```
 
-`start/seed.odb` is `default.odb` on Iteration1, otherwise the previous
+`start/seed.odb` is `default.odb` on iteration1, otherwise the previous
 iteration's `best/output.odb`.
 
 Each `plan<N>/` is one `run_plan.tcl` execution:
@@ -71,7 +71,7 @@ Each `plan<N>/` is one `run_plan.tcl` execution:
 
 `best/` mirrors the winning plan with files re-prefixed `best_*`;
 `best_plan.txt` records which plan number was promoted, and its `output.odb`
-becomes Iteration2's `seed.odb`.
+becomes iteration2's `seed.odb`.
 
 `planner_decision.json` / `selector_decision.json` follow the schemas under
 `scripts/schemas/`; `*_convo.jsonl` is the raw Anthropic API exchange for

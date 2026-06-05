@@ -94,10 +94,10 @@ def seed_odb(agent: str, design: str, iteration: int) -> pathlib.Path:
     """Return the seed ODB path for this iteration.
 
     The Reporter (build_baseline_prompt.py) already copied the correct ODB
-    into LLM_iterations/Iteration<N>/start/seed.odb before the Executor runs.
+    into llm_iterations/iteration<N>/start/seed.odb before the Executor runs.
     """
     p = (WORKSPACE / "work_dir" / agent / design
-         / "LLM_iterations" / f"Iteration{iteration}"
+         / "llm_iterations" / f"iteration{iteration}"
          / "start" / "seed.odb")
     if not p.exists():
         raise SystemExit(
@@ -384,7 +384,7 @@ def main() -> int:
     iterN   = args.iteration
 
     iter_dir = (WORKSPACE / "work_dir" / agent / design
-                / "LLM_iterations" / f"Iteration{iterN}")
+                / "llm_iterations" / f"iteration{iterN}")
 
     # Determine which plans to run
     all_plans  = [f"plan{i}" for i in range(1, args.plan_count + 1)]

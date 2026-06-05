@@ -35,7 +35,7 @@ def _work_dir(agent: str, pdk: str, design: str) -> pathlib.Path:
 
 
 def _iter_dir(wdir: pathlib.Path, n: int) -> pathlib.Path:
-    return wdir / "LLM_iterations" / f"Iteration{n}"
+    return wdir / "llm_iterations" / f"iteration{n}"
 
 
 # ---------------------------------------------------------------------------
@@ -129,21 +129,21 @@ def _section_default(wdir: pathlib.Path, lines: list) -> None:
 
 def _section_iterations(wdir: pathlib.Path, lines: list) -> list:
     """Emit per-iteration detail. Returns trajectory list for summary table."""
-    llm_root = wdir / "LLM_iterations"
+    llm_root = wdir / "llm_iterations"
     if not llm_root.exists():
         return []
 
     iters = sorted(
-        int(d.name.replace("Iteration", ""))
+        int(d.name.replace("iteration", ""))
         for d in llm_root.iterdir()
-        if d.is_dir() and d.name.startswith("Iteration") and d.name[9:].isdigit()
+        if d.is_dir() and d.name.startswith("iteration") and d.name[9:].isdigit()
     )
 
     trajectory: List[Dict] = []
     seed_wns_map: Dict[int, Optional[float]] = {}
 
     for n in iters:
-        idir = llm_root / f"Iteration{n}"
+        idir = llm_root / f"iteration{n}"
         lines.append(f"\n{SEP}")
         lines.append(f"  ITERATION {n}")
         lines.append(SEP)
@@ -299,7 +299,7 @@ def _section_trajectory(trajectory: list, lines: list) -> None:
 
 
 def _section_rankings(wdir: pathlib.Path, lines: list) -> None:
-    d = _read_json(wdir / "LLM_iterations" / "Best_solutions" / "rankings.json")
+    d = _read_json(wdir / "llm_iterations" / "Best_solutions" / "rankings.json")
     if not d:
         return
     lines.append(f"\n{SEP}")

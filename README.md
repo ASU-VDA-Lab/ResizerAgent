@@ -129,7 +129,7 @@ Exactly one of `--clean` or `--run-stage` must be provided.
 For design `D` under agent `A`:
 
 - `work_dir/A/<pdk>/D/base/`, `default/` — base and default-stage results
-- `work_dir/A/<pdk>/D/LLM_iterations/Iteration<N>/` — per-iteration
+- `work_dir/A/<pdk>/D/llm_iterations/iteration<N>/` — per-iteration
   planner / selector JSON + reporter prompt + `plan<i>/` subdirs + `best/`
 - `work_dir/A/<pdk>/D/{design}_baseline.csv`,
   `{design}_agentic[_r<N>].csv` — ledger rows for each backend stage

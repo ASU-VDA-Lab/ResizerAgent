@@ -11,8 +11,8 @@
       "plan": "plan1",
       "wns_ps": -63.954,
       "tns_ps": -1030.916,
-      "odb": "<sample_root>/LLM_iterations/Iteration3/plan1/output.odb",
-      "sdc": "<sample_root>/LLM_iterations/Iteration3/plan1/output.sdc",
+      "odb": "<sample_root>/llm_iterations/iteration3/plan1/output.odb",
+      "sdc": "<sample_root>/llm_iterations/iteration3/plan1/output.sdc",
       "odb_exists": true,
       "chosen": true,
       "rank": 1
@@ -22,8 +22,8 @@
       "plan": "plan2",
       "wns_ps": -63.954,
       "tns_ps": -1031.781,
-      "odb": "<sample_root>/LLM_iterations/Iteration3/plan2/output.odb",
-      "sdc": "<sample_root>/LLM_iterations/Iteration3/plan2/output.sdc",
+      "odb": "<sample_root>/llm_iterations/iteration3/plan2/output.odb",
+      "sdc": "<sample_root>/llm_iterations/iteration3/plan2/output.sdc",
       "odb_exists": true,
       "chosen": false,
       "rank": 2
@@ -33,8 +33,8 @@
       "plan": "plan1",
       "wns_ps": -63.954,
       "tns_ps": -1030.916,
-      "odb": "<sample_root>/LLM_iterations/Iteration4/plan1/output.odb",
-      "sdc": "<sample_root>/LLM_iterations/Iteration4/plan1/output.sdc",
+      "odb": "<sample_root>/llm_iterations/iteration4/plan1/output.odb",
+      "sdc": "<sample_root>/llm_iterations/iteration4/plan1/output.sdc",
       "odb_exists": true,
       "chosen": true,
       "rank": 3
@@ -44,8 +44,8 @@
       "plan": "plan2",
       "wns_ps": -64.095,
       "tns_ps": -998.009,
-      "odb": "<sample_root>/LLM_iterations/Iteration4/plan2/output.odb",
-      "sdc": "<sample_root>/LLM_iterations/Iteration4/plan2/output.sdc",
+      "odb": "<sample_root>/llm_iterations/iteration4/plan2/output.odb",
+      "sdc": "<sample_root>/llm_iterations/iteration4/plan2/output.sdc",
       "odb_exists": true,
       "chosen": false,
       "rank": 4

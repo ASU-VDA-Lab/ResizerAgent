@@ -129,7 +129,7 @@ def _resolve_seed_wns(
     clock with ~-8 ps slack) and scaled the seed up by 1000×, producing nonsense
     delta_wns / wns_in values. Trust the file unit as ps.
     """
-    llm_root = iter_dir.parent  # LLM_iterations/
+    llm_root = iter_dir.parent  # llm_iterations/
 
     if iterN == 1:
         seed_csv = iter_dir / "start" / "seed_metrics.csv"
@@ -147,7 +147,7 @@ def _resolve_seed_wns(
     # Check if the prior iteration backtracked, which changes which iter we seed from.
     # Walk backwards: prior iter's selector_decision may have backtrack_to_iteration.
     seed_iter = iterN - 1
-    prior_sel_path = llm_root / f"Iteration{iterN - 1}" / "selector_decision.json"
+    prior_sel_path = llm_root / f"iteration{iterN - 1}" / "selector_decision.json"
     if prior_sel_path.exists():
         try:
             prior_sel = json.loads(prior_sel_path.read_text())
@@ -157,7 +157,7 @@ def _resolve_seed_wns(
         except (OSError, json.JSONDecodeError, KeyError):
             pass
 
-    prior_best_txt = llm_root / f"Iteration{seed_iter}" / "best" / "best_plan.txt"
+    prior_best_txt = llm_root / f"iteration{seed_iter}" / "best" / "best_plan.txt"
     if prior_best_txt.exists():
         try:
             for line in prior_best_txt.read_text().splitlines():
@@ -205,7 +205,7 @@ def _resolve_seed_tns(
         return None
 
     seed_iter = iterN - 1
-    prior_sel_path = llm_root / f"Iteration{iterN - 1}" / "selector_decision.json"
+    prior_sel_path = llm_root / f"iteration{iterN - 1}" / "selector_decision.json"
     if prior_sel_path.exists():
         try:
             prior_sel = json.loads(prior_sel_path.read_text())
@@ -215,7 +215,7 @@ def _resolve_seed_tns(
         except (OSError, json.JSONDecodeError, KeyError):
             pass
 
-    prior_best_txt = llm_root / f"Iteration{seed_iter}" / "best" / "best_plan.txt"
+    prior_best_txt = llm_root / f"iteration{seed_iter}" / "best" / "best_plan.txt"
     if prior_best_txt.exists():
         try:
             for line in prior_best_txt.read_text().splitlines():
@@ -366,12 +366,12 @@ def _build_iteration_table(
     current_best_tns: Optional[float] = None,
 ) -> List[Dict[str, Any]]:
     """Build iteration_table with WNS trajectory for iterations 1..N."""
-    llm_root = design_dir / "LLM_iterations"
+    llm_root = design_dir / "llm_iterations"
     table: List[Dict[str, Any]] = []
 
     # Gather completed prior iterations (1 to N-1)
     for k in range(1, iterN):
-        best_txt = llm_root / f"Iteration{k}" / "best" / "best_plan.txt"
+        best_txt = llm_root / f"iteration{k}" / "best" / "best_plan.txt"
         if not best_txt.exists():
             continue
         plan_name = ""
@@ -394,7 +394,7 @@ def _build_iteration_table(
         # We read it from the selector_decision's iteration_table if available,
         # falling back to seed_metrics.csv
         wns_in: Optional[float] = None
-        prior_sel_path = llm_root / f"Iteration{k}" / "selector_decision.json"
+        prior_sel_path = llm_root / f"iteration{k}" / "selector_decision.json"
         if prior_sel_path.exists():
             try:
                 prior_sel = json.loads(prior_sel_path.read_text())
@@ -408,7 +408,7 @@ def _build_iteration_table(
 
         if wns_in is None:
             # Fall back to seed_metrics.csv
-            seed_csv = llm_root / f"Iteration{k}" / "start" / "seed_metrics.csv"
+            seed_csv = llm_root / f"iteration{k}" / "start" / "seed_metrics.csv"
             row = _read_csv_first_row(seed_csv)
             if row:
                 wns_in = _safe_float(row.get("wns"))
@@ -840,8 +840,8 @@ def build_context(
 
     # 6. delta_wns_last_iter and delta_tns_last_iter (from prior iteration's selector_decision)
     if iterN > 1:
-        llm_root = design_dir / "LLM_iterations"
-        prior_sel_path = llm_root / f"Iteration{iterN - 1}" / "selector_decision.json"
+        llm_root = design_dir / "llm_iterations"
+        prior_sel_path = llm_root / f"iteration{iterN - 1}" / "selector_decision.json"
         if prior_sel_path.exists():
             try:
                 prior_sel = json.loads(prior_sel_path.read_text())
@@ -938,9 +938,9 @@ def merge_selector_output(
         return False
 
     # Determine iteration number from path name
-    iter_name = iter_dir.name  # "Iteration<N>"
+    iter_name = iter_dir.name  # "iteration<N>"
     try:
-        iterN = int(iter_name.replace("Iteration", ""))
+        iterN = int(iter_name.replace("iteration", ""))
     except ValueError:
         iterN = sel.get("iteration", 0)
 

@@ -413,7 +413,7 @@ def build_plans(iter_dir: pathlib.Path) -> Tuple[bool, List[str]]:
     if not plans:
         return False, ["no plans in decision"]
 
-    iter_n   = int(iter_dir.name.replace("Iteration", ""))
+    iter_n   = int(iter_dir.name.replace("iteration", ""))
     warnings: List[str] = []
     built    = 0
 

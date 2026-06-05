@@ -24,10 +24,10 @@ scripts/schemas/planner_decision.schema.json  ← input format you must understa
 You are told the exact paths in the invocation prompt. Use them literally.
 
 - **Input JSON:**
-  `work_dir/<agent>/<design>/<pdk>/LLM_iterations/Iteration<N>/planner_decision.json`
+  `work_dir/<agent>/<design>/<pdk>/llm_iterations/iteration<N>/planner_decision.json`
 
 - **Output TCL:**
-  `work_dir/<agent>/<design>/<pdk>/LLM_iterations/Iteration<N>/plan1/run_plan.tcl`
+  `work_dir/<agent>/<design>/<pdk>/llm_iterations/iteration<N>/plan1/run_plan.tcl`
 
 CRITICAL: Write to the path shown in your invocation prompt. Do not invent
 alternative paths. Create the `plan1/` directory if it does not exist.
