@@ -1,4 +1,4 @@
-# ablation3_no_physical_feedback  —  A3: No physical feedback
+# ablation3_no_physical_feedback
 
 Removes physical information from agent inputs, including the
 post-evaluation feedback signal. The loop measures at placement parasitics
