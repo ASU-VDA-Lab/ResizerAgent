@@ -1,4 +1,4 @@
-# autotuner_rsz  —  AT baseline
+# autotuner_rsz
 
 Optuna 3.x TPE search over the `repair_timing -setup` knob space. Sequence
 is encoded as 18 parameters (`include_move` flag + `weight_move ∈ [1.0, 10.0]`
