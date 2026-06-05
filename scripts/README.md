@@ -16,7 +16,7 @@ Non-orchestrator code consumed by `run.py`.
 |------|------------|
 | `executor.py` | Validates `planner_decision.json` and emits one `run_plan.tcl` per plan under `planX/`. Does not invoke Docker. |
 | `selector_prep.py` | Pre-computes mechanical fields (rankings, regression flags, plateau diagnostics) before the selector LLM call. |
-| `launch_workers.py` | Runs one Docker / OpenROAD process per `planX/`, captures logs, classifies errors. |
+| `launch_workers.py` | Runs one Docker / OpenROAD process per `planX/`, captures logs, and classifies errors. |
 | `generate_cts.py` | Invokes `make clean_all && make cts-a` so `4_1_cts.odb` / `.sdc` land in the ORFS results tree. |
 | `parse_gr_metrics.py` | Parses `[INFO GRT-*]` lines from `global_route` logs into a structured summary. |
 | `generate_report.py` | Compiled text report for a run (FP / GP / DP / CTS / repair / GRT / DR ledger + iteration trajectory). |
@@ -32,7 +32,6 @@ Non-orchestrator code consumed by `run.py`.
 
 | File | What it is |
 |------|------------|
-| `__init__.py` | `get(name)` returns the `_PDK` dataclass for a PDK. |
 | `asap7.py` | ASAP7 PDK bundle (multi-V_t; ASAP7-specific unsizable cells). |
 | `nangate45.py` | NanGate45 PDK bundle (single-V_t). |
 
@@ -41,10 +40,10 @@ Non-orchestrator code consumed by `run.py`.
 | File | What it is |
 |------|------------|
 | `run_default.tcl` | Default-stage driver: load PDK + `base_cts.odb` → `repair_timing` → DPL → write pre-GR DB → GR → post-GR metrics. |
-| `generate_base_artifacts.tcl` | Base-stage timing / area / power / worst-paths / metrics from `base_cts.odb` at placement parasitics. |
+| `generate_base_artifacts.tcl` | Base-stage timing/area/power / worst-paths / metrics from `base_cts.odb` at placement parasitics. |
 | `generate_design_artifacts.tcl` | Reusable report generator for an arbitrary ODB; configured via env vars. |
 | `generate_placement_report.tcl` | Spatial placement report (density grid, critical-path cell locations). |
-| `eco_buf_insert.tcl` | Defines `eco_insert_buffer` — ODB-level buffer-insertion procedure used by targeted-fix plans. |
+
 
 ## `schemas/`
 
