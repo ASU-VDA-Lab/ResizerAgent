@@ -13,7 +13,7 @@ Usage (explicit path — clock_sweep or custom layouts):
 
     The --design value is used only to locate CSV files named
     {design}_baseline.csv, {design}_agentic.csv, etc.
-    When --wdir is given, --agent / --pdk / --orfs are ignored.
+    When --wdir is given, --agent / --pdk are ignored.
 """
 
 import argparse
@@ -30,8 +30,8 @@ from typing import Any, Dict, List, Optional
 ROOT = pathlib.Path(__file__).resolve().parent.parent.parent  # 2A-new-context/
 
 
-def _work_dir(agent: str, orfs: str, pdk: str, design: str) -> pathlib.Path:
-    return ROOT / "work_dir" / agent / f"orfs_{orfs}" / pdk / design
+def _work_dir(agent: str, pdk: str, design: str) -> pathlib.Path:
+    return ROOT / "work_dir" / agent / pdk / design
 
 
 def _iter_dir(wdir: pathlib.Path, n: int) -> pathlib.Path:
@@ -409,10 +409,9 @@ def main() -> None:
     ap.add_argument("--design", required=True,
                     help="Design name (also used as CSV prefix: {design}_baseline.csv etc.)")
     ap.add_argument("--wdir",   default=None,
-                    help="Explicit path to the design work directory (overrides --agent/--pdk/--orfs)")
+                    help="Explicit path to the design work directory (overrides --agent/--pdk)")
     ap.add_argument("--agent",  default="claude")
     ap.add_argument("--pdk",    default="asap7", choices=["asap7", "nangate45"])
-    ap.add_argument("--orfs",   default="fix",   choices=["fix"])
     ap.add_argument("--output", default=None,
                     help="Write report to file instead of stdout")
     args = ap.parse_args()
@@ -420,7 +419,7 @@ def main() -> None:
     if args.wdir:
         wdir = pathlib.Path(args.wdir).resolve()
     else:
-        wdir = _work_dir(args.agent, args.orfs, args.pdk, args.design)
+        wdir = _work_dir(args.agent, args.pdk, args.design)
 
     if not wdir.exists():
         print(f"[ERROR] work directory not found: {wdir}", file=sys.stderr)
@@ -436,7 +435,6 @@ def main() -> None:
         lines.append(f"  Work dir  : {wdir}")
     else:
         lines.append(f"  PDK       : {args.pdk}")
-        lines.append(f"  ORFS      : orfs_{args.orfs}")
         lines.append(f"  Agent     : {args.agent}")
     lines.append(f"  Generated : {time.strftime('%Y-%m-%d %H:%M:%S')}")
     lines.append(SEP2)

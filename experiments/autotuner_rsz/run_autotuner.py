@@ -6,7 +6,7 @@ Completely standalone — never touches run.py, work_dir/, or any agentic
 flow infrastructure. Copy experiments/autotuner_rsz/ to another server and it runs.
 
 Stages:
-  base  — Run make cts inside Docker (experiments/autotuner_rsz/ORFS_fix/), copy
+  base  — Run make cts inside Docker (openroad-flow-scripts/), copy
            4_1_cts.odb + SDC to experiments/autotuner_rsz/results/.../base/, generate
            placement-parasitic artifacts via generate_base_artifacts.tcl.
 
@@ -30,7 +30,7 @@ Usage:
   python3 experiments/autotuner_rsz/run_autotuner.py \\
       --design aes --pdk asap7 --run-stage tune --resume
 
-Output (experiments/autotuner_rsz/results/orfs_<orfs>/<pdk>/<design>/):
+Output (experiments/autotuner_rsz/results/<pdk>/<design>/):
   base/
     base_cts.odb            — raw post-CTS database (seed for all trials)
     constraint.sdc          — post-CTS SDC
@@ -76,9 +76,8 @@ from pdk_configs import get as _get_pdk   # noqa: E402
 # ---------------------------------------------------------------------------
 
 class _OrfsConfig:
-    def __init__(self, name, root_dir_name, docker_image, cts_make_target,
+    def __init__(self, root_dir_name, docker_image, cts_make_target,
                  cts_odb_name, cts_sdc_name):
-        self.name             = name
         self.root_dir_name    = root_dir_name
         self.docker_image     = docker_image
         self.cts_make_target  = cts_make_target
@@ -86,17 +85,9 @@ class _OrfsConfig:
         self.cts_sdc_name     = cts_sdc_name
 
 
-_ORFS_CONFIGS = {
-    "old": _OrfsConfig("old", "ORFS_old",
-                        "openroad/flow-ubuntu22.04-builder:0b569c",
-                        "cts-a", "4_1_cts.odb", "4_1_cts.sdc"),
-    "new": _OrfsConfig("new", "ORFS_new",
-                        "orfs:final",
-                        "cts", "4_1_cts.odb", "4_cts.sdc"),
-    "fix": _OrfsConfig("fix", "experiments/autotuner_rsz/ORFS_fix",
-                        "rsz_fix",
-                        "cts", "4_1_cts.odb", "4_cts.sdc"),
-}
+_ORFS_CFG = _OrfsConfig("openroad-flow-scripts",
+                        "orfs_ra",
+                        "cts", "4_1_cts.odb", "4_cts.sdc")
 
 DOCKER_OPENROAD = "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"
 
@@ -115,8 +106,6 @@ def parse_args() -> argparse.Namespace:
                     help="Design name (e.g. gcd, aes, ibex)")
     ap.add_argument("--pdk",       required=True, choices=["asap7", "nangate45"],
                     help="Target PDK")
-    ap.add_argument("--orfs",      choices=["old", "new", "fix"], default="fix",
-                    help="ORFS variant (default: fix → rsz_fix image + experiments/autotuner_rsz/ORFS_fix/)")
     group = ap.add_mutually_exclusive_group(required=True)
     group.add_argument("--run-stage", choices=["base", "tune", "backend"],
                        dest="run_stage",
@@ -148,8 +137,8 @@ def parse_args() -> argparse.Namespace:
 
 def _clean(design: str, pdk: str, orfs_cfg, what: str) -> int:
     import shutil
-    output_dir = AUTOTUNER_ROOT / "results" / f"orfs_{orfs_cfg.name}" / pdk / design
-    log_dir    = AUTOTUNER_ROOT / "logs"    / f"orfs_{orfs_cfg.name}" / pdk / design
+    output_dir = AUTOTUNER_ROOT / "results" / pdk / design
+    log_dir    = AUTOTUNER_ROOT / "logs"    / pdk / design
     orfs_flow_dir    = WORKSPACE / orfs_cfg.root_dir_name / "flow"
     orfs_results_dir = orfs_flow_dir / "results" / pdk / design / "base"
 
@@ -200,7 +189,7 @@ def _clean(design: str, pdk: str, orfs_cfg, what: str) -> int:
         _rm(output_dir / "base")
         for f in ["base_cts.log", "base_artifacts.log"]:
             _rm(log_dir / f)
-        # Also wipe the ORFS_fix flow results for this design so make cts rebuilds from scratch
+        # Also wipe the openroad-flow-scripts flow results for this design so make cts rebuilds from scratch
         _rm_docker(orfs_flow_dir / "results" / pdk / design)
 
     if what in ("tune", "all"):
@@ -247,13 +236,13 @@ def _clean(design: str, pdk: str, orfs_cfg, what: str) -> int:
 
 def main() -> int:
     args     = parse_args()
-    orfs_cfg = _ORFS_CONFIGS[args.orfs]
+    orfs_cfg = _ORFS_CFG
     pdk_cfg  = _get_pdk(args.pdk)
 
     if args.clean:
         return _clean(args.design, args.pdk, orfs_cfg, args.clean)
 
-    print(f"[autotuner] ORFS variant : {args.orfs} ({orfs_cfg.root_dir_name})")
+    print(f"[autotuner] ORFS         : openroad-flow-scripts (submodule)")
     print(f"[autotuner] Docker image : {orfs_cfg.docker_image}")
     print(f"[autotuner] Stage        : {args.run_stage}")
 

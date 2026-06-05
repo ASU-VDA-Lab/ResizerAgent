@@ -1,8 +1,8 @@
 """
 experiments/autotuner_rsz/base_stage.py — Standalone base CTS stage for the AutoTuner.
 
-Runs `make cts` inside Docker using experiments/autotuner_rsz/ORFS_fix/, then copies the
-resulting 4_1_cts.odb to experiments/autotuner_rsz/results/orfs_<orfs>/<pdk>/<design>/base/
+Runs `make cts` inside Docker using openroad-flow-scripts/, then copies the
+resulting 4_1_cts.odb to experiments/autotuner_rsz/results/<pdk>/<design>/base/
 and generates placement-parasitic artifacts via generate_base_artifacts.tcl.
 
 Never touches run.py, work_dir/, or any agentic flow infrastructure.
@@ -46,7 +46,7 @@ def run_base_stage(
     Run CTS + base artifact generation for the given design/PDK.
 
     Steps:
-      1. docker run ... make cts  (inside experiments/autotuner_rsz/ORFS_fix/flow)
+      1. docker run ... make cts  (inside openroad-flow-scripts/flow)
       2. copy 4_1_cts.odb + SDC → results/.../base/
       3. docker run openroad -exit generate_base_artifacts.tcl
       4. write runtimes.csv rows
@@ -57,7 +57,7 @@ def run_base_stage(
     orfs_flow_dir    = workspace / orfs_cfg.root_dir_name / "flow"
     orfs_results_dir = orfs_flow_dir / "results" / pdk / design / "base"
 
-    output_dir   = autotuner_root / "results" / f"orfs_{orfs_cfg.name}" / pdk / design
+    output_dir   = autotuner_root / "results" / pdk / design
     base_dir     = output_dir / "base"
     runtimes_csv = output_dir / "runtimes.csv"
     log_dir      = base_dir   # logs live alongside base artifacts

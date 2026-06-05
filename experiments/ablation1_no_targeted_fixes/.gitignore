@@ -1,7 +1,4 @@
 work_dir/
-ORFS_old/
-ORFS_new/
-ORFS_fix/
 latest_orfs/
 __pycache__/
 *.pyc

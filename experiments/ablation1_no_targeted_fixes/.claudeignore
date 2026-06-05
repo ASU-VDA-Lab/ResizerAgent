@@ -8,7 +8,7 @@ work_dir/**/*.def
 work_dir/**/*.guide
 
 # ORFS source tree — massive, agents never need to browse it
-OpenROAD-flow-scripts/
+openroad-flow-scripts/
 
 # PDK platform files (preamble.tcl, LEF, LIB, cell_catalog.xml)
 # Reference docs have been moved to agents/nangate45.md and agents/asap7.md

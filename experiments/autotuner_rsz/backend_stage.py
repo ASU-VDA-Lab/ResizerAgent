@@ -1,7 +1,7 @@
 """
 experiments/autotuner_rsz/backend_stage.py — Backend route+finish for AutoTuner.
 
-Reads autotuner_best.json, copies best_output.odb → ORFS_fix/flow/results/
+Reads autotuner_best.json, copies best_output.odb → openroad-flow-scripts/flow/results/
 as 4_1_cts.*, then runs `make clean_route && make route finish` inside Docker.
 
 Writes:
@@ -178,13 +178,13 @@ def run_backend_stage(
     autotuner_root: pathlib.Path,
 ) -> None:
     """
-    Copy best_output.odb → ORFS_fix/flow/results/ as 4_1_cts.* then run
+    Copy best_output.odb → openroad-flow-scripts/flow/results/ as 4_1_cts.* then run
     make route finish inside Docker. Writes autotuner_comparison.csv.
     """
-    output_dir   = autotuner_root / "results" / f"orfs_{orfs_cfg.name}" / pdk / design
+    output_dir   = autotuner_root / "results" / pdk / design
     runtimes_csv = output_dir / "runtimes.csv"
     best_json    = output_dir / "autotuner_best.json"
-    log_dir      = autotuner_root / "logs" / f"orfs_{orfs_cfg.name}" / pdk / design
+    log_dir      = autotuner_root / "logs" / pdk / design
     log_dir.mkdir(parents=True, exist_ok=True)
 
     if not best_json.exists():

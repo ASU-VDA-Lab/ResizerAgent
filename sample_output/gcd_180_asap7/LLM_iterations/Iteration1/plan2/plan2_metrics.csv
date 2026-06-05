@@ -1,2 +1,2 @@
 stage,wns,tns,area_um2,util_percent,power_mw,violating_endpoints,input_db,sdc_file
-"plan2",-71.967446,-1480.540585,50,85,2.038e-03,49,"/workspace/work_dir/claude/orfs_fix/asap7/gcd_180/LLM_iterations/Iteration1/plan2/input.odb","/workspace/work_dir/claude/orfs_fix/asap7/gcd_180/base/constraint.sdc"
+"plan2",-71.967446,-1480.540585,50,85,2.038e-03,49,"/workspace/work_dir/claude/asap7/gcd_180/LLM_iterations/Iteration1/plan2/input.odb","/workspace/work_dir/claude/asap7/gcd_180/base/constraint.sdc"

@@ -60,12 +60,11 @@ from typing import Dict, List, Optional, Tuple
 WORKSPACE = pathlib.Path(__file__).resolve().parent          # run.py lives at root
 
 # ---------------------------------------------------------------------------
-# ORFS configuration — pinned to ORFS_fix.
+# ORFS configuration — pinned to the openroad-flow-scripts submodule.
 # ---------------------------------------------------------------------------
 
 @dataclass
 class OrfsConfig:
-    name: str
     root_dir_name: str       # directory name relative to WORKSPACE
     docker_image: str        # Docker image tag
     cts_make_target: str     # make target that produces post-CTS ODB
@@ -73,9 +72,8 @@ class OrfsConfig:
     cts_sdc_name: str        # SDC file produced by CTS stage
 
 _ORFS_CFG: OrfsConfig = OrfsConfig(
-    name="fix",
-    root_dir_name="ORFS_fix",
-    docker_image="rsz_fix",
+    root_dir_name="openroad-flow-scripts",
+    docker_image="orfs_ra",
     cts_make_target="cts",
     cts_odb_name="4_1_cts.odb",
     cts_sdc_name="4_cts.sdc",
@@ -174,9 +172,9 @@ def env_to_docker(env_vars: dict) -> dict:
 
 
 def design_dir(agent: str, design: str) -> pathlib.Path:
-    # work_dir/<agent>/orfs_fix/<pdk>/<design>/  — PDK and design namespaced so
+    # work_dir/<agent>/<pdk>/<design>/  — PDK and design namespaced so
     # asap7/nangate45 coexist without collision.
-    return WORK_DIR / agent / f"orfs_{_ORFS_CFG.name}" / PDK_NAME / design
+    return WORK_DIR / agent / PDK_NAME / design
 
 
 def iter_dir(agent: str, design: str, n: int) -> pathlib.Path:
@@ -1826,7 +1824,7 @@ def _build_planner_sandbox(agent: str, design: str, iterN: int) -> pathlib.Path:
     """Create a minimal temp sandbox for the Planner. Empty except for the output path."""
     import tempfile
     sandbox = pathlib.Path(tempfile.mkdtemp(prefix=f"planner_{design}_iter{iterN}_"))
-    iter_sandbox = (sandbox / "work_dir" / agent / f"orfs_{_ORFS_CFG.name}" / PDK_NAME / design
+    iter_sandbox = (sandbox / "work_dir" / agent / PDK_NAME / design
                     / "LLM_iterations" / f"Iteration{iterN}")
     iter_sandbox.mkdir(parents=True)
     return sandbox
@@ -1856,7 +1854,7 @@ def _pdk_hint() -> str:
 def invoke_planner(agent: str, design: str, iteration: int, claude_bin: str) -> bool:
     reporter_content = (iter_dir(agent, design, iteration) / "reporter_baseline_prompt.txt").read_text()
     agents_context = _build_planner_context()
-    output_path = (f"work_dir/{agent}/orfs_{_ORFS_CFG.name}/{PDK_NAME}/{design}"
+    output_path = (f"work_dir/{agent}/{PDK_NAME}/{design}"
                    f"/LLM_iterations/Iteration{iteration}/planner_decision.json")
     prompt = (f"=== PLANNER REFERENCE (instructions + schema + PDK) ===\n{agents_context}\n"
               f"=== END REFERENCE ===\n\n"
@@ -1875,7 +1873,7 @@ def invoke_planner(agent: str, design: str, iteration: int, claude_bin: str) -> 
                            iteration=iteration, role="planner",
                            cwd=str(sandbox),
                            allowed_tools="Write")
-        sandbox_json = (sandbox / "work_dir" / agent / f"orfs_{_ORFS_CFG.name}" / PDK_NAME / design
+        sandbox_json = (sandbox / "work_dir" / agent / PDK_NAME / design
                         / "LLM_iterations" / f"Iteration{iteration}" / "planner_decision.json")
         real_json = iter_dir(agent, design, iteration) / "planner_decision.json"
         if sandbox_json.exists():
@@ -1920,7 +1918,7 @@ def _build_executor_sandbox(agent: str, design: str, iterN: int) -> pathlib.Path
     (sandbox / "agents" / "executor" / "AGENTS.md").write_text(combined)
 
     # 2. planner_decision.json — only file the Executor needs to read from the iter dir
-    iter_sandbox = (sandbox / "work_dir" / agent / f"orfs_{_ORFS_CFG.name}" / PDK_NAME / design
+    iter_sandbox = (sandbox / "work_dir" / agent / PDK_NAME / design
                     / "LLM_iterations" / f"Iteration{iterN}")
     iter_sandbox.mkdir(parents=True)
     (iter_sandbox / "planner_decision.json").symlink_to(
@@ -1974,7 +1972,7 @@ def invoke_executor_retry(agent: str, design: str, iteration: int,
         f"infrastructure failure) — do NOT rewrite the TCL. Instead append a single comment "
         f"line to the top of run_plan.tcl: `# UNFIXABLE: <reason>`.\n"
         f"Plan TCL paths: "
-        f"work_dir/{agent}/orfs_{_ORFS_CFG.name}/{PDK_NAME}/{design}/LLM_iterations/Iteration{{iteration}}/<plan>/run_plan.tcl"
+        f"work_dir/{agent}/{PDK_NAME}/{design}/LLM_iterations/Iteration{{iteration}}/<plan>/run_plan.tcl"
     )
     sandbox = _build_executor_sandbox(agent, design, iteration)
     try:
@@ -2006,7 +2004,7 @@ def _build_selector_sandbox(agent: str, design: str, iterN: int) -> pathlib.Path
         "**/*_netlist.v\n**/*.odb\n**/*.log\n**/run_logs/\n**/start/\n"
         "**/*_timing.txt\n**/*_area.rpt\n**/*_power.rpt\n**/output.sdc\n**/congestion.rpt\n"
     )
-    work_agent = sandbox / "work_dir" / agent / f"orfs_{_ORFS_CFG.name}"
+    work_agent = sandbox / "work_dir" / agent
     work_agent.mkdir(parents=True)
     (work_agent / PDK_NAME).symlink_to(design_dir(agent, design).parent)
     return sandbox
@@ -2118,7 +2116,7 @@ def invoke_selector(agent: str, design: str, iteration: int, claude_bin: str) ->
     selector_context = _build_selector_context()
     file_context = _build_selector_file_context(
         agent, design, iteration, ctx.best_plan if ctx else None)
-    output_path = (f"work_dir/{agent}/orfs_{_ORFS_CFG.name}/{PDK_NAME}/{design}"
+    output_path = (f"work_dir/{agent}/{PDK_NAME}/{design}"
                    f"/LLM_iterations/Iteration{iteration}/selector_decision.json")
     base_prompt = (
         f"=== SELECTOR REFERENCE (instructions + schema + PDK) ===\n{selector_context}\n"

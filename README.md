@@ -59,8 +59,8 @@ path (or update `_ORFS_CFG.root_dir_name` in `run.py`).
 ## Prerequisites
 
 - Python 3 (standard library only — no pip packages).
-- Docker, with image `rsz_fix` available locally (custom build of ORFS;
-  Dockerfile lives at `OpenROAD-flow-scripts/Dockerfile.rsz_fix` once the
+- Docker, with image `orfs_ra` available locally (custom build of ORFS;
+  Dockerfile lives at `OpenROAD-flow-scripts/Dockerfile.orfs_ra` once the
   submodule is added).
 - Claude CLI binary on `$PATH`, with model access to
   `claude-opus-4-7` (Planner / Selector) and `claude-sonnet-4-6`
@@ -128,15 +128,15 @@ Exactly one of `--clean` or `--run-stage` must be provided.
 
 For design `D` under agent `A`:
 
-- `work_dir/A/orfs_fix/<pdk>/D/base/`, `default/` — base and default-stage results
-- `work_dir/A/orfs_fix/<pdk>/D/LLM_iterations/Iteration<N>/` — per-iteration
+- `work_dir/A/<pdk>/D/base/`, `default/` — base and default-stage results
+- `work_dir/A/<pdk>/D/LLM_iterations/Iteration<N>/` — per-iteration
   planner / selector JSON + reporter prompt + `plan<i>/` subdirs + `best/`
-- `work_dir/A/orfs_fix/<pdk>/D/{design}_baseline.csv`,
+- `work_dir/A/<pdk>/D/{design}_baseline.csv`,
   `{design}_agentic[_r<N>].csv` — ledger rows for each backend stage
-- `work_dir/A/orfs_fix/<pdk>/D/experiment_summary.csv` — per-iteration
+- `work_dir/A/<pdk>/D/experiment_summary.csv` — per-iteration
   summary across plans
-- `work_dir/A/orfs_fix/<pdk>/D/runtimes.csv`,
-  `work_dir/A/orfs_fix/<pdk>/D/tokens.csv` — wall-time and LLM cost
+- `work_dir/A/<pdk>/D/runtimes.csv`,
+  `work_dir/A/<pdk>/D/tokens.csv` — wall-time and LLM cost
 - `run_logs/<design>_<pdk>/` — Docker / OpenROAD / make stdout+stderr per step
 
 ## Conventions

@@ -27,4 +27,3 @@ The `backend` stage is required to obtain post-DR QoR comparable to RA.
 | `--max-iterations` | no | `15` | Iteration cap for `LLM-iterations`. |
 | `--start-iteration` | no | `1` | Resume from a specific iteration. |
 | `--claude-bin` | no | `claude` | Path to the Claude CLI binary. |
-| `--orfs` | no | `fix` | ORFS tree (`ORFS_fix`). |

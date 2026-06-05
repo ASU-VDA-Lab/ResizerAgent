@@ -9,7 +9,7 @@ all starting from the same `base_cts.odb`.
 
 - `pip install optuna`
 - Docker (the chosen ORFS image must be available locally)
-- An ORFS tree at `experiments/autotuner_rsz/ORFS_fix/`
+- An ORFS tree at `openroad-flow-scripts/ (the submodule at the project root)`
 
 ## Run
 
@@ -28,7 +28,6 @@ Add `--resume` to continue an existing `optuna_study.db`.
 |------|----------|-------------------|---------|
 | `--design` | yes | e.g. `aes`, `jpeg`, `ibex` | Design name. |
 | `--pdk` | yes | `asap7` | Target PDK. |
-| `--orfs` | no | `fix` (default) | ORFS tree / Docker image (`ORFS_fix`). |
 | `--run-stage` | one of run-stage / clean | `base`, `tune`, `backend` | Single stage to run and exit. |
 | `--clean` | one of run-stage / clean | `base`, `tune`, `backend`, `all` | Delete a stage's artifacts and exit. |
 | `--n-startup-trials` | no | `20` | [tune] Random trials before TPE takes over. |
