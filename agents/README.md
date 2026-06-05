@@ -1,19 +1,8 @@
 # `agents/`
 
 Prompts and parameters for the LLM agents that ResizerAgent (RA) drives. The
-loop has four phases — **Report → Plan → Execute → Select** — and three of
-them delegate their reasoning step to an agent. The Report phase is pure
-Python and has no agent. Shared cell-naming and OpenROAD references live at
-this level.
-
-## Phase overview
-
-```
-Report   → Plan          → Execute               → Select
-(Python)   (planner         (Python first pass,    (Python pre-compute,
-            agent)           executor agent on      selector agent)
-                             TCL-error retry)
-```
+loop has four phases: **Report, Plan, Execute, Select**, and three of
+them delegate their reasoning step to an agent. 
 
 ## Agent prompts
 
