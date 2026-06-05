@@ -1,4 +1,4 @@
-# lexicographic_priority_power  —  Power-priority variant
+# lexicographic_priority_power 
 
 Reorders the selector's ranking policy so power is ranked above WNS and TNS.
 
