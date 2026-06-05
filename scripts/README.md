@@ -47,5 +47,5 @@
 
 | File | What it is |
 |------|------------|
-| `planner_decision.schema.json` | Output contract for the planner agent. Validates 1–7 candidate plans across the three plan types. |
-| `selector_decision.schema.json` | Output contract for the selector agent's LLM portion. `selector_prep.py` merges the mechanical fields after the LLM writes this file. |
+| `planner_decision.schema.json` | Output contract for the planner agent. |
+| `selector_decision.schema.json` | Output contract for the selector agent's LLM portion. |
