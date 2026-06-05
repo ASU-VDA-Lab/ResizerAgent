@@ -32,11 +32,3 @@ knobs RA controls (sequence encoded as 18 parameters: a binary
 operation). The cost function is a weighted
 sum of WNS, TNS, and power (weights 0.4 / 0.4 / 0.2).
 
-## Layout
-
-Every ablation and the lexicographic variant mirror RA's layout (`run.py`,
-`scripts/`, `agents/`, `platforms/`). `autotuner_rsz/` has its own
-`run_autotuner.py` + stage scripts and a local `README.md` with the CLI.
-
-See `../sample_output/gcd_180_asap7/README.md` for a per-file tour of what one
-RA run produces.
