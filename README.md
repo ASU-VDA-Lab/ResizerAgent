@@ -10,7 +10,7 @@ negative slack (WNS) and total negative slack (TNS) on a post-CTS design.
 ## Requirements
 
 - Python 3 (standard library only)
-- Docker, with the `orfs_ra:latest` image available locally
+- Docker, with the `orfs_ra:latest` image available locally [Can be made available on request]
 - Claude CLI on `$PATH`, with model access to `claude-opus-4-7` (planner and
   selector agents) and `claude-sonnet-4-6` (executor agent)
 - ASAP7 PDK from the bundled `openroad-flow-scripts/` submodule
