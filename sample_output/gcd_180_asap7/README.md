@@ -14,8 +14,8 @@ gcd_180_asap7/
 ├── base/                # raw post-CTS, no repair_timing
 ├── default/             # ORFS default repair_timing baseline (BL)
 ├── LLM_iterations/
-│   ├── Iteration1/      # one full Report → Plan → Execute → Select cycle
-│   └── Best_solutions/  # cross-iteration WNS ranking
+    ├── Iteration1/      # one full Report → Plan → Execute → Select cycle
+    └── Best_solutions/  # cross-iteration WNS ranking
 ├── run_logs/            # ORFS stage logs
 ├── apicall.csv          # API calls per role per iteration
 ├── runtimes.csv         # wall-time per stage
