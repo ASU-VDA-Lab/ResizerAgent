@@ -37,7 +37,7 @@ Or chain everything with `--run-stage all`.
 | `--max-iterations` | no | `15` | Iteration cap for the `LLM-iterations` stage. |
 | `--start-iteration` | no | `1` | Resume the loop from a specific iteration. |
 | `--claude-bin` | no | `claude` | Path to the Claude CLI binary. |
-| `--orfs` | no | `old` \| `new` \| `fix` (default `old`) | Which ORFS tree to use: `ORFS_old`, `ORFS_new`, or `ORFS_fix`. |
+| `--orfs` | no | `fix` | Which ORFS tree to use (`ORFS_fix`). |
 
 ## Stage semantics
 

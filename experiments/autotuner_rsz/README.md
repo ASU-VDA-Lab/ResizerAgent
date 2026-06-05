@@ -12,8 +12,7 @@ independent and start from the same `base_cts.odb`.
 
 - `pip install optuna` (only external Python dependency)
 - Docker (the chosen ORFS image must be available locally)
-- An ORFS tree at `experiments/autotuner_rsz/ORFS_fix/` when `--orfs fix`
-  (default), or top-level `ORFS_old/` / `ORFS_new/` for the other variants
+- An ORFS tree at `experiments/autotuner_rsz/ORFS_fix/`
 
 ## Run
 
@@ -42,7 +41,7 @@ Add `--resume` to a `tune` invocation to continue from `optuna_study.db`.
 |---|---|---|---|
 | `--design` | yes | e.g. `aes`, `jpeg`, `ibex` | Design name; must exist under the chosen ORFS tree. |
 | `--pdk` | yes | `asap7` \| `nangate45` | Target PDK. |
-| `--orfs` | no | `old` \| `new` \| `fix` (default `fix`) | Which ORFS tree / Docker image to use. |
+| `--orfs` | no | `fix` (default) | Which ORFS tree / Docker image to use (`ORFS_fix`). |
 | `--run-stage` | one of run-stage / clean | `base`, `tune`, `backend` | Single stage to run and exit. |
 | `--clean` | one of run-stage / clean | `base`, `tune`, `backend`, `all` | Delete a stage's artifacts and exit. |
 | `--n-startup-trials` | no | `20` | [tune] Sequential random trials before TPE takes over. |
