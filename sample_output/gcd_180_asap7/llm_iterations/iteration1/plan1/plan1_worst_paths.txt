@@ -1,0 +1,102 @@
+Startpoint: dpath.a_reg.out[6]$_DFFE_PP_
+            (rising edge-triggered flip-flop clocked by core_clock)
+Endpoint: resp_msg[13] (output port clocked by core_clock)
+Path Group: core_clock
+Path Type: max
+
+      Cap      Slew     Delay      Time   Description
+-------------------------------------------------------------------------------
+                       0.0000    0.0000   clock core_clock (rise edge)
+                       0.0000    0.0000   clock source latency
+   2.1106    0.0000    0.0000    0.0000 ^ clk (in)
+                                          clk (net)
+             0.6170    0.1947    0.1947 ^ clkbuf_0_clk/A (BUFx2_ASAP7_75t_R)
+   3.9718   15.3006   15.1792   15.3739 ^ clkbuf_0_clk/Y (BUFx2_ASAP7_75t_R)
+                                          clknet_0_clk (net)
+            15.3261    0.3933   15.7672 ^ clkbuf_2_1__f_clk/A (BUFx2_ASAP7_75t_R)
+   7.3860   25.9391   24.0636   39.8308 ^ clkbuf_2_1__f_clk/Y (BUFx2_ASAP7_75t_R)
+                                          clknet_2_1__leaf_clk (net)
+            25.9551    0.3798   40.2106 ^ dpath.a_reg.out[6]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_SL)
+   1.6428   15.4330   29.9141   70.1246 ^ dpath.a_reg.out[6]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_SL)
+                                          _011_ (net)
+            15.4432    0.1851   70.3097 ^ _314_/A (INVx2_ASAP7_75t_SL)
+   2.1247    8.5453    4.7965   75.1063 v _314_/Y (INVx2_ASAP7_75t_SL)
+                                          dpath.a_lt_b$in0[6] (net)
+             8.5503    0.1165   75.2227 v _588_/B (HAxp5_ASAP7_75t_SL)
+   3.9954   53.3217   39.5150  114.7377 v _588_/SN (HAxp5_ASAP7_75t_SL)
+                                          _041_ (net)
+            53.3255    0.2683  115.0061 v _330_/A2 (OA21x2_ASAP7_75t_SL)
+   2.1119   10.6078   21.5311  136.5372 v _330_/Y (OA21x2_ASAP7_75t_SL)
+                                          _107_ (net)
+            10.6134    0.1286  136.6658 v _335_/B (AND2x2_ASAP7_75t_SL)
+   1.8108    7.4920   12.0520  148.7178 v _335_/Y (AND2x2_ASAP7_75t_SL)
+                                          _112_ (net)
+             7.5064    0.1673  148.8851 v _386_/B (OR3x2_ASAP7_75t_SL)
+   2.8346   13.6609   18.9091  167.7942 v _386_/Y (OR3x2_ASAP7_75t_SL)
+                                          _161_ (net)
+            13.6988    0.3589  168.1531 v _389_/A2 (OA21x2_ASAP7_75t_SL)
+   0.6970    6.4252   13.2193  181.3724 v _389_/Y (OA21x2_ASAP7_75t_SL)
+                                          _164_ (net)
+             6.4253    0.0359  181.4083 v _393_/A (OR5x2_ASAP7_75t_SL)
+   1.8118   14.5146   23.1485  204.5568 v _393_/Y (OR5x2_ASAP7_75t_SL)
+                                          net41 (net)
+            14.5330    0.2519  204.8086 v output41/A (BUFx2_ASAP7_75t_SL)
+   0.3557    4.7310   10.7404  215.5490 v output41/Y (BUFx2_ASAP7_75t_SL)
+                                          resp_msg[13] (net)
+             4.7310    0.0266  215.5756 v resp_msg[13] (out)
+                               215.5756   data arrival time
+
+                     180.0000  180.0000   clock core_clock (rise edge)
+                       0.0000  180.0000   clock network delay (propagated)
+                       0.0000  180.0000   clock reconvergence pessimism
+                     -36.0000  144.0000   output external delay
+                               144.0000   data required time
+-------------------------------------------------------------------------------
+                               144.0000   data required time
+                              -215.5756   data arrival time
+-------------------------------------------------------------------------------
+                               -71.5756   slack (VIOLATED)
+
+
+Startpoint: dpath.a_reg.out[6]$_DFFE_PP_
+            (rising edge-triggered flip-flop clocked by core_clock)
+Endpoint: resp_msg[15] (output port clocked by core_clock)
+Path Group: core_clock
+Path Type: max
+
+      Cap      Slew     Delay      Time   Description
+-------------------------------------------------------------------------------
+                       0.0000    0.0000   clock core_clock (rise edge)
+                       0.0000    0.0000   clock source latency
+   2.1106    0.0000    0.0000    0.0000 ^ clk (in)
+                                          clk (net)
+             0.6170    0.1947    0.1947 ^ clkbuf_0_clk/A (BUFx2_ASAP7_75t_R)
+   3.9718   15.3006   15.1792   15.3739 ^ clkbuf_0_clk/Y (BUFx2_ASAP7_75t_R)
+                                          clknet_0_clk (net)
+            15.3261    0.3933   15.7672 ^ clkbuf_2_1__f_clk/A (BUFx2_ASAP7_75t_R)
+   7.3860   25.9391   24.0636   39.8308 ^ clkbuf_2_1__f_clk/Y (BUFx2_ASAP7_75t_R)
+                                          clknet_2_1__leaf_clk (net)
+            25.9551    0.3798   40.2106 ^ dpath.a_reg.out[6]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_SL)
+   1.6428   15.4330   29.9141   70.1246 ^ dpath.a_reg.out[6]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_SL)
+                                          _011_ (net)
+            15.4432    0.1851   70.3097 ^ _314_/A (INVx2_ASAP7_75t_SL)
+   2.1247    8.5453    4.7965   75.1063 v _314_/Y (INVx2_ASAP7_75t_SL)
+                                          dpath.a_lt_b$in0[6] (net)
+             8.5503    0.1165   75.2227 v _588_/B (HAxp5_ASAP7_75t_SL)
+   3.9954   53.3217   39.5150  114.7377 v _588_/SN (HAxp5_ASAP7_75t_SL)
+                                          _041_ (net)
+            53.3255    0.2683  115.0061 v _330_/A2 (OA21x2_ASAP7_75t_SL)
+   2.1119   10.6078   21.5311  136.5372 v _330_/Y (OA21x2_ASAP7_75t_SL)
+                                          _107_ (net)
+            10.6134    0.1286  136.6658 v _335_/B (AND2x2_ASAP7_75t_SL)
+   1.8108    7.4920   12.0520  148.7178 v _335_/Y (AND2x2_ASAP7_75t_SL)
+                                          _112_ (net)
+             7.5035    0.1490  148.8668 v _336_/B (OR4x1_ASAP7_75t_SL)
+   3.0306   18.5014   22.3031  171.1699 v _336_/Y (OR4x1_ASAP7_75t_SL)
+                                          _113_ (net)
+            18.5216    0.3350  171.5049 v _352_/B (OR2x2_ASAP7_75t_SL)
+   0.7216    6.4325   13.6008  185.1057 v _352_/Y (OR2x2_ASAP7_75t_SL)
+                                          _129_ (net)
+             6.4330    0.0671  185.1729 v _354_/B2 (AO221x1_ASAP7_75t_SL)
+
+[... truncated for sample — full file has 16251 lines of report_checks output ...]

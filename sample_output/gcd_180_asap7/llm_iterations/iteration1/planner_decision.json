@@ -1,0 +1,86 @@
+{
+  "decision": "execute",
+  "rationale": [
+    "Worst paths cannot close with sizing: path 1 (resp_msg[13], -67.8) is dominated by HAxp5 _590_ (33.9 ps, ceiling — catalog shows xp5-only, already SL) plus max-size SL cells OA211x2 _331_ (22.2 ps, 5.6 fF/6-fanout), OA21x2 _389_ (14.4 ps) and OR5x2 _393_ (23.1 ps) — ~94 ps of the ~171 ps path is irreducible. Movable cells (INVx2→x3, OR2x2→x4, AO21x1→x2, BUFx2_L→SL) offer only ~10 ps; WNS gap is 67.8 ps, so WNS-only drilling is wasted — pivot to TNS breadth + a structural HAxp5 attack.",
+    "Distribution is bimodal: 9 severe endpoints at 50-100 ps (resp_msg[8..15], the output ports) and 32 mild at 10-25 ps (the dpath/ctrl register endpoints). The mild cluster is the closable TNS opportunity; default repair_timing actually WORSENED TNS (ΔTNS -98 ps) while spending +2 µm² and +4% util — so broad insertion-heavy repair backfires here and zero/low-area moves must lead.",
+    "Shared root cause: every severe path runs DFF→INVx2(_312_/_314_/_316_/_318_)→HAxp5(_590_/_588_/_586_/_585_/_584_), and the HAxp5 outputs carry catastrophic slew (43-61 ps) from high output load (3.2-4.65 fF, 4-6 sinks). Input slew into HAxp5 is already fine (~9.5 ps from INVx2), so the lever is OUTPUT load, not the cell or its driver. startpoint a_reg.out[10] (via _584_) feeds resp_msg[15]/[11]/[12]/[14] and ~20 mild endpoints — relieving these HAxp5 loads propagates to dozens of paths.",
+    "Placement is tight globally (85% util, ~4 free slots) so broad buffer/clone is avoided in sequence plans (in-place sizeup/vt_swap/swap only); but the HAxp5 cells themselves sit in moderate bins (_590_ row3/67%, _584_ row3/65%, _588_ row4/81%), making 3 targeted buffer insertions feasible — that is the ECO. vt_swap has real targets (OA21x2_R _343_, OAI21x1_R _345_, OR3x1_R _375_, OA211x2_R _376_, OA21x2_L _364_, XOR2x2_R _412_, BUFx2_L output cells) at zero area."
+  ],
+  "plan_count": 3,
+  "plans": [
+    {
+      "plan_type": "sequence",
+      "sequence": ["vt_swap", "sizeup", "swap"],
+      "run_knobs": {
+        "repair_tns": 100,
+        "max_passes": 4,
+        "setup_margin": 0
+      },
+      "reasoning": [
+        "vt_swap first: _343_ OA21x2_R, _345_ OAI21x1_R, _375_ OR3x1_R, _376_ OA211x2_R, _412_ XOR2x2_R and the BUFx2_L output cells appear on violating paths with faster SL variants — zero-area delay reduction applied broadly under the tight 85-89% utilization.",
+        "sizeup second: sizable SL gates carry the mild cluster — OR2x2 _326_/_333_/_370_ (→x4, several at 4-5.6 fF), AO21x1 _327_/_342_ (→x2), INVx2 _312_/_318_ (→x3), AND2x2 _335_/_344_ (→x4) — reducing gate delay and slew into the high-cap nets.",
+        "swap third: AO21/OA21/OA211/AOI21/XOR2 reconverging gates pervade these cones; pin reorder puts the late-arriving input on the faster pin for slew/delay at no area cost.",
+        "repair_tns=100 sweeps all 48 violators worst-first for TNS; max_passes=4 caps effort on the uncloseable severe endpoints so the budget reaches the 32 mild ones; setup_margin=0 since no path has positive-slack headroom to spare."
+      ],
+      "expected_outcome": "WNS marginal (~-67 to -62 ps, +3-6 ps), TNS materially improved by clearing the 10-25 ps cluster (target below default's -1243 ps), area ~flat (vt_swap/swap zero-area, limited sizeup). Beats default on TNS without the area/util penalty."
+    },
+    {
+      "plan_type": "sequence",
+      "sequence": ["sizeup", "vt_swap", "swap"],
+      "run_knobs": {
+        "repair_tns": 25,
+        "max_passes": 8,
+        "setup_margin": 0
+      },
+      "reasoning": [
+        "sizeup first: the severe cluster (resp_msg[8-15]) is gate-dominated; upsizing the sizable SL gates on those paths (OR2x2 _326_/_333_/_370_→x4, AO21x1 _327_/_342_→x2, OR3x1 _361_→x2, OR4x1 _336_→x2, AND2x2→x4, INVx2→x3) gives the largest per-path delay recovery and improves slew into the max-size downstream cells.",
+        "vt_swap second: R/L cells on the severe paths (_343_R, _345_R, _364_L, _375_R, _376_R) swap to SL for additional zero-area delay once sizing is committed.",
+        "swap third: pin reorder on the reconverging gates in the severe cone (AO221 _354_, AOI21 _377_/_378_, OA211) for final slew cleanup.",
+        "repair_tns=25 focuses the budget on the worst ~12 endpoints (the severe cluster); max_passes=8 grinds each harder to extract the ~10-15 ps these paths can yield even though they cannot reach 0."
+      ],
+      "expected_outcome": "WNS ~-60 to -55 ps (+8-12 ps squeezed from the severe cluster), TNS modest improvement, area slight increase from focused sizeup. A surgical alternative to Plan 1's breadth, betting on per-path depth."
+    },
+    {
+      "plan_type": "eco",
+      "changes": [
+        {
+          "action": "insert_buffer",
+          "net": "_047_",
+          "driver_pin": "_590_/SN",
+          "buf_cell": "BUFx4_ASAP7_75t_SL",
+          "buf_name": "buf_ha590_eco",
+          "sinks": "all",
+          "at": "driver",
+          "reason": "HAxp5 _590_ SN (33.9 ps cell_dly, 43.4 ps slew, 3.2 fF over 4 sinks _326_/_329_/_355_/_416_) is the unsizable ceiling on the WNS path (resp_msg[13], -67.8). Offloading its fanout to a BUFx4_SL repeater cuts its load to ~0.7 fF, dropping its delay ~12 ps and slew to ~12 ps; downstream _326_ then sees a clean transition. Buffer placed at driver in row3/67% bin."
+        },
+        {
+          "action": "insert_buffer",
+          "net": "_029_",
+          "driver_pin": "_584_/SN",
+          "buf_cell": "BUFx4_ASAP7_75t_SL",
+          "buf_name": "buf_ha584_eco",
+          "sinks": "all",
+          "at": "driver",
+          "reason": "HAxp5 _584_ SN is the worst HAxp5 (44.5 ps cell_dly, 61.6 ps slew, 4.65 fF over 6 sinks) and sits at the head of startpoint a_reg.out[10], which feeds resp_msg[15]/[11]/[12]/[14] plus ~20 mild endpoints. Load relief here (~14-16 ps delay, slew 61.6→~12 ps) propagates to the most paths of any single move. Placed at driver in row3/65% bin."
+        },
+        {
+          "action": "insert_buffer",
+          "net": "_041_",
+          "driver_pin": "_588_/SN",
+          "buf_cell": "BUFx4_ASAP7_75t_SL",
+          "buf_name": "buf_ha588_eco",
+          "sinks": "all",
+          "at": "driver",
+          "reason": "HAxp5 _588_ SN (38.0 ps cell_dly, 50.7 ps slew, 3.79 fF over 5 sinks) heads startpoint a_reg.out[6], feeding resp_msg[13]/[11] and the ctrl.state endpoints. Same load-relief mechanism (~13 ps delay + slew cleanup). Placed at driver near row4/81% bin — third and last insertion within the ~4 free-slot budget."
+        }
+      ],
+      "reasoning": [
+        "All three targets are unsizable HAxp5 cells (catalog: xp5-only, already SL) whose delay and slew are dominated by output load, not by the cell or its INVx2 driver (input slew already ~9.5 ps) — the only effective lever is splitting the output load, which repair_timing sizing cannot do for an unsizable master.",
+        "BUFx4_SL is sized to drive the 3.2-4.65 fF loads while presenting ~0.7 fF back to the HAxp5; net effect on each through-path is HAxp5(~14 ps)+buffer(~10 ps) replacing HAxp5(34-45 ps), a ~12-16 ps win plus large secondary gains from slew dropping ~50→~12 ps into the downstream cones.",
+        "These three HAxp5 outputs head the three most-shared startpoints (a_reg.out[4]/[10]/[6]), so the slew relief reaches the WNS endpoint and the bulk of the 48 violators simultaneously; placement is feasible since the HAxp5 cells sit in 65-81% bins with ~4 free slots, unlike the 85-89% global average."
+      ],
+      "expected_outcome": "WNS -67.8 → ~-52 to -50 ps (~12-16 ps from HAxp5 load relief on the worst path), TNS improved via slew propagation to shared downstream cones, area +~0.3 µm² (3 buffers). Best WNS lever of the three plans and clears default's -65.6 ps."
+    }
+  ],
+  "more_info": "Full sink lists for the truncated HAxp5 fanout nets (_029_ shows '6:' but lists only 4 sinks, '...') would let me choose selective offload — keeping the single critical sink on direct HAxp5 drive while buffering the rest — instead of full-fanout 'all' buffering, which adds a series stage to the critical sink. Per-pin input-slew at each HAxp5 sink and actual bin utilization at the sink centroids would also confirm whether 'driver' vs 'centroid' placement minimizes the added buffer-to-sink RC."
+}

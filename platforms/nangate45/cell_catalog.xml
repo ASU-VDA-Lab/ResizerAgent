@@ -1,0 +1,240 @@
+<?xml version="1.0" ?>
+<library name="Nangate45">
+  <cell name="AND2">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="AND3">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="AND4">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="ANTENNA">
+    <size name="X1"/>
+  </cell>
+  <cell name="AOI21">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="AOI211">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="AOI22">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="AOI221">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="AOI222">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="BUF">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+    <size name="X8"/>
+    <size name="X16"/>
+    <size name="X32"/>
+  </cell>
+  <cell name="CLKBUF">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X3"/>
+  </cell>
+  <cell name="CLKGATE">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+    <size name="X8"/>
+  </cell>
+  <cell name="CLKGATETST">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+    <size name="X8"/>
+  </cell>
+  <cell name="DFF">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+  <cell name="DFFR">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+  <cell name="DFFRS">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+  <cell name="DFFS">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+  <cell name="DLH">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+  <cell name="DLL">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+  <cell name="FA">
+    <size name="X1"/>
+  </cell>
+  <cell name="FILLCELL">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+    <size name="X8"/>
+    <size name="X16"/>
+    <size name="X32"/>
+  </cell>
+  <cell name="HA">
+    <size name="X1"/>
+  </cell>
+  <cell name="INV">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+    <size name="X8"/>
+    <size name="X16"/>
+    <size name="X32"/>
+  </cell>
+  <cell name="LOGIC0">
+    <size name="X1"/>
+  </cell>
+  <cell name="LOGIC1">
+    <size name="X1"/>
+  </cell>
+  <cell name="MUX2">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+  <cell name="NAND2">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="NAND3">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="NAND4">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="NOR2">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="NOR3">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="NOR4">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="OAI21">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="OAI211">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="OAI22">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="OAI221">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="OAI222">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="OAI33">
+    <size name="X1"/>
+  </cell>
+  <cell name="OR2">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="OR3">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="OR4">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+  </cell>
+  <cell name="SDFF">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+  <cell name="SDFFR">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+  <cell name="SDFFRS">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+  <cell name="SDFFS">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+  <cell name="TAPCELL">
+    <size name="X1"/>
+  </cell>
+  <cell name="TBUF">
+    <size name="X1"/>
+    <size name="X2"/>
+    <size name="X4"/>
+    <size name="X8"/>
+    <size name="X16"/>
+  </cell>
+  <cell name="TINV">
+    <size name="X1"/>
+  </cell>
+  <cell name="TLAT">
+    <size name="X1"/>
+  </cell>
+  <cell name="XNOR2">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+  <cell name="XOR2">
+    <size name="X1"/>
+    <size name="X2"/>
+  </cell>
+</library>

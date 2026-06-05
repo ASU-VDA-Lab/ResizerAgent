@@ -1,0 +1,1252 @@
+<?xml version='1.0' encoding='utf-8'?>
+<library name="ASAP7">
+  <cell name="A2O1A1I">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="A2O1A1O1I">
+    <size name="xp25">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AND2">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x4">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x6">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AND3">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x4">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AND4">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AND5">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AO21">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AO211">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AO22">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AO221">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AO222">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AO31">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AO32">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AO322">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AO33">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AO331">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AO332">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AO333">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI21">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI211">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI22">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI221">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI222">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI31">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp67">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI311">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI32">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI321">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI322">
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI33">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI331">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI332">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="AOI333">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="BUF">
+    <size name="x10">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x12">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x12f">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x16f">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x24">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x4">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x4f">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x6f">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x8">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="CKINVDC">
+    <size name="x10">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x11">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x12">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x14">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x16">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x20">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x5p33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x6p67">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x8">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x9p33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="DFFASRHQN">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="DFFHQ">
+    <size name="x4">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="DFFHQN">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="DFFHQNH2V2X">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="DFFHQNV2X">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="DFFHQNV4X">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="DFFLQ">
+    <size name="x4">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="DFFLQN">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="DHL">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="DLL">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="FA">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="HA">
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="HB1">
+    <size name="xp67">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="HB2">
+    <size name="xp67">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="HB3">
+    <size name="xp67">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="HB4">
+    <size name="xp67">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="ICG">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2p67DC">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x4">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x4DC">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x5p33DC">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x6p67DC">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x8DC">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="INV">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x11">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x13">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x4">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x6">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x8">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp67">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="MAJ">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="MAJI">
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="NAND2">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x1p5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp67">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="NAND3">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="NAND4">
+    <size name="xp25">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp75">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="NAND5">
+    <size name="xp2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="NOR2">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x1p5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp67">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="NOR3">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="NOR4">
+    <size name="xp25">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp75">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="NOR5">
+    <size name="xp2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="O2A1O1I">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OA21">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OA211">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OA22">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OA221">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OA222">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OA31">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OA33">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OA331">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OA332">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OA333">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI21">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI211">
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI22">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI221">
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI222">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI31">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp67">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI311">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI32">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI321">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI322">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI33">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI331">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI332">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OAI333">
+    <size name="xp33">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OR2">
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x4">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x6">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OR3">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x4">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OR4">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="OR5">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="SDFH">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x4">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="SDFL">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x3">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x4">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="TIEHI">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="TIELO">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="XNOR2">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+  <cell name="XOR2">
+    <size name="x1">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="x2">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+    <size name="xp5">
+      <vt name="LVT" />
+      <vt name="RVT" />
+      <vt name="SLVT" />
+    </size>
+  </cell>
+</library>

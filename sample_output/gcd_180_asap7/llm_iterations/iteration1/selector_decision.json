@@ -1,0 +1,112 @@
+{
+  "decision": "retry",
+  "stop_reason": null,
+  "backtrack_to_iteration": null,
+  "per_plan_ratings": [
+    {
+      "plan": "plan1",
+      "rating": "F",
+      "note": "vt_swap,sizeup,swap: WNS=-71.6 (\u0394WNS=-3.8), TNS=-1499.9 (\u0394TNS=-354.8, WORSENED), viol=49 flat. Regressed both metrics \u2014 worst path cells are already _SL so vt_swap had no headroom, and sizeup added load. Predicted +4ps but went backward. Area data not provided."
+    },
+    {
+      "plan": "plan2",
+      "rating": "F",
+      "note": "sizeup,vt_swap,swap: WNS=-72.0 (\u0394WNS=-4.2, worst of the three), TNS=-1480.5 (\u0394TNS=-335.5, WORSENED), viol=49 flat. Leading with sizeup added the most load/cap and produced the largest regression. Predicted +10ps \u2192 regressed."
+    },
+    {
+      "plan": "plan3",
+      "rating": "F",
+      "note": "eco: WNS=-69.3 (\u0394WNS=-1.6, least-bad and pre-selected), TNS=-1433.5 (\u0394TNS=-288.4, WORSENED), viol=49 flat. Still a regression \u2014 the eco inserted buf_ha590_eco (BUFx4 driving only 3.45fF) which adds 17.4ps on the worst path. Nearest to flat but does not beat the seed."
+    }
+  ],
+  "strategy_note": {
+    "stuck_paths": [],
+    "plateau_diagnosis": null,
+    "guidance": [
+      "Iter1 winner: plan3 (eco) WNS=-69.3ps (\u0394-1.6ps) TNS=-1433.5ps (\u0394-288.4ps) \u2014 REGRESSION. All 3 plans regressed WNS AND TNS; viol flat at 49. Decision: retry \u2014 re-seed from the original seed ODB (WNS=-67.8), do NOT promote any regressed state. Path structure unchanged, so the moves were counterproductive, not the objective.",
+      "WNS/TNS strategy for next iter: target WNS SURGICALLY on the single worst path (dpath.a_reg.out[4]$_DFFE_PP_ \u2192 resp_msg[13]). viol is moderate (49) but every broad move regressed TNS too, so breadth is not the problem \u2014 blanket sizing/vt is. Keep repair_tns LOW (0\u201320); use staged/ECO edits aimed at named cells, not a global vt_swap+sizeup sweep.",
+      "vt_swap is EXHAUSTED on the worst path: INVx2_SL, HAxp5_SL, OR2x2_SL, AO21x1_SL, OA211x2_SL, OA21x2_SL, OR5x2_SL are ALL already at _SL (fastest VT). A vt_swap-led plan has no headroom here and is why plan1/plan2 regressed. The ONLY VT headroom on the path is output41 (BUFx2_ASAP7_75t_L \u2192 swap to _SL); do not touch the _R clock buffers (CTS).",
+      "Stuck/unsizable cell: _590_ HAxp5_ASAP7_75t_SL \u2014 half-adder, CON delay 11.9ps + SN 7.4ps (~19ps total), only one size, cannot resize. Attack the load/slew around it: input A is fed by _312_ (INVx2_SL) with 10ps slew; output nets _046_/_047_ feed downstream. Reduce input slew (upsize/clone _312_) or lighten its output nets rather than touching the HA.",
+      "Self-inflicted bottleneck: buf_ha590_eco (BUFx4_ASAP7_75t_SL) inserted by the eco plan contributes 17.4ps while driving only 3.45fF (buf_ha590_eco_net161) \u2014 grossly over-sized for its load and adding delay. Right-size it DOWN (BUFx1/BUFx2) or remove it. This is an area+delay win and must precede adding any new cells.",
+      "Highest-load net on the path: _108_ off _331_ OA211x2_SL has output cap 5.85fF and Y delay 22.5ps. Reduce load via clone/net-split or a correctly-sized repeater (NOT another x4). Also _393_ OR5x2_SL contributes 23.1ps (5-input OR intrinsic delay, already _SL) \u2014 query the cell catalog for a stronger OR5 drive (e.g. OR5x4) as the only remaining structural lever there.",
+      "Area: sizeup-led plans regressed, so do NOT add area blindly. Lead with right-sizing the over-sized buf_ha590_eco and load-reduction on _108_ before inserting buffers. Default reference area is 52 um2; per-plan area was not provided this iteration."
+    ],
+    "avoid_strategies": [
+      "vt_swap-led sequences (plan1 vt_swap,sizeup,swap / plan2 sizeup,vt_swap,swap) \u2014 worst-path cells are already _SL, no VT headroom, regressed both WNS and TNS.",
+      "sizeup-first / global sizeup \u2014 added load and cap, produced the largest regression (plan2 \u0394WNS=-4.2).",
+      "Generic eco buffer insertion that drops oversized buffers (BUFx4 on a 3.45fF net like buf_ha590_eco) \u2014 adds more delay than it saves."
+    ]
+  },
+  "more_info": "Per-plan area_um2 was not included in PLAN RESULTS, so I could not compute area_ratio or judge the area cost of the sizeup/eco moves. The seed's own worst-path report was also not provided \u2014 having it would confirm whether the bottleneck (resp_msg[13] via HAxp5 _590_) is identical to the seed or whether the eco buffer shifted it, which determines retry vs accept_regression.",
+  "iteration": 1,
+  "chosen_plan": "plan3",
+  "chosen_sequence": [
+    "eco"
+  ],
+  "chosen_metrics": {
+    "wns": -69.325795,
+    "tns": -1433.474012,
+    "area_um2": 50.0,
+    "util_percent": 85.0,
+    "power_mw": 0.001925,
+    "violating_endpoints": 49
+  },
+  "regressed": true,
+  "convergence": {
+    "delta_wns_this_iter": -1.569,
+    "delta_wns_last_iter": null,
+    "delta_tns_this_iter": -288.438,
+    "delta_tns_last_iter": null,
+    "plateau_status": "hard_plateau",
+    "trend": [
+      -1.569
+    ]
+  },
+  "iteration_table": [
+    {
+      "iter": 1,
+      "plan": "plan3",
+      "wns_in": -67.756967,
+      "wns_out": -69.325795,
+      "delta_wns": -1.569,
+      "tns_out": -1433.474012
+    }
+  ],
+  "plan_results": [
+    {
+      "plan": "plan1",
+      "status": "success",
+      "wns": -71.575607,
+      "tns": -1499.878339,
+      "delta_tns": -354.842,
+      "area_um2": 50.0,
+      "violating_endpoints": 49,
+      "delta_wns": -3.819
+    },
+    {
+      "plan": "plan2",
+      "status": "success",
+      "wns": -71.967446,
+      "tns": -1480.540585,
+      "delta_tns": -335.505,
+      "area_um2": 50.0,
+      "violating_endpoints": 49,
+      "delta_wns": -4.21
+    },
+    {
+      "plan": "plan3",
+      "status": "success",
+      "wns": -69.325795,
+      "tns": -1433.474012,
+      "delta_tns": -288.438,
+      "area_um2": 50.0,
+      "violating_endpoints": 49,
+      "delta_wns": -1.569
+    }
+  ],
+  "rationale": [
+    "plan3 WNS=-69.3 ps selected as best",
+    "\u0394WNS this iter: -1.6 ps",
+    "Plateau status: hard_plateau"
+  ]
+}

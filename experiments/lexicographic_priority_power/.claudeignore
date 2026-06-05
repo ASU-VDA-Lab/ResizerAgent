@@ -1,0 +1,20 @@
+# Raw timing data — 1MB+ per file, already summarized in reporter_baseline_prompt.txt
+work_dir/**/*_worst_paths.txt
+work_dir/**/*_netlist.v
+
+# Binary / unreadable design files
+work_dir/**/*.odb
+work_dir/**/*.def
+work_dir/**/*.guide
+
+# ORFS source tree — massive, agents never need to browse it
+openroad-flow-scripts/
+
+# PDK platform files (preamble.tcl, LEF, LIB, cell_catalog.xml)
+# Reference docs have been moved to agents/nangate45.md and agents/asap7.md
+platforms/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo

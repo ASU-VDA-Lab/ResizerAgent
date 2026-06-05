@@ -1,0 +1,54 @@
+{
+  "design": "gcd_180",
+  "agent": "claude",
+  "pdk": "asap7",
+  "last_updated_iteration": 4,
+  "last_updated": "2026-05-27T06:32:51",
+  "note": "rank 1 = best WNS (closest to 0 ps). All successful plans from every iteration compete \u2014 not just selector winners. ODB paths reference original plan directories; files are not copied here.",
+  "rankings": [
+    {
+      "iteration": 3,
+      "plan": "plan1",
+      "wns_ps": -63.954,
+      "tns_ps": -1030.916,
+      "odb": "<sample_root>/llm_iterations/iteration3/plan1/output.odb",
+      "sdc": "<sample_root>/llm_iterations/iteration3/plan1/output.sdc",
+      "odb_exists": true,
+      "chosen": true,
+      "rank": 1
+    },
+    {
+      "iteration": 3,
+      "plan": "plan2",
+      "wns_ps": -63.954,
+      "tns_ps": -1031.781,
+      "odb": "<sample_root>/llm_iterations/iteration3/plan2/output.odb",
+      "sdc": "<sample_root>/llm_iterations/iteration3/plan2/output.sdc",
+      "odb_exists": true,
+      "chosen": false,
+      "rank": 2
+    },
+    {
+      "iteration": 4,
+      "plan": "plan1",
+      "wns_ps": -63.954,
+      "tns_ps": -1030.916,
+      "odb": "<sample_root>/llm_iterations/iteration4/plan1/output.odb",
+      "sdc": "<sample_root>/llm_iterations/iteration4/plan1/output.sdc",
+      "odb_exists": true,
+      "chosen": true,
+      "rank": 3
+    },
+    {
+      "iteration": 4,
+      "plan": "plan2",
+      "wns_ps": -64.095,
+      "tns_ps": -998.009,
+      "odb": "<sample_root>/llm_iterations/iteration4/plan2/output.odb",
+      "sdc": "<sample_root>/llm_iterations/iteration4/plan2/output.sdc",
+      "odb_exists": true,
+      "chosen": false,
+      "rank": 4
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+stage,wns,tns,area_um2,util_percent,power_mw,violating_endpoints,input_db,sdc_file
+"default",-65.596931,-1243.204766,52,89,2.073e-03,48,"/workspace/work_dir/claude/asap7/gcd_180/base/base_cts.odb","/workspace/work_dir/claude/asap7/gcd_180/base/constraint.sdc"

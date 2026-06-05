@@ -1,0 +1,7 @@
+work_dir/
+latest_orfs/
+__pycache__/
+*.pyc
+*.pyo
+.env
+run_logs/

@@ -1,0 +1,102 @@
+Startpoint: dpath.a_reg.out[4]$_DFFE_PP_
+            (rising edge-triggered flip-flop clocked by core_clock)
+Endpoint: resp_msg[13] (output port clocked by core_clock)
+Path Group: core_clock
+Path Type: max
+
+      Cap      Slew     Delay      Time   Description
+-------------------------------------------------------------------------------
+                       0.0000    0.0000   clock core_clock (rise edge)
+                       0.0000    0.0000   clock source latency
+   2.1106    0.0000    0.0000    0.0000 ^ clk (in)
+                                          clk (net)
+             0.6170    0.1947    0.1947 ^ clkbuf_0_clk/A (BUFx2_ASAP7_75t_R)
+   3.9718   15.3006   15.1792   15.3739 ^ clkbuf_0_clk/Y (BUFx2_ASAP7_75t_R)
+                                          clknet_0_clk (net)
+            15.3261    0.3933   15.7672 ^ clkbuf_2_1__f_clk/A (BUFx2_ASAP7_75t_R)
+   7.3860   25.9391   24.0636   39.8308 ^ clkbuf_2_1__f_clk/Y (BUFx2_ASAP7_75t_R)
+                                          clknet_2_1__leaf_clk (net)
+            26.0179    0.8554   40.6862 ^ dpath.a_reg.out[4]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_SL)
+   1.7702   16.0677   30.2452   70.9315 ^ dpath.a_reg.out[4]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_SL)
+                                          _009_ (net)
+            16.0823    0.2375   71.1689 ^ _312_/A (INVx2_ASAP7_75t_SL)
+   2.8275   10.0552    5.8222   76.9912 v _312_/Y (INVx2_ASAP7_75t_SL)
+                                          dpath.a_lt_b$in0[4] (net)
+            10.0591    0.1125   77.1037 v _590_/A (HAxp5_ASAP7_75t_SL)
+   1.7269   22.0638   11.9218   89.0255 ^ _590_/CON (HAxp5_ASAP7_75t_SL)
+                                          _046_ (net)
+   1.0389   17.0141    7.4106   96.4361 v _590_/SN (HAxp5_ASAP7_75t_SL)
+                                          _047_ (net)
+            17.0163    0.1405   96.5766 v buf_ha590_eco/A (BUFx4_ASAP7_75t_SL)
+   3.4525    9.8020   17.4269  114.0035 v buf_ha590_eco/Y (BUFx4_ASAP7_75t_SL)
+                                          buf_ha590_eco_net161 (net)
+             9.8207    0.2190  114.2226 v _326_/B (OR2x2_ASAP7_75t_SL)
+   0.9072    6.9167   12.0871  126.3097 v _326_/Y (OR2x2_ASAP7_75t_SL)
+                                          _103_ (net)
+             6.9194    0.0968  126.4064 v _327_/B (AO21x1_ASAP7_75t_SL)
+   1.6133   10.8287   12.9102  139.3166 v _327_/Y (AO21x1_ASAP7_75t_SL)
+                                          _104_ (net)
+            10.8336    0.1097  139.4264 v _331_/A2 (OA211x2_ASAP7_75t_SL)
+   5.8542   20.4725   22.4993  161.9257 v _331_/Y (OA211x2_ASAP7_75t_SL)
+                                          _108_ (net)
+            20.6696    1.0911  163.0168 v _389_/A2 (OA21x2_ASAP7_75t_SL)
+   0.6970    6.5737   14.5908  177.6076 v _389_/Y (OA21x2_ASAP7_75t_SL)
+                                          _164_ (net)
+             6.5738    0.0359  177.6435 v _393_/A (OR5x2_ASAP7_75t_SL)
+   1.7920   14.4726   23.1446  200.7881 v _393_/Y (OR5x2_ASAP7_75t_SL)
+                                          net41 (net)
+            14.4906    0.2482  201.0362 v output41/A (BUFx2_ASAP7_75t_L)
+   0.3529    4.4019   12.2646  213.3009 v output41/Y (BUFx2_ASAP7_75t_L)
+                                          resp_msg[13] (net)
+             4.4019    0.0249  213.3258 v resp_msg[13] (out)
+                               213.3258   data arrival time
+
+                     180.0000  180.0000   clock core_clock (rise edge)
+                       0.0000  180.0000   clock network delay (propagated)
+                       0.0000  180.0000   clock reconvergence pessimism
+                     -36.0000  144.0000   output external delay
+                               144.0000   data required time
+-------------------------------------------------------------------------------
+                               144.0000   data required time
+                              -213.3258   data arrival time
+-------------------------------------------------------------------------------
+                               -69.3258   slack (VIOLATED)
+
+
+Startpoint: dpath.a_reg.out[4]$_DFFE_PP_
+            (rising edge-triggered flip-flop clocked by core_clock)
+Endpoint: resp_msg[13] (output port clocked by core_clock)
+Path Group: core_clock
+Path Type: max
+
+      Cap      Slew     Delay      Time   Description
+-------------------------------------------------------------------------------
+                       0.0000    0.0000   clock core_clock (rise edge)
+                       0.0000    0.0000   clock source latency
+   2.1106    0.0000    0.0000    0.0000 ^ clk (in)
+                                          clk (net)
+             0.6170    0.1947    0.1947 ^ clkbuf_0_clk/A (BUFx2_ASAP7_75t_R)
+   3.9718   15.3006   15.1792   15.3739 ^ clkbuf_0_clk/Y (BUFx2_ASAP7_75t_R)
+                                          clknet_0_clk (net)
+            15.3261    0.3933   15.7672 ^ clkbuf_2_1__f_clk/A (BUFx2_ASAP7_75t_R)
+   7.3860   25.9391   24.0636   39.8308 ^ clkbuf_2_1__f_clk/Y (BUFx2_ASAP7_75t_R)
+                                          clknet_2_1__leaf_clk (net)
+            26.0179    0.8554   40.6862 ^ dpath.a_reg.out[4]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_SL)
+   1.7702   16.0677   30.2452   70.9315 ^ dpath.a_reg.out[4]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_SL)
+                                          _009_ (net)
+            16.0823    0.2375   71.1689 ^ _312_/A (INVx2_ASAP7_75t_SL)
+   2.8275   10.0552    5.8222   76.9912 v _312_/Y (INVx2_ASAP7_75t_SL)
+                                          dpath.a_lt_b$in0[4] (net)
+            10.0591    0.1125   77.1037 v _590_/A (HAxp5_ASAP7_75t_SL)
+   1.7269   22.0638   11.9218   89.0255 ^ _590_/CON (HAxp5_ASAP7_75t_SL)
+                                          _046_ (net)
+   1.0389   17.0141    7.4106   96.4361 v _590_/SN (HAxp5_ASAP7_75t_SL)
+                                          _047_ (net)
+            17.0163    0.1405   96.5766 v buf_ha590_eco/A (BUFx4_ASAP7_75t_SL)
+   3.4525    9.8020   17.4269  114.0035 v buf_ha590_eco/Y (BUFx4_ASAP7_75t_SL)
+                                          buf_ha590_eco_net161 (net)
+             9.8207    0.2190  114.2226 v _326_/B (OR2x2_ASAP7_75t_SL)
+   0.9072    6.9167   12.0871  126.3097 v _326_/Y (OR2x2_ASAP7_75t_SL)
+                                          _103_ (net)
+
+[... truncated for sample — full file has 16716 lines of report_checks output ...]

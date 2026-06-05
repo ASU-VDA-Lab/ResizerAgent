@@ -1,0 +1,11 @@
+iteration,role,model,api_calls
+1,planner,claude-opus-4-7,4
+1,selector,claude-opus-4-7,4
+2,planner,claude-opus-4-7,4
+2,selector,claude-opus-4-7,4
+3,planner,claude-opus-4-7,3
+3,selector,claude-opus-4-7,4
+4,planner,claude-opus-4-7,4
+4,selector,claude-opus-4-7,4
+5,planner,claude-opus-4-7,4
+5,selector,claude-opus-4-7,1
