@@ -2,7 +2,6 @@
 
 ## `python/`
 
-### Run-loop modules
 
 | File | What it is |
 |------|------------|
