@@ -9,7 +9,7 @@
 | `launch_workers.py` | Runs one Docker / OpenROAD process per `planX/`, captures logs, and classifies errors. |
 | `generate_cts.py` | Invokes `make clean_all && make cts` inside ORFS  |
 | `parse_gr_metrics.py` | Parses `global_route` logs into a structured summary. |
-| `generate_report.py` | Compiled text report for a run (Floorplan / Global Placement / Detail Placement / Clock Tree Synthesis / Global Route / Detail Route  + iteration trajectory). |
+| `generate_report.py` | Compiled text report for a run (floorplan / global placement / detail placement / clock tree synthesis / global route / detail route  + iteration trajectory). |
 
 ### `python/utils/`
 
