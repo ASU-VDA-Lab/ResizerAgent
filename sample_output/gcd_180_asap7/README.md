@@ -95,11 +95,11 @@ was promoted. `output.odb` becomes `seed.odb` for Iteration2.
 
 **`planner_decision.json`** — top-level fields:
 - `decision`: `"execute"` (proceed with the plans) or `"request_data"` (ask
-  the Reporter for extra context first — `suggest_eco`, `deep_worst_paths`,
-  `path_neighbors`, or `verbose_repair_summary`).
-- `rationale`: free-text bullets the Planner used to justify the picks.
-- `plan_count`, `plans`: 1–7 plans, each with:
-  - `plan_type`: `"sequence"` | `"staged"` | `"eco"`
+  the report phase for extra context first — `suggest_eco`,
+  `deep_worst_paths`, `path_neighbors`, or `verbose_repair_summary`).
+- `rationale`: free-text bullets the planner agent used to justify the picks.
+- `plan_count`, `plans`: 1–7 plans, each typed as a sequence plan, a
+  single-operation fix plan, or a targeted fix plan, with:
   - `sequence`: ordered list of moves from `sizeup`, `sizedown`, `vt_swap`,
     `buffer`, `split`, `unbuffer`, `clone`, `sizeup_match`, `swap`
   - `run_knobs`: `repair_tns`, `max_passes`, `setup_margin`, …
