@@ -29,7 +29,7 @@
 
 | File | What it is |
 |------|------------|
-| `run_default.tcl` | Default-stage driver: load PDK + `base_cts.odb` → `repair_timing` → Detailed Placement → writes DB → Global Route → post-GR metrics. |
+| `run_default.tcl` | Default-stage driver: load PDK + `base_cts.odb` → `repair_timing` → detailed placement → writes DB → global route → post-GR metrics. |
 | `generate_base_artifacts.tcl` | Base-stage timing/area/power / worst-paths / metrics from `base_cts.odb` at placement parasitics. |
 | `generate_design_artifacts.tcl` | Reusable report generator for an arbitrary ODB; configured via env vars. |
 | `generate_placement_report.tcl` | Spatial placement report. |
