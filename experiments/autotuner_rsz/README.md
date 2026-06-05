@@ -1,8 +1,12 @@
-# autotuner_rsz
+# autotuner_rsz  —  AT baseline
 
-Standalone Optuna TPE search over `repair_timing` sequence + knobs. Replaces the
-LLM Planner with hyperparameter optimization. Trials are independent — each
-starts from the same `base_cts.odb` (no ODB state carried forward).
+Local build of the **AutoTuner (AT) baseline** used in ResizerAgent
+(paper §4). An Optuna 3.x TPE sampler tunes the same `repair_timing -setup`
+knobs RA controls (Table 1). The sequence parameter is encoded as 18
+parameters — one binary `include_move` flag and one continuous
+`weight_move ∈ [1.0, 10.0]` per operation — and the cost function is a
+weighted sum of WNS, TNS, and power (weights 0.4 / 0.4 / 0.2). No planner or
+selector agent; trials are independent and start from the same `base_cts.odb`.
 
 ## Prerequisites
 
@@ -11,14 +15,16 @@ starts from the same `base_cts.odb` (no ODB state carried forward).
 - An ORFS tree at `experiments/autotuner_rsz/ORFS_fix/` when `--orfs fix`
   (default), or top-level `ORFS_old/` / `ORFS_new/` for the other variants
 
-## Usage
+## Run
+
+From the repo root:
 
 ```bash
 # 1. Generate base_cts.odb (one-time per design)
 python3 experiments/autotuner_rsz/run_autotuner.py \
     --design aes --pdk asap7 --run-stage base
 
-# 2. Run the search
+# 2. Run the TPE search
 python3 experiments/autotuner_rsz/run_autotuner.py \
     --design aes --pdk asap7 --run-stage tune \
     --n-startup-trials 20 --n-iterations 15 --n-jobs 4
@@ -29,5 +35,24 @@ python3 experiments/autotuner_rsz/run_autotuner.py \
 ```
 
 Add `--resume` to a `tune` invocation to continue from `optuna_study.db`.
-Run `python3 experiments/autotuner_rsz/run_autotuner.py --help` for the full
-flag list and output layout.
+
+## CLI flags
+
+| Flag | Required | Choices / default | Purpose |
+|---|---|---|---|
+| `--design` | yes | e.g. `aes`, `jpeg`, `ibex` | Design name; must exist under the chosen ORFS tree. |
+| `--pdk` | yes | `asap7` \| `nangate45` | Target PDK. |
+| `--orfs` | no | `old` \| `new` \| `fix` (default `fix`) | Which ORFS tree / Docker image to use. |
+| `--run-stage` | one of run-stage / clean | `base`, `tune`, `backend` | Single stage to run and exit. |
+| `--clean` | one of run-stage / clean | `base`, `tune`, `backend`, `all` | Delete a stage's artifacts and exit. |
+| `--n-startup-trials` | no | `20` | [tune] Sequential random trials before TPE takes over. |
+| `--n-iterations` | no | `15` | [tune] TPE-guided parallel iterations after warmup. |
+| `--n-jobs` | no | `4` | [tune] Parallel trials per iteration. |
+| `--resume` | no | — | [tune] Resume the existing `optuna_study.db` rather than starting fresh. |
+| `--finalize` | no | — | [tune] Skip Phase 1/2; just write summary files from the existing study (use after a crash that lost the wrap-up). |
+
+## Stage semantics
+
+- **`base`** — `make cts` in Docker, copy `base_cts.odb` + SDC, extract placement-parasitic metrics. Every trial seeds from this.
+- **`tune`** — Optuna TPE search over the Table 1 knob space. Each trial runs `repair_timing -setup` in Docker, measures WNS/TNS/area/power at placement parasitics, and reports the weighted score back to the sampler.
+- **`backend`** — push the best trial's ODB through `make route finish` for post-DR metrics, matching how the RA loop's best ODB is finished.
