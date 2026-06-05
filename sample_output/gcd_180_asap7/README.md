@@ -80,8 +80,7 @@ that agent.
 ## `Best_solutions/rankings.json`
 
 Cross-iteration WNS ranking — every successful plan competes, not just
-selector winners. Entries carry `wns_ps`, `tns_ps`, paths to `odb`/`sdc`,
-and a `chosen: true` flag when the selector promoted it.
+selector winners. Entries carry `wns_ps`, `tns_ps`, paths to `odb`/`sdc`.
 
 ## `run_logs/`
 
@@ -99,8 +98,4 @@ and a `chosen: true` flag when the selector promoted it.
 | `tokens.csv` | LLM tokens + USD cost per call. |
 | `apicall.csv` | API turns per role per iteration. |
 
-## Files only in a complete run
 
-`experiment_summary.csv`, `<design>_baseline.csv`, `<design>_agentic.csv`
-(+ `_r2`, `_r3`), `final_comparison.csv`, `rank<N>_comparison.csv`,
-`state.json`. This sample stopped before that phase, so they are absent.
