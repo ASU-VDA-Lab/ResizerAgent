@@ -1,43 +1,37 @@
 # experiments/
 
-Companion configurations to **ResizerAgent (RA)** — the LLM-based timing
-optimization framework that drives OpenROAD's Resizer through a closed-loop
-agentic flow (*Report → Plan → Execute → Select*). The full RA system lives at
-the repo root; each subdirectory here is either an **ablation** (paper §5.2)
-or a **lexicographic-priority variant** (paper §5.3) of RA, plus a local
-build of the **AutoTuner baseline (AT)** used in the evaluation.
+Companion configurations to **ResizerAgent (RA)**. The full RA system lives at
+the repo root.
 
-## Ablations (paper §5.2)
+## Ablations
 
-### `ablation1_no_targeted_fixes`  (paper: **A1 — No targeted fixes**)
+### `ablation1_no_targeted_fixes` 
 Disables the targeted-fix plan type. RA can only emit sequence plans and
-single-operation fix plans — i.e., modify the `repair_timing -setup` knobs in
-Table 1 — with no explicit ECO-style edits.
+single-operation fix plans.
 
-### `ablation2_single_candidate_plan`  (paper: **A2 — Single candidate plan**)
+### `ablation2_single_candidate_plan` 
 Restricts the planner agent to generating exactly one candidate plan per
 iteration. All three plan types remain available; only the multi-plan
 exploration is removed.
 
-### `ablation3_no_physical_feedback`  (paper: **A3 — No physical feedback**)
+### `ablation3_no_physical_feedback` 
 Removes physical information from agent inputs, including the post-evaluation
-feedback signal — i.e., the report phase drops placement/routing context and
+feedback signal, i.e., the report phase drops placement/routing context and
 the loop no longer measures with post-global-route parasitics.
 
-## Lexicographic-priority variant (paper §5.3)
+## Lexicographic-priority variant
 
 ### `lexicographic_priority_power`
-Reorders the selector's lexicographic ranking policy (Π_rank) so power is
+Reorders the selector's lexicographic ranking policy so power is
 ranked above WNS and TNS. Same architecture as RA; only the user-defined
-priority and the corresponding ε_metric thresholds change.
+priority and the corresponding metric thresholds change.
 
-## AutoTuner baseline (paper §4)
-
+## AutoTuner baseline
 ### `autotuner_rsz`
-Local build of the **AT** baseline. An Optuna 3.x TPE sampler tunes the same
-Table 1 knobs RA controls (sequence encoded as 18 parameters: a binary
+Local build of the autotuner baseline. An Optuna 3.x TPE sampler tunes the same
+knobs RA controls (sequence encoded as 18 parameters: a binary
 `include_move` flag and a continuous `weight_move ∈ [1.0, 10.0]` per
-operation). No planner or selector agent — the cost function is a weighted
+operation). The cost function is a weighted
 sum of WNS, TNS, and power (weights 0.4 / 0.4 / 0.2).
 
 ## Layout
