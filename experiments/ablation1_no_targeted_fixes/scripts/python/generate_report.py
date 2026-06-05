@@ -299,7 +299,7 @@ def _section_trajectory(trajectory: list, lines: list) -> None:
 
 
 def _section_rankings(wdir: pathlib.Path, lines: list) -> None:
-    d = _read_json(wdir / "llm_iterations" / "Best_solutions" / "rankings.json")
+    d = _read_json(wdir / "llm_iterations" / "best_solutions" / "rankings.json")
     if not d:
         return
     lines.append(f"\n{SEP}")

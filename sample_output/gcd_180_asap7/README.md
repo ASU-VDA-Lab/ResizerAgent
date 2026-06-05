@@ -15,7 +15,7 @@ gcd_180_asap7/
 ├── default/             # ORFS default repair_timing baseline (BL)
 ├── llm_iterations/
     ├── iteration1/      # one full Report → Plan → Execute → Select cycle
-    └── Best_solutions/  # cross-iteration WNS ranking
+    └── best_solutions/  # cross-iteration WNS ranking
 ├── run_logs/            # ORFS stage logs
 ├── apicall.csv          # API calls per role per iteration
 ├── runtimes.csv         # wall-time per stage
@@ -77,7 +77,7 @@ becomes iteration2's `seed.odb`.
 `scripts/schemas/`; `*_convo.jsonl` is the raw Anthropic API exchange for
 that agent.
 
-## `Best_solutions/rankings.json`
+## `best_solutions/rankings.json`
 
 Cross-iteration WNS ranking — every successful plan competes, not just
 selector winners. Entries carry `wns_ps`, `tns_ps`, paths to `odb`/`sdc`.

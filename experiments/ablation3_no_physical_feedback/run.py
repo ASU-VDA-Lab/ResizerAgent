@@ -2195,7 +2195,7 @@ def promote_best(agent: str, design: str, iteration: int, decision: dict) -> boo
 # ===========================================================================
 
 def update_best_solutions(agent: str, design: str, iteration: int, decision: dict) -> None:
-    """Keep Best_solutions/rankings.json up to date with the top 4 plans by WNS.
+    """Keep best_solutions/rankings.json up to date with the top 4 plans by WNS.
 
     Compares ALL successful plans from the current iteration against the existing
     ranked list — not just the selector's chosen plan. Called after every iteration.
@@ -2235,10 +2235,10 @@ def update_best_solutions(agent: str, design: str, iteration: int, decision: dic
             pass
 
     if not new_candidates:
-        log(f"Best_solutions: no successful plans in iteration {iteration} — skipping update.")
+        log(f"best_solutions: no successful plans in iteration {iteration} — skipping update.")
         return
 
-    best_dir = design_dir(agent, design) / "llm_iterations" / "Best_solutions"
+    best_dir = design_dir(agent, design) / "llm_iterations" / "best_solutions"
     best_dir.mkdir(parents=True, exist_ok=True)
     rankings_path = best_dir / "rankings.json"
 
@@ -2278,7 +2278,7 @@ def update_best_solutions(agent: str, design: str, iteration: int, decision: dic
 
     rank1 = top4[0]
     new_in_top4 = [r for r in top4 if r.get("iteration") == iteration]
-    log(f"Best_solutions updated (iter {iteration}: {len(new_candidates)} successful plans, "
+    log(f"best_solutions updated (iter {iteration}: {len(new_candidates)} successful plans, "
         f"{len(new_in_top4)} entered top4) — "
         f"rank1: iter={rank1['iteration']} {rank1['plan']} WNS={rank1['wns_ps']} ps  "
         f"top4 WNS: {[r['wns_ps'] for r in top4]}")
@@ -2696,10 +2696,10 @@ def run_backend_rank(agent: str, design: str, rank: int) -> int:
     # experiment_summary.csv (from iteration data, no routing needed)
     _build_experiment_summary_csv(agent, design)
 
-    # Locate rank-N entry in Best_solutions
-    rankings_path = ddir / "llm_iterations" / "Best_solutions" / "rankings.json"
+    # Locate rank-N entry in best_solutions
+    rankings_path = ddir / "llm_iterations" / "best_solutions" / "rankings.json"
     if not rankings_path.exists():
-        log(f"[ERROR] Backend rank{rank}: Best_solutions/rankings.json not found — "
+        log(f"[ERROR] Backend rank{rank}: best_solutions/rankings.json not found — "
             f"run --run-stage LLM-iterations first.")
         return 1
     try:
