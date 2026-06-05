@@ -26,9 +26,5 @@ priority and the corresponding metric thresholds change.
 
 ## AutoTuner baseline
 ### `autotuner_rsz`
-Local build of the autotuner baseline. An Optuna 3.x TPE sampler tunes the same
-knobs RA controls (sequence encoded as 18 parameters: a binary
-`include_move` flag and a continuous `weight_move ∈ [1.0, 10.0]` per
-operation). The cost function is a weighted
-sum of WNS, TNS, and power (weights 0.4 / 0.4 / 0.2).
+Local build of the autotuner baseline. 
 
