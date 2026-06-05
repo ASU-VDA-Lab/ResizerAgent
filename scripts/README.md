@@ -19,27 +19,7 @@ Non-orchestrator code consumed by `run.py`.
 | `launch_workers.py` | Runs one Docker / OpenROAD process per `planX/`, captures logs, classifies errors. |
 | `generate_cts.py` | Invokes `make clean_all && make cts-a` so `4_1_cts.odb` / `.sdc` land in the ORFS results tree. |
 | `parse_gr_metrics.py` | Parses `[INFO GRT-*]` lines from `global_route` logs into a structured summary. |
-| `extract_stuck_paths.py` | Walks iterations and tallies follow-through of selector stuck-path → next planner. |
-
-### Analysis / dataset
-
-| File | What it is |
-|------|------------|
 | `generate_report.py` | Compiled text report for a run (FP / GP / DP / CTS / repair / GRT / DR ledger + iteration trajectory). |
-| `build_dialogue_dataset.py` | Walks all experiments and writes a CSV summarising every planner → selector dialogue. |
-
-### Plotting
-
-| File | What it is |
-|------|------------|
-| `plot_calibration.py` | Planner-predicted ΔWNS vs actual ΔWNS. |
-| `plot_decision_trajectory.py` | Per-experiment WNS-over-iterations trajectory with selector-decision markers. |
-| `plot_pareto.py` | Effective CP vs DR power, one curve per rank, across clock periods. |
-| `plot_pareto_grid.py` | 2-row × N-column Pareto grid; rows = repair vs DR stage. |
-| `plot_pareto_grid_nangate45.py` | NanGate45 wrapper around `plot_pareto_grid.py`. |
-| `plot_util_sweep.py` | Effective-CP vs target-util curve per rank. |
-| `plot_util_grid.py` | 2-row util-sweep grid (left-y = power, right-y = util). |
-| `plot_util_3d.py` | 3-D util / CP / power scatter. |
 
 ### `python/utils/`
 
