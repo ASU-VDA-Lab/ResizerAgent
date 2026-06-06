@@ -28,3 +28,6 @@ priority and the corresponding metric thresholds change.
 ### `autotuner_rsz`
 Local build of the autotuner baseline. 
 
+## Note
+
+Please add OpenROAD-flow-scripts repository to the specific experiment directory to run the experiment. Since all experiments and ResizerAgent as well use the same ORFS structure, dedicated ORFS trees are recommended to avoid polluting design states across different experiments.
