@@ -9,18 +9,53 @@ plan, single-operation fix plan, and targeted fix plan, to minimize user-provide
 
 - Python 3 (standard library only)
 - Docker, with the `orfs_ra:latest` image available locally [Can be made available on request]
-- Claude CLI on `$PATH`, with model access to `claude-opus-4-7` (planner and
-  selector agents) and `claude-sonnet-4-6` (executor agent)
+- Claude Code CLI on `$PATH`, authenticated with a **Claude Max subscription**,
+  with model access to `claude-opus-4-7` (planner and selector agents) and
+  `claude-sonnet-4-6` (executor agent)
 - The `openroad-flow-scripts/` submodule (cloned with `--recurse-submodules`), which ships both the ORFS flow and its PDK platforms (ASAP7, NanGate45)
 
 ## Setup
+
+### Part 1 — Clone the repository
+
+Clone with submodules so the `openroad-flow-scripts/` ORFS tree (flow + ASAP7 /
+NanGate45 platforms) is fetched:
 
 ```bash
 git clone --recurse-submodules https://github.com/ASU-VDA-Lab/ResizerAgent.git
 cd ResizerAgent
 ```
 
+If you already cloned without `--recurse-submodules`:
+
+```bash
+git submodule update --init openroad-flow-scripts
+```
+
 The Docker image `orfs_ra:latest` must be built or loaded separately.
+
+### Part 2 — Set up the Claude Code CLI
+
+The agents are driven by the Claude Code CLI, which needs a **Claude Max
+subscription** for the required model access. Install it, ensure it is on your
+`$PATH`, and authenticate:
+
+```bash
+# Install (native binary → ~/.local/bin/claude)
+curl -fsSL https://claude.ai/install.sh | bash
+
+# If `which claude` is empty, add the install dir to your PATH
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+
+# Verify
+claude --version
+```
+
+Then authenticate your account following Anthropic's official guide —
+<https://code.claude.com/docs/en/authentication>. Once `claude` is on `$PATH`
+and authenticated, the flow can invoke it; pass a non-default binary with
+`--claude-bin` if needed.
 
 ## Run
 
