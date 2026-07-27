@@ -60,10 +60,17 @@ and authenticated, the flow can invoke it; pass a non-default binary with
 ## Run
 
 ```bash
+# Run the base stage where the Openroad Flow Scripts runs till CTS without performing post-CTS timing optimization
 python3 run.py --design aes --agent claude --pdk asap7 --run-stage base
+
+# Run the default repair stage where Openroad Flow Scripts runs the default timing repair 
 python3 run.py --design aes --agent claude --pdk asap7 --run-stage default
+
+# Run ResizerAgent to optimize timing
 python3 run.py --design aes --agent claude --pdk asap7 \
     --run-stage LLM-iterations --max-iterations 15
+
+# Run the backend flow to evaluate post detail-route PPA
 python3 run.py --design aes --agent claude --pdk asap7 --run-stage backend
 ```
 
