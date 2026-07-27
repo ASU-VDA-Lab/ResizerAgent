@@ -43,7 +43,7 @@ from typing import Dict, List, Optional, Tuple
 # ---------------------------------------------------------------------------
 
 WORKSPACE    = pathlib.Path(__file__).resolve().parent.parent.parent  # scripts/python/ → scripts/ → workspace
-DOCKER_IMAGE = "openroad/flow-ubuntu22.04-builder:0b569c"
+DOCKER_IMAGE = "orfs_ra"
 OPENROAD_BIN = "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"
 
 # Error patterns that indicate the generated TCL script is broken.
@@ -262,9 +262,9 @@ def run_plan(
 
     # --- Build Docker command ---
     sdc_file  = WORKSPACE / "work_dir" / agent / design / "base" / "constraint.sdc"
-    lef_dir   = WORKSPACE / "OpenROAD-flow-scripts" / "flow" / "platforms" / "asap7" / "lef"
-    lib_dir   = WORKSPACE / "OpenROAD-flow-scripts" / "flow" / "platforms" / "asap7" / "lib" / "NLDM"
-    setrc_tcl = WORKSPACE / "OpenROAD-flow-scripts" / "flow" / "platforms" / "asap7" / "setRC.tcl"
+    lef_dir   = WORKSPACE / "openroad-flow-scripts" / "flow" / "platforms" / "asap7" / "lef"
+    lib_dir   = WORKSPACE / "openroad-flow-scripts" / "flow" / "platforms" / "asap7" / "lib" / "NLDM"
+    setrc_tcl = WORKSPACE / "openroad-flow-scripts" / "flow" / "platforms" / "asap7" / "setRC.tcl"
 
     env_vars = {
         "INPUT_DB":   to_docker_path(input_odb),
@@ -275,7 +275,7 @@ def run_plan(
         "LIB_DIR":    to_docker_path(lib_dir) + "/",
         "SETRC_TCL":  to_docker_path(setrc_tcl),
         "STAGE_TAG":  plan_name,
-        "FLOW_HOME":  "/workspace/OpenROAD-flow-scripts/flow",
+        "FLOW_HOME":  "/workspace/openroad-flow-scripts/flow",
     }
 
     cmd = ["docker", "run", "--rm", "--user", "root"]

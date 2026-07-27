@@ -26,13 +26,13 @@ from pathlib import Path
 WORKSPACE = Path(__file__).resolve().parent.parent.parent
 WORK_DIR  = WORKSPACE / "work_dir"
 
-DOCKER_IMAGE    = "openroad/flow-ubuntu22.04-builder:0b569c"
+DOCKER_IMAGE    = "orfs_ra"
 DOCKER_OPENROAD = "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"
 DOCKER_YOSYS    = "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys"
 
 # Inside Docker the workspace is mounted at /workspace.
 # ORFS flow directory (inside Docker)
-DOCKER_FLOW_HOME = "/workspace/OpenROAD-flow-scripts/flow"
+DOCKER_FLOW_HOME = "/workspace/openroad-flow-scripts/flow"
 
 
 def docker_run(design: str, log_path: Path) -> None:
@@ -57,7 +57,7 @@ def docker_run(design: str, log_path: Path) -> None:
         "--user", "root",
         "-e", f"FLOW_HOME={DOCKER_FLOW_HOME}",
         "-v", f"{WORKSPACE}:/workspace",
-        "-w", "/workspace/OpenROAD-flow-scripts/flow",
+        "-w", "/workspace/openroad-flow-scripts/flow",
         DOCKER_IMAGE,
         "/bin/bash", "-c", shell_cmd,
     ]
@@ -77,7 +77,7 @@ def docker_run(design: str, log_path: Path) -> None:
     # Verify output exists
     expected = (
         WORKSPACE
-        / "OpenROAD-flow-scripts"
+        / "openroad-flow-scripts"
         / "flow"
         / "results"
         / "asap7"
