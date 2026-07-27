@@ -76,6 +76,13 @@ python3 run.py --design aes --agent claude --pdk asap7 --run-stage backend
 
 `--run-stage all` chains everything in one invocation.
 
+## Paper configurations (`AE/dataset/`)
+
+`AE/dataset/` holds the design inputs for every configuration used in the paper
+(per PDK / design / `<util>_<cp>`). Stage one into the ORFS flow with
+`AE/dataset/design_setup.py`, then run as above. See `AE/dataset/README.md` for
+details.
+
 ## CLI flags
 
 | Flag | Required | Choices / default | Purpose |
