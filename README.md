@@ -16,7 +16,7 @@ plan, single-operation fix plan, and targeted fix plan, to minimize user-provide
 
 ## Setup
 
-### Part 1 — Clone the repository
+### Part 1 - Clone the repository
 
 Clone with submodules so the `openroad-flow-scripts/` ORFS tree (flow + ASAP7 /
 NanGate45 platforms) is fetched:
@@ -34,7 +34,7 @@ git submodule update --init openroad-flow-scripts
 
 The Docker image `orfs_ra:latest` must be built or loaded separately.
 
-### Part 2 — Set up the Claude Code CLI
+### Part 2 - Set up the Claude Code CLI
 
 The agents are driven by the Claude Code CLI, which needs a **Claude Max
 subscription** for the required model access. Install it, ensure it is on your
@@ -52,7 +52,7 @@ source ~/.bashrc
 claude --version
 ```
 
-Then authenticate your account following Anthropic's official guide —
+Then authenticate your account following Anthropic's official guide -
 <https://code.claude.com/docs/en/authentication>. Once `claude` is on `$PATH`
 and authenticated, the flow can invoke it; pass a non-default binary with
 `--claude-bin` if needed.
