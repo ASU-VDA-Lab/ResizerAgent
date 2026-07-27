@@ -95,4 +95,4 @@ Results land under `work_dir/<agent>/<pdk>/<design>/` with subdirectories
 `base/`, `default/`, and `llm_iterations/iteration<N>/`, plus a cross-iteration
 ranking at `llm_iterations/best_solutions/rankings.json`.
 
-See `sample_output/gcd_180_asap7/README.md` for a tour of a real run.
+See `sample_output_structure/gcd_180_asap7/README.md` for a tour of a real run.
