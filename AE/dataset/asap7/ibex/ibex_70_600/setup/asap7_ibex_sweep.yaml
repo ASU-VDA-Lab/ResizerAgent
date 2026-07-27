@@ -1,0 +1,19 @@
+run_config:
+  design: ibex
+  experiment: freq
+  flow_home: /OpenROAD-flow-scripts/flow
+  jobs: 2
+  mode: sweep
+  platform: asap7
+  ray_outputs_dir: /work
+  orfs_outputs_dir: /work
+search_space:
+  _SDC_FILE_PATH:
+    type: constant
+    value: /OpenROAD-flow-scripts/flow/designs/asap7/ibex/constraint.sdc
+  _SDC_CLK_PERIOD:
+    type: range_int
+    min: 950
+    max: 1050
+    step: 10
+  

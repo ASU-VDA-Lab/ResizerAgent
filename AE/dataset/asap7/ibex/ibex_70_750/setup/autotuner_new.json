@@ -1,0 +1,58 @@
+{
+    "_SDC_FILE_PATH": "designs/asap7/ibex/constraint.sdc",
+    "_SDC_CLK_PERIOD": {
+        "type": "range_int",
+        "step": 0,
+        "min": 1200,
+        "max": 2000
+    },
+    "CORE_UTILIZATION": {
+        "type": "range_int",
+        "step": 1,
+        "min": 5,
+        "max": 10
+    },
+    "CORE_ASPECT_RATIO": {
+        "type": "range_float",
+        "step": 0,
+        "min": 0.9,
+        "max": 1.1
+    },
+    "CELL_PAD_IN_SITES_GLOBAL_PLACEMENT": {
+        "type": "range_int",
+        "step": 1,
+        "min": 0,
+        "max": 3
+    },
+    "CELL_PAD_IN_SITES_DETAIL_PLACEMENT": {
+        "type": "range_int",
+        "step": 1,
+        "min": 0,
+        "max": 3
+    },
+    "_FR_LAYER_ADJUST": {
+        "type": "range_float",
+        "step": 0,
+        "min": 0.0,
+        "max": 0.1
+    },
+    "PLACE_DENSITY_LB_ADDON": {
+        "type": "range_float",
+        "step": 0,
+        "min": 0.0,
+        "max": 0.2
+    },
+    "CTS_CLUSTER_SIZE": {
+        "type": "range_int",
+        "step": 1,
+        "min": 10,
+        "max": 200
+    },
+    "CTS_CLUSTER_DIAMETER": {
+        "type": "range_int",
+        "step": 1,
+        "min": 20,
+        "max": 400
+    },
+    "_FR_FILE_PATH": ""
+}

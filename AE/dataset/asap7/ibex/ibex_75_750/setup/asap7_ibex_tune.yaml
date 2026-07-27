@@ -1,0 +1,12 @@
+run_config:
+  design: ibex
+  experiment: basic
+  flow_home: /OpenROAD-flow-scripts/flow
+  jobs: 2
+  mode: tune
+  samples: 5
+  platform: asap7
+  ray_outputs_dir: /work
+  orfs_outputs_dir: /work
+search_space:
+  file: designs/asap7/ibex/autotuner_new.json
