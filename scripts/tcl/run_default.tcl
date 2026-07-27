@@ -60,8 +60,13 @@ file mkdir [file dirname $output_db]
 # ---------------------------------------------------------------------------
 # 1. Load PDK + design
 # ---------------------------------------------------------------------------
-source [require_env PDK_PREAMBLE]
+# NOTE: read_db MUST come before the PDK preamble's read_lef. The saved .odb
+# already carries the tech/standard-cell LEF; issuing read_lef first and then
+# read_db duplicates the cell masters, which corrupts the resizer's buffer list
+# and SIGSEGVs (dbMaster::getSite) inside repair_timing on current OpenROAD
+# builds. Loading the DB first, then the liberty, avoids the duplicate masters.
 read_db  $input_db
+source [require_env PDK_PREAMBLE]
 read_sdc $sdc_file
 source   $setrc_tcl
 

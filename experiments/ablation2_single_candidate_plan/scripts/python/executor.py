@@ -191,10 +191,10 @@ _PREAMBLE = """\
 # Plan: {ptype}, Iteration: {it}
 
 # --- Load technology ---
+read_db  $env(INPUT_DB)
 source $env(PDK_PREAMBLE)
 
 # --- Load design ---
-read_db  $env(INPUT_DB)
 read_sdc $env(SDC_FILE)
 source   $env(SETRC_TCL)
 

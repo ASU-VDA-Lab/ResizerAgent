@@ -59,8 +59,8 @@ file mkdir [file dirname $output_db]
 # ---------------------------------------------------------------------------
 # 1. Load PDK + design
 # ---------------------------------------------------------------------------
-source [require_env PDK_PREAMBLE]
 read_db  $input_db
+source [require_env PDK_PREAMBLE]
 read_sdc $sdc_file
 source   $setrc_tcl
 
