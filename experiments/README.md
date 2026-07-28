@@ -30,4 +30,4 @@ Local build of the autotuner baseline.
 
 ## Note
 
-Please add OpenROAD-flow-scripts repository to the specific experiment directory to run the experiment. Since all experiments and ResizerAgent as well use the same ORFS structure, dedicated ORFS trees are recommended to avoid polluting design states across different experiments.
+Please add an OpenROAD-flow-scripts tree to the specific experiment directory to run the experiment — use the same patched ORFS fork as the project submodule (`Atmadip/ORFS`, carrying the `repair_timing` fix); an unpatched upstream ORFS will hit the crash. Since all experiments and ResizerAgent use the same ORFS structure, dedicated ORFS trees per experiment are recommended to avoid polluting design states across experiments.
