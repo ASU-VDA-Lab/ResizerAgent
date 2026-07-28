@@ -1,7 +1,7 @@
 # Dataset
 
 Design inputs for every paper configuration, plus the scripts to stage and
-(re)build them. Each design point is stored **once** — the design files are
+(re)build them. Each design point is stored **once** - the design files are
 experiment-independent inputs, so there are no per-experiment copies.
 
 ## Layout
