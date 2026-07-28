@@ -12,7 +12,7 @@ plan, single-operation fix plan, and targeted fix plan, to minimize user-provide
 - Claude Code CLI on `$PATH`, authenticated with a **Claude Max subscription**,
   with model access to `claude-opus-4-7` (planner and selector agents) and
   `claude-sonnet-4-6` (executor agent)
-- The `openroad-flow-scripts/` submodule (cloned with `--recurse-submodules`), which ships both the ORFS flow and its PDK platforms (ASAP7, NanGate45)
+- The `openroad-flow-scripts/` submodule (cloned with `--recurse-submodules`), which ships both the ORFS flow and its PDK platforms (ASAP7, NanGate45). This is a **custom ORFS fork** carrying a fix for an OpenROAD `repair_timing` crash (upstream PR #10272).
 
 ## Setup
 
