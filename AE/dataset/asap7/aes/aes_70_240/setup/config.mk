@@ -1,4 +1,5 @@
 export PLATFORM               = asap7
+export ASAP7_USE_VT           = RVT LVT SLVT
 
 export DESIGN_NAME            = aes_cipher_top
 export DESIGN_NICKNAME        = aes

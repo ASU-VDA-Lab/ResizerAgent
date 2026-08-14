@@ -1,4 +1,5 @@
 export PLATFORM               = asap7
+export ASAP7_USE_VT           = RVT LVT SLVT
 
 export DESIGN_NICKNAME        = ibex
 export DESIGN_NAME            = ibex_core
