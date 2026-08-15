@@ -1,7 +1,7 @@
 # Dataset
 
 Design inputs for every paper configuration, plus the scripts to stage and
-(re)build them. Each design point is stored **once** - the design files are
+(re)build them. Each design point is stored **once**. The design files are
 experiment-independent inputs, so there are no per-experiment copies.
 
 ## Layout
@@ -13,16 +13,16 @@ experiment-independent inputs, so there are no per-experiment copies.
 
 - **pdk**: `asap7` | `nangate45`
 - **design**: `aes` | `ibex` | `jpeg`
-- **config**: `<util>_<cp>` — utilization (%) and clock period (ps), e.g. `70_430`
+- **config**: `<util>_<cp>` - utilization (%) and clock period (ps), e.g. `70_430`
 
 The set of configs per design is the union of the paper's points: utilization
 sweep (Table 3 / Table 9), clock-period sweep (Fig 2 / Fig 3), and the ASAP7
 ablation configs (Table 4). 36 configs total (22 asap7 + 14 nangate45).
 
 ## Scripts (in this directory)
-- `design_setup.py` — stage one config into the ORFS flow tree.
-- `populate_dataset.py` — (re)build the per-PDK data dirs from ORFS + the paper table.
-- `run_autotuner_exp.py` — AutoTuner pipeline.
+- `design_setup.py` - stage one config into the ORFS flow tree.
+- `populate_dataset.py` - (re)build the per-PDK data dirs from ORFS + the paper table.
+- `run_autotuner_exp.py` - AutoTuner pipeline.
 
 ## How to run a config
 ```bash

@@ -73,7 +73,7 @@ class OrfsConfig:
 
 _ORFS_CFG: OrfsConfig = OrfsConfig(
     root_dir_name="openroad-flow-scripts",
-    docker_image="orfs_ra",
+    docker_image="orfs_ra:latest",
     cts_make_target="cts",
     cts_odb_name="4_1_cts.odb",
     cts_sdc_name="4_cts.sdc",
@@ -113,10 +113,17 @@ def set_pdk(name: str) -> None:
 # Fixed constants
 # ---------------------------------------------------------------------------
 
-DOCKER_IMAGE     = _ORFS_CFG.docker_image
+DOCKER_IMAGE     = _ORFS_CFG.docker_image   # default; override with --docker-image
 DOCKER_OPENROAD  = "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"
 DOCKER_YOSYS     = "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys"
 DOCKER_FLOW_HOME = f"/workspace/{_ORFS_CFG.root_dir_name}/flow"
+
+
+def set_docker_image(image: str) -> None:
+    """Override the Docker image[:tag] the flow runs in.
+    Called from main() when --docker-image is parsed."""
+    global DOCKER_IMAGE
+    DOCKER_IMAGE = image
 
 TCL_ERROR_PATTERNS = [
     r"undefined proc", r"wrong # args", r"invalid command name",
@@ -3143,8 +3150,27 @@ STAGE_CHOICES = ["base", "default", "LLM-iterations",
                  "backend", "all"]
 
 
+class _HelpfulParser(argparse.ArgumentParser):
+    """On an argument error, show the full help (usage + options + examples)
+    followed by the error message."""
+    def error(self, message):
+        self.print_help(sys.stderr)
+        self.exit(2, f"\n{self.prog}: error: {message}\n")
+
+
 def parse_args() -> argparse.Namespace:
-    ap = argparse.ArgumentParser(description="Timing-closure agentic flow — stage-based runner.")
+    ap = _HelpfulParser(
+        description="Timing-closure agentic flow — stage-based runner.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""\
+Typical usage:
+    python3 run.py --design aes  --agent claude --pdk asap7     --run-stage all
+    python3 run.py --design aes  --agent claude --pdk asap7     --run-stage base
+    python3 run.py --design ibex --agent claude --pdk nangate45 --run-stage LLM-iterations --max-iterations 15
+
+If you built the image under a different name:
+    python3 run.py --design aes  --agent claude --pdk asap7 --run-stage all --docker-image myimg:mytag
+""")
     ap.add_argument("--design",          required=True, help="Design name (e.g. aes)")
     ap.add_argument("--agent",           required=True, help="Agent label (e.g. claude)")
     ap.add_argument("--pdk",             required=True, choices=["asap7", "nangate45"],
@@ -3161,6 +3187,9 @@ def parse_args() -> argparse.Namespace:
                     help="Resume LLM-iterations from this iteration (default 1)")
     ap.add_argument("--claude-bin",      default="claude",
                     help="Path to Claude CLI binary (default: claude)")
+    ap.add_argument("--docker-image",    default=_ORFS_CFG.docker_image, dest="docker_image",
+                    help="Docker image (name[:tag]) to run the flow in "
+                         f"(default: {_ORFS_CFG.docker_image})")
     args = ap.parse_args()
     if not args.clean and not args.run_stage:
         ap.error("must specify --clean or --run-stage")
@@ -3198,6 +3227,7 @@ def _dispatch_run_stage(stage: str, agent: str, design: str, args: argparse.Name
 def main() -> int:
     args = parse_args()
     set_pdk(args.pdk)
+    set_docker_image(args.docker_image)
     design, agent = args.design, args.agent
 
     # --- Clean mode ---

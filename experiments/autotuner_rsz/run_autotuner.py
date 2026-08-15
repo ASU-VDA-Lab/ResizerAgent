@@ -86,7 +86,7 @@ class _OrfsConfig:
 
 
 _ORFS_CFG = _OrfsConfig("openroad-flow-scripts",
-                        "orfs_ra",
+                        "orfs_ra:latest",
                         "cts", "4_1_cts.odb", "4_cts.sdc")
 
 DOCKER_OPENROAD = "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"
@@ -96,8 +96,16 @@ DOCKER_OPENROAD = "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"
 # CLI
 # ---------------------------------------------------------------------------
 
+class _HelpfulParser(argparse.ArgumentParser):
+    """On an argument error, show the full help (usage + options + examples)
+    followed by the error message."""
+    def error(self, message):
+        self.print_help(sys.stderr)
+        self.exit(2, f"\n{self.prog}: error: {message}\n")
+
+
 def parse_args() -> argparse.Namespace:
-    ap = argparse.ArgumentParser(
+    ap = _HelpfulParser(
         description="AutoTuner: standalone CTS + Optuna repair_timing search.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
@@ -129,6 +137,8 @@ def parse_args() -> argparse.Namespace:
                     help="[tune] Parallel trials per iteration (default: 4)")
     ap.add_argument("--resume",    action="store_true",
                     help="[tune] Resume existing Optuna study from optuna_study.db")
+    ap.add_argument("--docker-image", default=_ORFS_CFG.docker_image, dest="docker_image",
+                    help="Docker image (name[:tag]) to run in (default: %(default)s)")
     ap.add_argument("--finalize",  action="store_true",
                     help="[tune] Skip Phase 1/2, write summary files from existing study "
                          "(for recovering from a crash after trials completed)")
@@ -237,6 +247,7 @@ def _clean(design: str, pdk: str, orfs_cfg, what: str) -> int:
 def main() -> int:
     args     = parse_args()
     orfs_cfg = _ORFS_CFG
+    orfs_cfg.docker_image = args.docker_image
     pdk_cfg  = _get_pdk(args.pdk)
 
     if args.clean:

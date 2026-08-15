@@ -1,4 +1,4 @@
-# Sample Output — gcd_180 / asap7
+# Sample Output - gcd_180 / asap7
 
 One real iteration of a `gcd_180` run on `asap7`. iteration2..N would mirror
 the same shape under sibling `iteration<N>/` directories.
@@ -79,7 +79,7 @@ that agent.
 
 ## `best_solutions/rankings.json`
 
-Cross-iteration WNS ranking — every successful plan competes, not just
+Cross-iteration WNS ranks every successful plan that competes, not just
 selector winners. Entries carry `wns_ps`, `tns_ps`, paths to `odb`/`sdc`.
 
 ## `run_logs/`

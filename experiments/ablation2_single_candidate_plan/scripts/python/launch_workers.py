@@ -43,7 +43,7 @@ from typing import Dict, List, Optional, Tuple
 # ---------------------------------------------------------------------------
 
 WORKSPACE    = pathlib.Path(__file__).resolve().parent.parent.parent  # scripts/python/ → scripts/ → workspace
-DOCKER_IMAGE = "orfs_ra"
+DOCKER_IMAGE = "orfs_ra:latest"
 OPENROAD_BIN = "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"
 
 # Error patterns that indicate the generated TCL script is broken.
@@ -375,11 +375,15 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--plans",      nargs="+", metavar="planN",
                     help="Run only the named plan directory (e.g. --plans plan1). "
                          "Default: run the iteration's plan.")
+    ap.add_argument("--docker-image", default=DOCKER_IMAGE, dest="docker_image",
+                    help="Docker image (name[:tag]) to run in (default: %(default)s)")
     return ap.parse_args()
 
 
 def main() -> int:
     args    = parse_args()
+    global DOCKER_IMAGE
+    DOCKER_IMAGE = args.docker_image
     design  = args.design
     agent   = args.agent
     iterN   = args.iteration

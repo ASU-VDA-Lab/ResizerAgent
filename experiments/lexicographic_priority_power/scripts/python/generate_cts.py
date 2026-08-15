@@ -26,7 +26,7 @@ from pathlib import Path
 WORKSPACE = Path(__file__).resolve().parent.parent.parent
 WORK_DIR  = WORKSPACE / "work_dir"
 
-DOCKER_IMAGE    = "orfs_ra"
+DOCKER_IMAGE    = "orfs_ra:latest"
 DOCKER_OPENROAD = "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"
 DOCKER_YOSYS    = "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys"
 
@@ -94,12 +94,16 @@ def docker_run(design: str, log_path: Path) -> None:
 
 
 def main() -> None:
+    global DOCKER_IMAGE
     ap = argparse.ArgumentParser(
         description="Run ORFS make cts-a inside Docker to generate 4_1 artifacts."
     )
     ap.add_argument("--design", required=True, help="Design name (e.g. aes)")
     ap.add_argument("--agent",  required=True, help="Agent name (e.g. claude, codex)")
+    ap.add_argument("--docker-image", default=DOCKER_IMAGE, dest="docker_image",
+                    help="Docker image (name[:tag]) to run in (default: %(default)s)")
     args = ap.parse_args()
+    DOCKER_IMAGE = args.docker_image
 
     log_path = WORK_DIR / args.agent / args.design / "run_logs" / "generate_cts.log"
 
