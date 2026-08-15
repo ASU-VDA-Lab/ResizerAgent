@@ -8,31 +8,34 @@ plan, single-operation fix plan, and targeted fix plan, to minimize user-provide
 ## Requirements
 
 - Python 3 (standard library only)
-- Docker, with the `orfs_ra:latest` image available locally [Can be made available on request]
+- Docker - the image is built from the bundled ORFS source with `./build_image.sh`
 - Claude Code CLI on `$PATH`, authenticated with a **Claude Max subscription**,
   with model access to `claude-opus-4-7` (planner and selector agents) and
   `claude-sonnet-4-6` (executor agent)
-- The `openroad-flow-scripts/` submodule (cloned with `--recurse-submodules`), which ships both the ORFS flow and its PDK platforms (ASAP7, NanGate45). This is a **custom ORFS fork** carrying a fix for an OpenROAD `repair_timing` crash (upstream PR #10272).
+- The bundled `openroad-flow-scripts/` tree included in full as regular files (no submodule to fetch) which ships both the ORFS flow and its PDK platforms (ASAP7, NanGate45). This is a **custom ORFS build** carrying a fix for an OpenROAD `repair_timing` crash (upstream PR #10272).
 
 ## Setup
 
-### Part 1 - Clone the repository
+### Part 1 - Build the Docker image
 
-Clone with submodules so the `openroad-flow-scripts/` ORFS tree (flow + ASAP7 /
-NanGate45 platforms) is fetched:
+The `openroad-flow-scripts/` tree is bundled in full, so from the `ResizerAgent/`
+directory build the image:
 
 ```bash
-git clone --recurse-submodules https://github.com/ASU-VDA-Lab/ResizerAgent.git
 cd ResizerAgent
+./build_image.sh                 # -> orfs_ra:latest  (run.py's default image)
 ```
 
-If you already cloned without `--recurse-submodules`:
+To build under a custom name and tag, pass them as the two positional arguments
+(then point the flow at it with `--docker-image`):
 
 ```bash
-git submodule update --init openroad-flow-scripts
+./build_image.sh myimg mytag     # -> myimg:mytag
+python3 run.py ... --docker-image myimg:mytag
 ```
 
-The Docker image `orfs_ra:latest` must be built or loaded separately.
+For more on the bundled ORFS flow itself, see
+[`openroad-flow-scripts/README.md`](openroad-flow-scripts/README.md).
 
 ### Part 2 - Set up the Claude Code CLI
 
@@ -95,6 +98,7 @@ details.
 | `--max-iterations` | no | `15` | Iteration cap for `LLM-iterations`. |
 | `--start-iteration` | no | `1` | Resume the loop from a specific iteration. |
 | `--claude-bin` | no | `claude` | Path to the Claude CLI binary. |
+| `--docker-image` | no | `orfs_ra:latest` | Docker image (`name[:tag]`) the flow runs OpenROAD/Yosys in. |
 
 ## Output
 
