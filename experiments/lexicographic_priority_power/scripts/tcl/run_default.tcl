@@ -1,8 +1,7 @@
 # run_default.tcl
 #
-# Default-stage driver: repair_timing + legalize → save pre-GR handoff DB
-# → global_route → full after-GR metrics. Single-file entry point for
-# --run-stage default.
+# Default-stage driver: repair_timing + legalize, reported at placement
+# parasitics (no global route). Single-file entry point for --run-stage default.
 #
 # Sequence:
 #   1. Load PDK + base_cts.odb + SDC
@@ -11,16 +10,11 @@
 #   4. detailed_placement + check_placement
 #   5. estimate_parasitics -placement  (refresh after DPL)
 #   6. Small placement-parasitic summary: WNS/TNS/area/util/power
-#   7. write_db / write_sdc                                ← HANDOFF (pre-GR)
-#   8. Global route (Blocks A–D from ORFS global_route.tcl)
-#   9. estimate_parasitics -global_routing
-#  10. Full after-GR artifacts via generate_design_artifacts.tcl (sourced
-#      in-session with skip_load=1, so no re-read)
+#   7. write_db / write_sdc  (HANDOFF)
 #
 # Required env vars:
 #   INPUT_DB, SDC_FILE, OUTPUT_DB, OUTPUT_DIR
 #   LEF_DIR, LIB_DIR, SETRC_TCL, PDK_PREAMBLE
-#   MIN_ROUTING_LAYER, MAX_ROUTING_LAYER, ROUTING_LAYER_ADJUSTMENT
 #
 # Optional env vars:
 #   SEQUENCE    — comma-separated repair_timing move list (default: OpenROAD built-in)
@@ -148,98 +142,21 @@ set placement_report_skip_load 1
 source [file join [file dirname [info script]] generate_placement_report.tcl]
 
 # ---------------------------------------------------------------------------
-# 5. HANDOFF — save pre-GR DB + SDC. The saved ODB is the seed for the next
-#    iteration (LLM loop) and the clean handoff to the backend. GR runs
-#    below are for measurement only; their parasitic state is NOT written
-#    to the handoff ODB.
-# ---------------------------------------------------------------------------
-write_db  $output_db
-write_sdc [file join $output_dir constraint.sdc]
-puts "Handoff DB written (pre-GR): $output_db"
-
-# ---------------------------------------------------------------------------
-# 6. Global route — Blocks A–D from ORFS global_route.tcl
-# ---------------------------------------------------------------------------
-
-# Block A — optional hooks / resistance-aware flag
-if {[info exists ::env(PRE_GLOBAL_ROUTE_TCL)] && [file exists $::env(PRE_GLOBAL_ROUTE_TCL)]} {
-    source $::env(PRE_GLOBAL_ROUTE_TCL)
-}
-set _res_aware {}
-if {[info exists ::env(ENABLE_RESISTANCE_AWARE)] && $::env(ENABLE_RESISTANCE_AWARE) ne ""} {
-    set _res_aware [list -resistance_aware 0]
-}
-
-# Configure signal routing layers + track-capacity adjustment. GRT state
-# does not persist across write_db/read_db, so this MUST run before every
-# pin_access / global_route invocation.
-if {[info exists ::env(MIN_ROUTING_LAYER)] && $::env(MIN_ROUTING_LAYER) ne "" \
-    && [info exists ::env(MAX_ROUTING_LAYER)] && $::env(MAX_ROUTING_LAYER) ne ""} {
-    set _layer_range "$::env(MIN_ROUTING_LAYER)-$::env(MAX_ROUTING_LAYER)"
-    set_routing_layers -signal $_layer_range
-    set _adj [optional_env ROUTING_LAYER_ADJUSTMENT 0.5]
-    set_global_routing_layer_adjustment $_layer_range $_adj
-}
-
-# Block B — pin access (required before global_route)
-pin_access
-
-# Block C — global_route with verbose output so log contains wirelength,
-# via count, congestion, per-layer usage for the Planner.
-# Wrap in catch so GRT-0116 "finished with congestion" doesn't abort the
-# TCL — we still want to measure after-GR parasitics and emit metrics even
-# when routing is congested. Record the congestion state for the Planner.
-set _gr_extra {}
-if {[info exists ::env(GLOBAL_ROUTE_ARGS)] && $::env(GLOBAL_ROUTE_ARGS) ne ""} {
-    set _gr_extra $::env(GLOBAL_ROUTE_ARGS)
-}
-set _gr_status "ok"
-set _gr_error  ""
-if {[catch {
-    global_route \
-        -congestion_report_file [file join $output_dir default_congestion.rpt] \
-        -verbose \
-        {*}$_gr_extra {*}$_res_aware
-} _gr_error]} {
-    # GR threw — typically GRT-0116 "Global routing finished with congestion".
-    # Guides are still populated; we continue so metrics get written.
-    set _gr_status "congested"
-    puts "WARNING: global_route raised: $_gr_error"
-    puts "WARNING: continuing with measurement — guides still usable, parasitics will reflect congested state."
-}
-
-# Block D — padding, propagated clock, GR-aware parasitics
-if {[info exists ::env(CELL_PAD_IN_SITES_DETAIL_PLACEMENT)] \
-    && $::env(CELL_PAD_IN_SITES_DETAIL_PLACEMENT) ne ""} {
-    set_placement_padding -global \
-        -left  $::env(CELL_PAD_IN_SITES_DETAIL_PLACEMENT) \
-        -right $::env(CELL_PAD_IN_SITES_DETAIL_PLACEMENT)
-}
-set_propagated_clock [all_clocks]
-estimate_parasitics -global_routing
-
-set after_wns [sta::worst_slack -max]
-set after_tns [sta::total_negative_slack -max]
-puts [format "Post-GR WNS=%.6f  TNS=%.6f (GR status: %s)" \
-    $after_wns $after_tns $_gr_status]
-
-# Record GR status for the Planner (useful when status=congested).
-set gr_status_file [file join $output_dir default_gr_status.txt]
-set fh [open $gr_status_file w]
-puts $fh "gr_status: $_gr_status"
-if {$_gr_status ne "ok"} {
-    puts $fh "gr_error: $_gr_error"
-}
-close $fh
-
-# ---------------------------------------------------------------------------
-# 7. Full after-GR artifacts — delegate to generate_design_artifacts.tcl
-#    with skip_load=1 so it uses the current in-session GR parasitics.
+# 4c. Report timing + metrics at PLACEMENT parasitics (post-repair_timing,
+#     post-DPL). Sourced with skip_load=1 so it reports the current
+#     placement-parasitic state. These are the reported default_* artifacts.
 # ---------------------------------------------------------------------------
 set generate_design_artifacts_skip_load 1
 source [file join [file dirname [info script]] generate_design_artifacts.tcl]
 
+# ---------------------------------------------------------------------------
+# 5. HANDOFF — save pre-GR DB + SDC. The saved ODB is the seed for the next
+#    iteration (LLM loop) and the clean handoff to the backend.
+# ---------------------------------------------------------------------------
+write_db  $output_db
+write_sdc [file join $output_dir constraint.sdc]
+puts "Handoff DB written: $output_db"
+
 puts "Default stage complete."
-puts [format "  Pre-GR  WNS=%.6f  TNS=%.6f" $pre_gr_wns $pre_gr_tns]
-puts [format "  Post-GR WNS=%.6f  TNS=%.6f" $after_wns  $after_tns]
-puts "  Handoff ODB: $output_db (pre-GR state)"
+puts [format "  WNS=%.6f  TNS=%.6f (placement parasitics, post-repair_timing)" $pre_gr_wns $pre_gr_tns]
+puts "  Handoff ODB: $output_db"
